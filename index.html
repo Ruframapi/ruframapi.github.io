@@ -1,155 +1,1159 @@
-<!DOCTYPE html>
-<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->  
-<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->  
-<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->  
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Ruben Manrique's Site</title>
-    <!-- Meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Responsive HTML5 Resume/CV Template for Developers">
-    <meta name="author" content="Xiaoying Riley at 3rd Wave Media">    
-    <link rel="shortcut icon" href="favicon.ico">  
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,400italic,300italic,300,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
-    <!-- Global CSS -->
-    <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">   
-    <!-- Plugins CSS -->
-    <link rel="stylesheet" href="assets/plugins/font-awesome/css/font-awesome.css">
-    
-    <!-- Theme CSS -->  
-    <link id="theme-style" rel="stylesheet" href="assets/css/styles.css">
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-</head> 
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Ruben Manrique - Assistant Professor of NLP at Universidad de los Andes, Colombia. Research in machine translation, LLM agents, medical NLP, and language technology for underrepresented communities.">
+<title>Ruben Manrique - NLP - Uniandes</title>
+<link rel="icon" type="image/png" href="images/PLN_Logo2_blanco.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg-base:       #0d0f0d;
+  --bg-surface:    #151a15;
+  --bg-card:       #1e261e;
+  --bg-hover:      #2a362a;
+  --accent:        #00E620;
+  --accent-mid:    #00b818;
+  --accent-deep:   #007a10;
+  --accent-tint:   #b8f5c0;
+  --blue:          #7ecef0;
+  --blue-bg:       #1a3a4a;
+  --text-primary:  #eef5ee;
+  --text-secondary:#8fa88f;
+  --text-muted:    #4a5e4a;
+  --border:        rgba(0,230,32,0.08);
+  --border-strong: rgba(0,230,32,0.18);
+  --radius:        8px;
+  --radius-lg:     14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg-base);color:var(--text-primary);font-family:'Source Serif 4',Georgia,serif;font-size:16px;line-height:1.7;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Playfair Display',Georgia,serif;color:var(--text-primary);line-height:1.25}
+h1{font-size:clamp(2.2rem,5vw,3.8rem)}
+h2{font-size:clamp(1.5rem,3vw,2.2rem)}
+h3{font-size:clamp(1.1rem,2vw,1.4rem)}
+p{color:var(--text-secondary);margin-bottom:1em}
+a{color:var(--accent);text-decoration:none;transition:opacity .2s}
+a:hover{opacity:.8}
+img{max-width:100%;height:auto}
+.section-inner{max-width:1200px;margin:0 auto;padding:90px 24px}
+.section-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent-mid);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;display:block}
+.section-title{margin-bottom:40px}
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 32px;transition:background .35s,border-bottom .35s}
+#nav.scrolled{background:rgba(13,15,13,0.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:0.5px solid var(--border-strong)}
+.nav-logo img{height:32px;width:auto;display:block}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--text-secondary);letter-spacing:.06em;text-transform:uppercase;padding-bottom:2px;border-bottom:1px solid transparent;transition:color .2s,border-color .2s}
+.nav-links a.active,.nav-links a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:6px}
+.nav-hamburger span{display:block;width:24px;height:2px;background:var(--text-primary);border-radius:2px;transition:transform .3s,opacity .3s}
+#nav-overlay{display:none;position:fixed;inset:0;background:var(--bg-base);z-index:99;flex-direction:column;align-items:center;justify-content:center;gap:32px}
+#nav-overlay.open{display:flex}
+#nav-overlay a{font-family:'IBM Plex Mono',monospace;font-size:22px;color:var(--text-primary);letter-spacing:.06em}
+#nav-overlay a:hover{color:var(--accent)}
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;background:linear-gradient(160deg,#0d150d 0%,#0a120a 60%,#040604 100%)}
+.hero-tokens{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.token{position:absolute;font-family:'IBM Plex Mono',monospace;font-size:clamp(11px,1.5vw,18px);color:var(--accent);opacity: 0.1;user-select:none;white-space:nowrap}
+@media (prefers-reduced-motion:no-preference){
+  .token{animation:floatToken linear infinite}
+  @keyframes floatToken{from{transform:translateY(110vh)}to{transform:translateY(-20vh)}}
+}
+.hero-inner{max-width:1200px;margin:0 auto;padding:120px 24px 80px;display:grid;grid-template-columns:1fr auto;gap:60px;align-items:center;width:100%}
+.hero-text{max-width:680px}
+.hero-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--accent-mid);letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px;display:block}
+.hero-name{font-size:clamp(2.8rem,6vw,4.4rem);font-weight:700;color:var(--text-primary);margin-bottom:12px}
+.hero-role{font-family:'IBM Plex Mono',monospace;font-size:clamp(13px,1.5vw,16px);color:var(--accent);margin-bottom:8px;letter-spacing:.04em}
+.hero-institution{font-family:'IBM Plex Mono',monospace;font-size:clamp(11px,1.2vw,13px);color:var(--text-muted);margin-bottom:28px;letter-spacing:.03em}
+.hero-tagline{font-family:'Source Serif 4',serif;font-size:clamp(1rem,1.8vw,1.2rem);font-style:italic;color:var(--text-secondary);margin-bottom:40px;max-width:560px;line-height:1.6}
+@media (prefers-reduced-motion:no-preference){
+  .hero-name{opacity:0;transform:translateY(16px);transition:opacity .7s ease .1s,transform .7s ease .1s}
+  .hero-role,.hero-eyebrow-wrap{opacity:0;transform:translateY(16px);transition:opacity .7s ease .3s,transform .7s ease .3s}
+  .hero-tagline{opacity:0;transform:translateY(16px);transition:opacity .7s ease .5s,transform .7s ease .5s}
+  .hero-photo-wrap{opacity:0;transform:scale(.96);transition:opacity .8s ease .2s,transform .8s ease .2s}
+  body.loaded .hero-name,body.loaded .hero-role,body.loaded .hero-eyebrow-wrap,body.loaded .hero-tagline{opacity:1;transform:none}
+  body.loaded .hero-photo-wrap{opacity:1;transform:scale(1)}
+}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+.btn{font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.06em;padding:12px 26px;border-radius:4px;cursor:pointer;border:1px solid var(--accent);transition:background .2s,color .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--accent);color:#001a02}
+.btn-primary:hover{background:var(--accent-mid);border-color:var(--accent-mid);opacity:1}
+.btn-outline{background:transparent;color:var(--accent)}
+.btn-outline:hover{background:rgba(0,230,32,.08);opacity:1}
+.hero-photo{width:160px;height:160px;border-radius:50%;object-fit:cover;border:3px solid var(--accent-deep);box-shadow:0 0 0 6px rgba(0,230,32,.07)}
+/* ABOUT */
+#about{background:var(--bg-surface);border-top:1px solid var(--border)}
+.about-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:start}
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:7px;top:0;bottom:0;width:2px;background:var(--accent-deep);transform-origin:top}
+@media (prefers-reduced-motion:no-preference){
+  .timeline::before{transform:scaleY(0);transition:transform 1.2s cubic-bezier(.4,0,.2,1)}
+  .timeline.visible::before{transform:scaleY(1)}
+}
+.timeline-item{position:relative;margin-bottom:22px}
+.timeline-item::before{content:'';position:absolute;left:-24px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent-deep);border:2px solid var(--accent)}
+.tl-year{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent-mid);letter-spacing:.08em;display:block;margin-bottom:2px}
+.tl-text{font-family:'Source Serif 4',serif;font-size:14px;color:var(--text-secondary);line-height:1.5;margin:0}
+.tl-place{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-muted)}
+/* TEACHING */
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:36px}
+.filter-btn{font-family:'IBM Plex Mono',monospace;font-size:11.5px;padding:7px 18px;border-radius:20px;border:1px solid var(--border-strong);background:transparent;color:var(--text-secondary);cursor:pointer;letter-spacing:.05em;transition:background .2s,color .2s,border-color .2s}
+.filter-btn.active,.filter-btn:hover{background:var(--bg-hover);color:var(--accent);border-color:var(--accent-mid)}
+.courses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;margin-bottom:48px}
+.course-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 20px;transition:background .2s,border-color .2s,transform .2s;position:relative}
+.course-card:hover{background:var(--bg-hover);border-color:var(--border-strong);transform:translateY(-2px)}
+.course-card.hidden{display:none}
+.course-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
+.course-code{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:.06em}
+.course-star{color:#ffd700;font-size:14px}
+.course-name{font-family:'Playfair Display',serif;font-size:15px;color:var(--text-primary);line-height:1.3;margin-bottom:12px}
+.course-nlp-logo{height:22px;width:auto;margin-bottom:10px;display:block}
+.badge{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:3px 10px;border-radius:12px;letter-spacing:.05em;display:inline-block;margin-right:5px;margin-bottom:5px}
+.badge-ug{background:rgba(0,178,160,.18);color:#5cfcee}
+.badge-misis{background:rgba(30,90,200,.22);color:#a0c4ff}
+.badge-maia{background:rgba(130,60,200,.22);color:#d4aaff}
+.badge-edco{background:rgba(200,120,0,.18);color:#ffc170}
+.badge-role{background:var(--bg-surface);color:var(--text-muted);border:1px solid var(--border)}
+.nvidia-callout{background:var(--bg-card);border-left:4px solid var(--accent);border-radius:var(--radius);padding:24px 28px;margin-top:8px}
+.nvidia-callout h4{font-size:15px;color:var(--text-primary);margin-bottom:8px}
+.nvidia-callout p{font-size:14px;margin:0;color:var(--text-secondary)}
+/* RESEARCH */
+#research{background:var(--bg-surface);border-top:1px solid var(--border)}
+.stat-pills{display:flex;gap:18px;flex-wrap:wrap;margin:32px 0 40px}
+.stat-pill{background:var(--bg-card);border:1px solid var(--border-strong);border-radius:var(--radius-lg);padding:22px 30px;text-align:center;min-width:140px}
+.stat-num{display:block;font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:6px}
+.stat-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:.07em;text-transform:uppercase}
+.doctoral-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:28px}
+.doctoral-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.doctoral-name{font-family:'Playfair Display',serif;font-size:15px;margin-bottom:4px}
+.doctoral-status{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent-mid);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px;display:block}
+.doctoral-topic{font-size:13px;color:var(--text-secondary);margin:0}
+/* PROJECTS */
+.projects-grid{display:flex;flex-direction:column;gap:14px}
+details.project-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:border-color .2s}
+details.project-card[open]{border-color:var(--border-strong)}
+details.project-card summary{padding:24px 26px;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;user-select:none}
+details.project-card summary::-webkit-details-marker{display:none}
+details.project-card summary:hover{background:var(--bg-hover)}
+.project-summary-left{flex:1}
+.project-number{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent-mid);letter-spacing:.1em;margin-bottom:4px;display:block}
+.project-title{font-size:16px;color:var(--text-primary);font-family:'Playfair Display',serif;margin:0}
+.project-chevron{font-family:'IBM Plex Mono',monospace;font-size:18px;color:var(--accent-deep);transition:transform .25s;flex-shrink:0}
+details.project-card[open] .project-chevron{transform:rotate(180deg)}
+.project-body{padding:0 26px 26px}
+.project-desc{color:var(--text-secondary);font-size:14.5px;margin-bottom:16px}
+.tag-group{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+.tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;padding:3px 11px;border-radius:14px;background:var(--bg-surface);border:1px solid var(--border-strong);color:var(--text-muted);letter-spacing:.04em}
+.project-pubs{display:flex;flex-direction:column;gap:8px}
+.project-pub{font-size:13px;color:var(--text-secondary);padding-left:14px;border-left:2px solid var(--accent-deep);line-height:1.5}
+.project-pub a{font-size:13px}
+.project-link{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--blue);border:1px solid var(--blue-bg);padding:4px 12px;border-radius:4px;display:inline-flex;align-items:center;gap:4px;margin-top:12px;transition:background .2s}
+.project-link:hover{background:var(--blue-bg);opacity:1}
+/* PUBLICATIONS */
+#publications{background:var(--bg-surface);border-top:1px solid var(--border)}
+.pub-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.pub-list{display:flex;flex-direction:column;gap:10px}
+.pub-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;transition:border-color .2s,background .2s}
+.pub-item:hover{border-color:var(--border-strong);background:var(--bg-hover)}
+.pub-item.hidden{display:none}
+.pub-title{font-family:'Source Serif 4',serif;font-size:15px;color:var(--text-primary);margin-bottom:6px;line-height:1.4}
+.pub-title a{color:var(--text-primary)}
+.pub-title a:hover{color:var(--accent)}
+.pub-meta{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--text-muted);margin-bottom:8px}
+.pub-meta .authors{color:var(--text-secondary)}
+.pub-meta .venue{color:var(--text-muted)}
+.pub-footer{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rank-badge{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:3px 9px;border-radius:4px;letter-spacing:.06em;font-weight:500;flex-shrink:0}
+.rank-astar{background:var(--accent);color:#001a02}
+.rank-a{background:var(--accent-deep);color:var(--accent-tint)}
+.rank-q1{background:var(--blue-bg);color:var(--blue)}
+.rank-q2{background:var(--bg-card);color:var(--text-secondary);border:1px solid var(--border-strong)}
+.rank-b{background:var(--bg-card);color:var(--text-muted);border:1px solid var(--border)}
+.topic-chip{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:2px 8px;border-radius:10px;background:var(--bg-surface);border:1px solid var(--border);color:var(--text-muted)}
+.pub-pagination{display:flex;align-items:center;justify-content:space-between;margin-top:28px;gap:16px;flex-wrap:wrap}
+.pub-page-info{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-muted)}
+.pub-nav{display:flex;gap:8px}
+.pub-btn{font-family:'IBM Plex Mono',monospace;font-size:11.5px;padding:8px 18px;border-radius:4px;border:1px solid var(--border-strong);background:transparent;color:var(--text-secondary);cursor:pointer;transition:background .2s,color .2s}
+.pub-btn:hover:not(:disabled){background:var(--bg-hover);color:var(--accent)}
+.pub-btn:disabled{opacity:.35;cursor:default}
+.scholar-cta{text-align:center;margin-top:36px}
+/* STATS */
+#stats{border-top:1px solid var(--border)}
+.charts-grid-top{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+.charts-grid-bottom{max-width:480px;margin:0 auto}
+.chart-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px}
+.chart-card h3{font-size:14px;color:var(--text-secondary);font-family:'IBM Plex Mono',monospace;font-weight:400;margin-bottom:20px;letter-spacing:.04em}
+/* GROUP */
+#group{background:var(--bg-surface);border-top:1px solid var(--border-strong);border-bottom:1px solid var(--border-strong)}
+.group-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+.group-logo{height:80px;width:auto;margin-bottom:20px;display:block}
+.group-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px}
+.group-stat{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 16px;text-align:center}
+.group-stat-num{display:block;font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:4px}
+.group-stat-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase}
+.group-doctoral h4{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent-mid);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+.group-doctoral-item{margin-bottom:14px;padding-left:14px;border-left:2px solid var(--accent-deep)}
+.group-doctoral-name{font-size:14px;color:var(--text-primary);font-weight:600;margin-bottom:2px}
+.group-doctoral-topic{font-size:12.5px;color:var(--text-secondary);margin:0}
+.research-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px;padding-top:20px;border-top:0.5px solid var(--border)}
+.research-pill{border:1px solid var(--accent-mid);color:var(--accent-mid);padding:4px 14px;border-radius:20px;font-size:12px;font-family:'IBM Plex Mono',monospace}
+@media (prefers-reduced-motion:no-preference){
+  .group-logo-wrap{opacity:0;transform:scale(.8);transition:opacity .8s ease,transform .8s ease}
+  .group-logo-wrap.visible{opacity:1;transform:scale(1)}
+  .research-pill{opacity:0;transform:translateX(-10px);transition:opacity .4s ease,transform .4s ease}
+  .research-pill.visible{opacity:1;transform:none}
+}
+/* BOOK */
+#book{background:var(--bg-surface);border-bottom:1px solid var(--border)}
+.book-layout{display:grid;grid-template-columns:auto 1fr;gap:56px;align-items:center}
+.book-cover{width:180px;height:260px;display:flex;flex-direction:row;border-radius:4px;overflow:hidden;box-shadow:8px 6px 28px rgba(0,0,0,.5);flex-shrink:0}
+.book-spine{width:22px;background:var(--accent-deep);flex-shrink:0;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent-tint);letter-spacing:.1em;padding:8px 0}
+.book-face{flex:1;background:var(--bg-card);border:2px solid var(--accent);border-left:none;padding:18px 16px;display:flex;flex-direction:column;justify-content:space-between}
+.book-label{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--accent-mid);letter-spacing:.1em;text-transform:uppercase;margin-bottom:0}
+.book-face h3{font-size:18px;color:var(--text-primary);line-height:1.2;margin:10px 0 6px}
+.book-subtitle{font-family:'Source Serif 4',serif;font-style:italic;font-size:13px;color:var(--text-secondary);margin:0 0 8px}
+.book-author{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-muted);margin:0}
+.book-meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-muted);margin-bottom:20px;line-height:1.8}
+.book-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.book-badge{font-family:'IBM Plex Mono',monospace;font-size:10.5px;padding:4px 12px;border-radius:12px;background:rgba(0,184,24,.1);border:1px solid var(--accent-deep);color:var(--accent-tint)}
+/* CONTACT */
+.contact-inner{max-width:600px;margin:0 auto;text-align:center;padding:90px 24px}
+.contact-cards{display:flex;flex-direction:column;gap:10px;margin:36px 0}
+.contact-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 22px;display:flex;align-items:center;gap:16px;text-align:left;transition:border-color .2s,background .2s;color:var(--text-secondary)}
+.contact-card:hover{border-color:var(--accent-mid);background:var(--bg-hover);opacity:1;color:var(--text-primary)}
+.contact-icon{font-size:20px;flex-shrink:0;width:28px;text-align:center}
+.contact-label{font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.03em}
+/* FOOTER */
+footer{background:var(--bg-surface);border-top:1px solid var(--border);padding:32px 24px;text-align:center}
+footer p{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:.05em;margin:4px 0}
+.footer-logo{height:24px;width:auto;opacity:.5;margin-bottom:12px}
+/* SCROLL ANIMATIONS */
+.animate-on-scroll{opacity:0;transform:translateY(28px)}
+@media (prefers-reduced-motion:no-preference){
+  .animate-on-scroll{transition:opacity .65s ease,transform .65s ease}
+}
+.animate-on-scroll.visible{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .animate-on-scroll{opacity:1;transform:none;transition:none}
+  .hero-name,.hero-role,.hero-tagline,.hero-photo-wrap{opacity:1!important;transform:none!important;transition:none!important}
+  .timeline::before{transform:scaleY(1)!important}
+}
+/* RESPONSIVE */
+@media (max-width:768px){
+  .nav-links{display:none}
+  .nav-hamburger{display:flex}
+  .hero-inner{grid-template-columns:1fr;text-align:center}
+  .hero-photo-wrap{order:-1;display:flex;justify-content:center}
+  .hero-ctas{justify-content:center}
+  .about-grid{grid-template-columns:1fr;gap:40px}
+  .group-grid{grid-template-columns:1fr;gap:36px}
+  .book-layout{grid-template-columns:1fr;justify-items:center}
+  .charts-grid-top{grid-template-columns:1fr}
+  .stat-pills{flex-direction:column}
+}
+@media (max-width:480px){
+  .section-inner{padding:60px 16px}
+  .hero-inner{padding:100px 16px 60px}
+  .filter-btn{padding:6px 12px;font-size:10.5px}
+}
+</style>
+</head>
 <body>
 
+<!-- NAV -->
+<nav id="nav" aria-label="Main navigation">
+  <a class="nav-logo" href="#hero" aria-label="Home">
+    <img src="images/PLN_Logo1_negativo.png" height="32" width="auto" loading="lazy" alt="NLP Research Group - Procesamiento de Lenguaje Natural">
+  </a>
+  <ul class="nav-links" role="list">
+    <li><a href="#about">About</a></li>
+    <li><a href="#teaching">Teaching</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#publications">Publications</a></li>
+    <li><a href="#book">Book</a></li>
+    <li><a href="#group">Group</a></li>
+    <li><a href="iaweek.html">AI Week</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-overlay">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
 
+<div id="nav-overlay" role="dialog" aria-modal="true" aria-label="Navigation menu">
+  <a href="#about" class="nav-overlay-link">About</a>
+  <a href="#teaching" class="nav-overlay-link">Teaching</a>
+  <a href="#research" class="nav-overlay-link">Research</a>
+  <a href="#projects" class="nav-overlay-link">Projects</a>
+  <a href="#publications" class="nav-overlay-link">Publications</a>
+  <a href="#book" class="nav-overlay-link">Book</a>
+  <a href="#group" class="nav-overlay-link">Group</a>
+  <a href="iaweek.html" class="nav-overlay-link">AI Week</a>
+  <a href="#contact" class="nav-overlay-link">Contact</a>
+</div>
 
-    <div class="wrapper">
-        <div class="sidebar-wrapper">
-            <div class="profile-container">
-                <img class="profile" src="assets/images/profile.jpg" alt="" />
-                <h1 class="name">Rubén Manrique</h1>
-                <h3 class="tagline">PhD Student</h3>
-            </div><!--//profile-container-->
-            
-            <div class="contact-container container-block">
-                <ul class="list-unstyled contact-list">
-                    <li class="email"><i class="fa fa-envelope"></i>rf.manrique (at) uniandes.edu.co</li>
-                    <li class="website"><i class="fa fa-globe"></i><a href="https://ruframapi.github.io" target="_blank">ruframapi.github.io</a></li>
-                    <li class="github"><i class="fa fa-github"></i><a href="#" target="_blank">github.com/Ruframapi</a></li>
-                    <li class="twitter"><i class="fa fa-twitter"></i><a href="https://twitter.com/Ruframapi" target="_blank">@Ruframapi</a></li>
-                </ul>
-            </div><!--//contact-container-->
-            <div class="education-container container-block">
-                <h2 class="container-block-title">Education</h2>
-                <div class="item">
-                    <h4 class="degree">PhD Student</h4>
-                    <h5 class="meta">Universidad de los Andes</h5>
-                    <div class="time">2016 - </div>
-                </div><!--//item-->                
-                <div class="item">
-                    <h4 class="degree">Ms.Eng (Systems and Computation)</h4>
-                    <h5 class="meta">Universidad Nacional de Colombia</h5>
-                    <div class="time">2010 - 2013</div>
-                </div><!--//item-->
-                <div class="item">
-                    <h4 class="degree">Bachelor of Engineering (Electronic Engineering) </h4>
-                    <h5 class="meta">Universidad Distrital</h5>
-                    <div class="time">2003 - 2009</div>
-                </div><!--//item-->
-            </div><!--//education-container-->
-            
-            <div class="languages-container container-block">
-                <h2 class="container-block-title">Languages</h2>
-                <ul class="list-unstyled interests-list">
-                    <li>Spanish <span class="lang-desc">(Native)</span></li>
-                    <li>English </li>
-                </ul>
-            </div><!--//interests-->
-            
-            
-        </div><!--//sidebar-wrapper-->
-        
-        <div class="main-wrapper">
-            
-            <div class="icon-bar">
-  				<a class="active" href="index.html"><i class="fa fa-home"></i></a> 
-  				<a href="publications.html" alt="Publications"><i class="fa fa-file-text"></i></a> 
- 				<a href="slideshare.html"><i class="fa fa-slideshare" alt="Slides"></i></a> 
-  				<a href="conferences.html"><i class="fa fa-list"></i></a>
- 				<a href="links.html"><i class="fa fa-link"></i></a> 
-		    </div>
-            
-            
-            <section class="section summary-section">
-                <h2 class="section-title"><i class="fa fa-user"></i>Me in a Nutshell</h2>
-                <div class="summary">
-                    <p>
-						I’m a doctoral student under <a href="https://profesores.virtual.uniandes.edu.co/olmarino/es/inicio/" target="_blank">Olga Marino</a> supervision at Universidad de los Andes, Colombia.
-						Previously, I worked as a software engineer (6 years) and adjunct professor (2 years).
-						I am a Electronic Engineer and Master in Systems and Computing Engineering.
-                    </p>
-                </div><!--//summary-->
-            </section><!--//section-->
-            
-            
-            <section class="section projects-section">
-                <h2 class="section-title"><i class="fa fa-archive"></i>News</h2>
-                <div class="item">
-                	<span class="project-title"><a href="#hook">2018-11</a></span> - <span class="project-tagline">The paper "An Analysis of Student Representation, Representative Features and Classification Algorithms to Predict Degree Dropout. " was accepted in LAK 2019. <a href="https://lak19.solaresearch.org/">(https://lak19.solaresearch.org/)</a></span>
-                </div><!--//item-->
-                <div class="item">
-                	<span class="project-title"><a href="#hook">2018-10</a></span> - <span class="project-tagline">The paper "Knowledge Graph-based Core Concept Identification in Learning Resources" was accepted in JIST 2018. <a href="http://jist2018.knowledge-graph.jp">(http://jist2018.knowledge-graph.jp)</a></span>
-                </div><!--//item-->
-                <div class="item">
-                	<span class="project-title"><a href="#hook">2018-09</a></span> - <span class="project-tagline">The paper "Investigating learning resources precedence relations via concept prerequisite learning" was accepted in Web Intelligence 2018. <a href="https://webintelligence2018.com/accepted-papers.html">(https://webintelligence2018.com/accepted-papers.html)</a></span>
-                </div><!--//item-->
-                <div class="item">
-                	<span class="project-title"><a href="#hook">2018-07</a></span> - <span class="project-tagline">The paper "SoLeMiO: Semantic Integration of Learning Material in Office" was accepted in E-Learn 2018. <a href="https://www.aace.org/conf/elearn/">(https://www.aace.org/conf/elearn/)</a></span>
-                </div><!--//item-->
-                <div class="item">
-                	<span class="project-title"><a href="#hook">2018-06</a></span> - <span class="project-tagline">The paper "Knowledge Graph-based Teacher Support for Learning Material Authoring" was accepted in CCC 2018. <a href="http://www.utb.edu.co/13ccc">(http://www.utb.edu.co/13ccc)</a></span>
-                </div><!--//item-->                
-                <div class="item">
-                	<span class="project-title"><a href="#hook">2018-06</a></span> - <span class="project-tagline">The paper "Comparing Graph Similarity Measures for Semantic Representations of Documents" was accepted in CCC 2018. <a href="http://www.utb.edu.co/13ccc">(http://www.utb.edu.co/13ccc)</a></span>
-                </div><!--//item-->                
-                <div class="item">
-                	<span class="project-title"><a href="#hook">2017-07</a></span> - <span class="project-tagline">The paper "Diversified Semantic Query Reformulation" was accepted in KESW 2017. <a href="http://2017.kesw.ru/">(http://2017.kesw.ru/)</a></span>
-                </div><!--//item-->
-                <div class="item">
-                	<span class="project-title"><a href="#hook">2017-07</a></span> - <span class="project-tagline">The paper "Automatic Learning Content Sequence via Linked Open Data" was accepted in ISWC Doctoral Consortium. <a href="https://iswc2017.semanticweb.org/program/accepted-papers/">(https://iswc2017.semanticweb.org/program/accepted-papers/)</a></span>
-                </div><!--//item-->
-               <div class="item">
- 					<span class="project-title"><a href="#hook">2017-06</a></span> - <span class="project-tagline">The paper "Exploring the use of Linked Open Data for User Research Interest Modeling" was accepted in CCC 2017. <a href="http://www.uao.edu.co/12ccc/">(http://www.uao.edu.co/12ccc/)</a></span>
-                </div><!--//item-->
-               <div class="item">
-				    <span class="project-title"><a href="#hook">2017-05</a></span> - <span class="project-tagline">The paper "How does the size of a document a ect Linked Open Data user modeling strategies?" was accepted in International Workshop on Web Personalization, Recommender Systems, and Social Media (WPRSM2017). <a href="http://webintelligence2017.com/">(http://webintelligence2017.com/)</a></span>
-                </div><!--//item--> 
-            </section><!--//section-->
-            
-
-            
-        </div><!--//main-body-->
+<!-- HERO -->
+<section id="hero" aria-label="Introduction">
+  <div class="hero-tokens" aria-hidden="true">
+    <span class="token" style="left:5%;animation-duration:18s;animation-delay:0s">NLP</span>
+    <span class="token" style="left:15%;animation-duration:22s;animation-delay:-4s">LLM</span>
+    <span class="token" style="left:28%;animation-duration:16s;animation-delay:-8s">token</span>
+    <span class="token" style="left:42%;animation-duration:20s;animation-delay:-2s">embed</span>
+    <span class="token" style="left:55%;animation-duration:25s;animation-delay:-12s">seq2seq</span>
+    <span class="token" style="left:67%;animation-duration:17s;animation-delay:-6s">attn</span>
+    <span class="token" style="left:78%;animation-duration:21s;animation-delay:-10s">AAAI</span>
+    <span class="token" style="left:88%;animation-duration:19s;animation-delay:-3s">corpus</span>
+    <span class="token" style="left:35%;animation-duration:23s;animation-delay:-15s">RAG</span>
+    <span class="token" style="left:72%;animation-duration:14s;animation-delay:-7s">agent</span>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <span class="hero-eyebrow">Assistant Professor &middot; Universidad de los Andes</span>
+      <h1 class="hero-name">Rub&eacute;n Manrique</h1>
+      <p class="hero-role">Assistant Professor &middot; Natural Language Processing</p>
+      <p class="hero-institution">Department of Systems and Computing Engineering &mdash; Universidad de los Andes</p>
+      <p class="hero-tagline">Building language technology for underrepresented communities and advancing human-centered AI.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#publications">View Publications</a>
+        <a class="btn btn-outline" href="https://scholar.google.com/citations?user=JBtFhPQAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">Google Scholar &#x2197;</a>
+      </div>
     </div>
- 
-    <footer class="footer">
-        <div class="text-center">
-                <!--/* This template is released under the Creative Commons Attribution 3.0 License. Please keep the attribution link below when using for your own project. Thank you for your support. :) If you'd like to use the template without the attribution, you can check out other license options via our website: themes.3rdwavemedia.com */-->
-                <span>&copy; 2017 Rubén Manrique. Powered by <a href="https://themes.3rdwavemedia.com/">Orbit theme</a>.</span>
-        </div><!--//container-->
-    </footer><!--//footer-->
- 
-    <!-- Javascript -->          
-    <script type="text/javascript" src="assets/plugins/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>    
-    <!-- custom js -->
-    <script type="text/javascript" src="assets/js/main.js"></script>            
-</body>
-</html> 
+    <div class="hero-photo-wrap">
+      <img class="hero-photo" src="images/RubenManriqueSmall.jpg" alt="Portrait of Ruben Manrique, Assistant Professor of NLP at Universidad de los Andes" width="160" height="160">
+    </div>
+  </div>
+</section>
 
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <span class="section-label">Background</span>
+    <h2 class="section-title">About Me</h2>
+    <div class="about-grid">
+      <div class="about-bio animate-on-scroll">
+        <p>I am an Assistant Professor in the Department of Systems and Computing Engineering at Universidad de los Andes, where I founded and lead the Natural Language Processing (NLP) research line &mdash; the first dedicated NLP research program in the department. My work focuses on building language technology for underrepresented communities, developing cooperative multi-agent AI systems, and advancing human-centered NLP applications across education, medicine, and the humanities.</p>
+        <p>My academic journey began with a B.Sc. in Electronic Engineering from Universidad Distrital Francisco Jos&eacute; de Caldas (2009). I continued with an M.Sc. in Systems and Computing Engineering from Universidad Nacional de Colombia (2013), followed by a Ph.D. in Engineering from Universidad de los Andes (2019), where my doctoral research on Semantic Web technologies and concept-prerequisite learning established the foundations of my current research agenda.</p>
+        <p>Before joining Uniandes in 2021, I spent nearly two years as an AI Engineer at Reconoser ID, leading the development of facial recognition and voice anti-spoofing systems adopted by major fintech companies. Since joining the University, I have supervised 18 master&apos;s theses and 44 undergraduate projects, published 48 research works in top venues including NeurIPS, AAAI, EMNLP, and IEEE Transactions on Artificial Intelligence, and established an internationally recognized research group in NLP. In 2023, I became the first NVIDIA Deep Learning Institute Ambassador in Colombia, reaching Platinum level in 2025.</p>
+      </div>
+      <div>
+        <div class="timeline animate-on-scroll" aria-label="Career timeline">
+          <div class="timeline-item">
+            <span class="tl-year">2009</span>
+            <p class="tl-text">B.Sc. Electronic Engineering</p>
+            <span class="tl-place">Universidad Distrital Francisco Jos&eacute; de Caldas</span>
+          </div>
+          <div class="timeline-item">
+            <span class="tl-year">2010&ndash;2015</span>
+            <p class="tl-text">Software Engineer &amp; IT Coordinator</p>
+            <span class="tl-place">Center for Research for Development (CID)</span>
+          </div>
+          <div class="timeline-item">
+            <span class="tl-year">2011&ndash;2013</span>
+            <p class="tl-text">M.Sc. Systems &amp; Computing Engineering</p>
+            <span class="tl-place">Universidad Nacional de Colombia</span>
+          </div>
+          <div class="timeline-item">
+            <span class="tl-year">2015&ndash;2019</span>
+            <p class="tl-text">Ph.D. Engineering</p>
+            <span class="tl-place">Universidad de los Andes</span>
+          </div>
+          <div class="timeline-item">
+            <span class="tl-year">2019&ndash;2021</span>
+            <p class="tl-text">AI Engineer &mdash; Facial recognition &amp; voice anti-spoofing</p>
+            <span class="tl-place">Reconoser ID</span>
+          </div>
+          <div class="timeline-item">
+            <span class="tl-year">2021 &rarr;</span>
+            <p class="tl-text">Assistant Professor</p>
+            <span class="tl-place">Universidad de los Andes</span>
+          </div>
+          <div class="timeline-item">
+            <span class="tl-year">2023</span>
+            <p class="tl-text">First NVIDIA DLI Ambassador in Colombia</p>
+            <span class="tl-place">Platinum level, 2025</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEACHING -->
+<section id="teaching">
+  <div class="section-inner">
+    <span class="section-label">Courses</span>
+    <h2 class="section-title">Teaching</h2>
+    <div class="filter-bar" role="group" aria-label="Filter courses by program">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="ug">Undergraduate</button>
+      <button class="filter-btn" data-filter="misis">MISIS</button>
+      <button class="filter-btn" data-filter="maia">MAIA</button>
+      <button class="filter-btn" data-filter="edco">EDCO</button>
+    </div>
+    <div class="courses-grid" id="courses-grid">
+      <div class="course-card animate-on-scroll" data-program="ug">
+        <div class="course-header"><span class="course-code">ISIS 1221</span></div>
+        <p class="course-name">Introduction to Programming</p>
+        <span class="badge badge-ug">Undergraduate</span><span class="badge badge-role">Teaching</span>
+      </div>
+      <div class="course-card animate-on-scroll" data-program="ug">
+        <div class="course-header"><span class="course-code">ISIS 1104</span></div>
+        <p class="course-name">Structural Mathematics and Logic</p>
+        <span class="badge badge-ug">Undergraduate</span><span class="badge badge-role">Teaching</span>
+      </div>
+      <div class="course-card animate-on-scroll" data-program="ug">
+        <div class="course-header"><span class="course-code">ISIS 1105</span></div>
+        <p class="course-name">Design and Analysis of Algorithms</p>
+        <span class="badge badge-ug">Undergraduate</span><span class="badge badge-role">Design &amp; Teaching</span>
+      </div>
+      <div class="course-card animate-on-scroll" data-program="ug">
+        <div class="course-header"><span class="course-code">ISIS 1226</span></div>
+        <p class="course-name">Object-Oriented Design and Programming</p>
+        <span class="badge badge-ug">Undergraduate</span><span class="badge badge-role">Teaching</span>
+      </div>
+      <div class="course-card animate-on-scroll" data-program="misis">
+        <div class="course-header"><span class="course-code">ISIS 4221</span><span class="course-star" aria-label="Designed from scratch">&#11088;</span></div>
+        <img src="images/PLN_Logo2_positivo.png" class="course-nlp-logo" loading="lazy" alt="NLP Research Group">
+        <p class="course-name">Natural Language Processing</p>
+        <span class="badge badge-misis">MISIS</span><span class="badge badge-role">Creation &amp; Coordination</span>
+      </div>
+      <div class="course-card animate-on-scroll" data-program="misis">
+        <div class="course-header"><span class="course-code">ISIS 4219</span></div>
+        <p class="course-name">Machine Learning Techniques</p>
+        <span class="badge badge-misis">MISIS</span><span class="badge badge-role">Coordination &amp; Teaching</span>
+      </div>
+      <div class="course-card animate-on-scroll" data-program="misis">
+        <div class="course-header"><span class="course-code">ISIS 4225</span></div>
+        <p class="course-name">Mastering Machine Learning</p>
+        <span class="badge badge-misis">MISIS</span><span class="badge badge-role">Teaching</span>
+      </div>
+      <div class="course-card animate-on-scroll" data-program="misis">
+        <div class="course-header"><span class="course-code">ISIS 4514</span></div>
+        <p class="course-name">Semantic Web</p>
+        <span class="badge badge-misis">MISIS</span><span class="badge badge-role">Coordination &amp; Teaching</span>
+      </div>
+      <div class="course-card animate-on-scroll" data-program="maia">
+        <div class="course-header"><span class="course-code">MAIA 4100</span></div>
+        <p class="course-name">Introduction to Contemporary Artificial Intelligence</p>
+        <span class="badge badge-maia">MAIA</span><span class="badge badge-role">Teaching</span>
+      </div>
+      <div class="course-card animate-on-scroll" data-program="maia">
+        <div class="course-header"><span class="course-code">MAIA 4331</span><span class="course-star" aria-label="Designed from scratch">&#11088;</span></div>
+        <img src="images/PLN_Logo2_positivo.png" class="course-nlp-logo" loading="lazy" alt="NLP Research Group">
+        <p class="course-name">Fundamentals of Natural Language Processing</p>
+        <span class="badge badge-maia">MAIA</span><span class="badge badge-role">Creation &amp; Coordination</span>
+      </div>
+      <div class="course-card animate-on-scroll" data-program="maia">
+        <div class="course-header"><span class="course-code">MAIA 4332</span><span class="course-star" aria-label="Designed from scratch">&#11088;</span></div>
+        <img src="images/PLN_Logo2_positivo.png" class="course-nlp-logo" loading="lazy" alt="NLP Research Group">
+        <p class="course-name">Advanced Models of Natural Language Processing</p>
+        <span class="badge badge-maia">MAIA</span><span class="badge badge-role">Creation &amp; Coordination</span>
+      </div>
+      <div class="course-card animate-on-scroll" data-program="maia">
+        <div class="course-header"><span class="course-code">MAIA 4371</span><span class="course-star" aria-label="Designed from scratch">&#11088;</span></div>
+        <p class="course-name">Semantic Web</p>
+        <span class="badge badge-maia">MAIA</span><span class="badge badge-role">Creation &amp; Coordination</span>
+      </div>
+      <div class="course-card animate-on-scroll" data-program="edco">
+        <div class="course-header"><span class="course-code">EDCO</span></div>
+        <p class="course-name">Procesamiento de Lenguaje Natural con Machine Learning</p>
+        <span class="badge badge-edco">EDCO</span><span class="badge badge-role">Design &amp; Coordination</span>
+      </div>
+      <div class="course-card animate-on-scroll" data-program="edco">
+        <div class="course-header"><span class="course-code">EDCO</span></div>
+        <p class="course-name">Dominando la Inteligencia Artificial: m&aacute;s all&aacute; de ChatGPT</p>
+        <span class="badge badge-edco">EDCO</span><span class="badge badge-role">Design &amp; Coordination</span>
+      </div>
+      <div class="course-card animate-on-scroll" data-program="edco">
+        <div class="course-header"><span class="course-code">EDCO</span></div>
+        <p class="course-name">Desarrollador de Soluciones de IA (Azure Open AI)</p>
+        <span class="badge badge-edco">EDCO</span><span class="badge badge-role">Design &amp; Coordination</span>
+      </div>
+      <div class="course-card animate-on-scroll" data-program="edco">
+        <div class="course-header"><span class="course-code">EDCO</span></div>
+        <p class="course-name">Procesamiento de Lenguaje Natural</p>
+        <span class="badge badge-edco">EDCO</span><span class="badge badge-role">Design &amp; Coordination</span>
+      </div>
+    </div>
+    <div class="nvidia-callout animate-on-scroll">
+      <h4>&#127885; NVIDIA Deep Learning Institute &mdash; Platinum Ambassador</h4>
+      <p>First DLI Ambassador in Colombia &middot; 19 workshops delivered &middot; 1,188 students trained &middot; 960 certified</p>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research">
+  <div class="section-inner">
+    <span class="section-label">Research</span>
+    <h2 class="section-title">NLP Research Line</h2>
+    <p class="animate-on-scroll" style="max-width:760px;font-size:16px;">I founded the NLP research line at Universidad de los Andes &mdash; the first dedicated NLP initiative in the Department of Systems and Computing Engineering. What began before the LLM boom has grown into a nationally and internationally recognized research program, producing publications at NeurIPS, AAAI, EMNLP, and IEEE Transactions on Artificial Intelligence, and training over 90 researchers and students.</p>
+    <div class="stat-pills" role="list" aria-label="Research statistics">
+      <div class="stat-pill animate-on-scroll"><span class="stat-num">18</span><span class="stat-label">Master&apos;s Theses</span></div>
+      <div class="stat-pill animate-on-scroll"><span class="stat-num">44</span><span class="stat-label">Undergrad Theses</span></div>
+      <div class="stat-pill animate-on-scroll"><span class="stat-num">4</span><span class="stat-label">Doctoral Students</span></div>
+    </div>
+    <h3 style="margin-bottom:20px;font-size:1.1rem;">Active Doctoral Students</h3>
+    <div class="doctoral-grid">
+      <div class="doctoral-card animate-on-scroll">
+        <p class="doctoral-name">Cristian Adri&aacute;n Mart&iacute;nez</p>
+        <span class="doctoral-status">In Progress &middot; Year 1</span>
+        <p class="doctoral-topic">Machine translation and computational methods for low-resource Colombian indigenous languages.</p>
+      </div>
+      <div class="doctoral-card animate-on-scroll">
+        <p class="doctoral-name">Manuel Alejandro Mosquera Ortega</p>
+        <span class="doctoral-status">In Progress &middot; Year 2</span>
+        <p class="doctoral-topic">Solving planning problems via World Models &mdash; building LLM-based agents with explicit world representations for multi-step reasoning.</p>
+      </div>
+      <div class="doctoral-card animate-on-scroll">
+        <p class="doctoral-name">Edier Becerra &Aacute;lvarez</p>
+        <span class="doctoral-status">In Progress &middot; Year 2</span>
+        <p class="doctoral-topic">Large language models and gamified strategies for building virtual assistants and AI-powered tutoring systems.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" style="background:var(--bg-surface);border-top:1px solid var(--border)">
+  <div class="section-inner">
+    <span class="section-label">Research Projects</span>
+    <h2 class="section-title">Main Research Lines</h2>
+    <div class="projects-grid">
+
+      <details class="project-card animate-on-scroll">
+        <summary>
+          <div class="project-summary-left">
+            <span class="project-number">01</span>
+            <h3 class="project-title">Machine Translation for Colombian Indigenous Languages</h3>
+          </div>
+          <span class="project-chevron">&#9660;</span>
+        </summary>
+        <div class="project-body">
+          <p class="project-desc">This project develops Transformer-based neural machine translation models and parallel corpora for Wayuunaiki, Arhuaco, Inga, and Nasa &mdash; advancing digital preservation and linguistic revitalization for Colombia&apos;s indigenous communities. It is the first national effort to release open NMT models and corpora for these languages and achieved a landmark first appearance in the AmericasNLP workshop.</p>
+          <div class="tag-group"><span class="tag">machine-translation</span><span class="tag">low-resource NLP</span><span class="tag">indigenous languages</span><span class="tag">transfer learning</span></div>
+          <div class="project-pubs">
+            <p class="project-pub">Mosquera et al. (AAAI 2026). <em>Improving Low-Resource Translation with Dictionary-Guided Fine-Tuning and RL: A Spanish-to-Wayuunaiki Study.</em></p>
+            <p class="project-pub">Salazar, Manrique &amp; Pereira Nunes (SN Computer Science, 2025). <em>Machine Translation Strategies for Low-Resource Colombian Indigenous Languages.</em></p>
+            <p class="project-pub">Prieto et al. (AmericasNLP 2024). <em>Translation systems for low-resource Colombian Indigenous languages, a first step towards cultural preservation.</em></p>
+          </div>
+          <a class="project-link" href="https://colombialanguages.virtual.uniandes.edu.co/" target="_blank" rel="noopener noreferrer">Project website &#x2197;</a>
+        </div>
+      </details>
+
+      <details class="project-card animate-on-scroll">
+        <summary>
+          <div class="project-summary-left">
+            <span class="project-number">02</span>
+            <h3 class="project-title">Cooperative Intelligence in LLM Multi-Agent Systems</h3>
+          </div>
+          <span class="project-chevron">&#9660;</span>
+        </summary>
+        <div class="project-body">
+          <p class="project-desc">A joint effort with faculty from Electronics and Biomedical Engineering, this project advances the understanding of cooperative behaviors, resilience, and social generalization in LLM-based multi-agent systems. It provides quantitative metrics for evaluating how agents withstand disruptions in mixed-motive scenarios &mdash; with contributions at NeurIPS (in collaboration with Google DeepMind) and in IEEE Transactions on Artificial Intelligence.</p>
+          <div class="tag-group"><span class="tag">multi-agent systems</span><span class="tag">LLM</span><span class="tag">evaluation</span><span class="tag">cooperative AI</span></div>
+          <div class="project-pubs">
+            <p class="project-pub">Smith et al. (NeurIPS 2025 D&amp;B Track). <em>Evaluating Generalization Capabilities of LLM-Based Agents in Mixed-Motive Scenarios Using Concordia.</em></p>
+            <p class="project-pub">Mosquera et al. (IEEE Trans. Artificial Intelligence, 2025). <em>Can LLM-Augmented Autonomous Agents Cooperate? An Evaluation Through Melting Pot.</em></p>
+            <p class="project-pub">Chacon-Chamorro et al. (IEEE Trans. Artificial Intelligence, 2025). <em>Cooperative Resilience in Artificial Intelligence Multiagent Systems.</em></p>
+          </div>
+        </div>
+      </details>
+
+      <details class="project-card animate-on-scroll">
+        <summary>
+          <div class="project-summary-left">
+            <span class="project-number">03</span>
+            <h3 class="project-title">LLM-Driven Virtual Patient for Medical Education</h3>
+          </div>
+          <span class="project-chevron">&#9660;</span>
+        </summary>
+        <div class="project-body">
+          <p class="project-desc">In collaboration with the University of Luxembourg and the Faculty of Medicine at Uniandes, this project develops an LLM-powered virtual patient system to train clinical communication skills in medical students. The platform simulates realistic patient interactions using adaptive reasoning and contextual memory, offering immediate scenario-specific feedback. Work also extends to medical text simplification for health literacy.</p>
+          <div class="tag-group"><span class="tag">medical NLP</span><span class="tag">LLM</span><span class="tag">education</span><span class="tag">text simplification</span></div>
+          <div class="project-pubs">
+            <p class="project-pub">Laverde et al. (CSBJ, 2025). <em>Integrating large language model-based agents into a virtual patient chatbot for clinical anamnesis training.</em></p>
+            <p class="project-pub">Arias Russi et al. (TSAR 2025). <em>A Multi-Agent Framework with Diagnostic Feedback for Iterative Plain Language Summary Generation from Cochrane Medical Abstracts.</em></p>
+          </div>
+        </div>
+      </details>
+
+      <details class="project-card animate-on-scroll">
+        <summary>
+          <div class="project-summary-left">
+            <span class="project-number">04</span>
+            <h3 class="project-title">Historical Ink: NLP on 19th-Century Latin American Spanish</h3>
+          </div>
+          <span class="project-chevron">&#9660;</span>
+        </summary>
+        <div class="project-body">
+          <p class="project-desc">An interdisciplinary effort with the Department of History, this project applies computational NLP to historical Spanish texts to uncover cultural and linguistic transformations. Work spans corpus construction with LLM-assisted OCR correction, semantic shift detection, irony detection, and gender semantics &mdash; producing open datasets and novel tools for digital humanities research in Latin America.</p>
+          <div class="tag-group"><span class="tag">historical NLP</span><span class="tag">semantic shift</span><span class="tag">irony detection</span><span class="tag">digital humanities</span></div>
+          <div class="project-pubs">
+            <p class="project-pub">Cohen, Manrique-G&oacute;mez &amp; Manrique (NLP4DH 2025). <em>Historical Ink: Exploring Large Language Models for Irony Detection in 19th-Century Spanish.</em></p>
+            <p class="project-pub">Manrique-G&oacute;mez et al. (NLP4DH 2024). <em>Historical Ink: 19th Century Latin American Spanish Newspaper Corpus with LLM OCR Correction.</em></p>
+            <p class="project-pub">Montes et al. (EMNLP Workshop LChange 2024). <em>Historical Ink: Semantic Shift Detection for 19th Century Spanish.</em></p>
+          </div>
+        </div>
+      </details>
+
+      <details class="project-card animate-on-scroll">
+        <summary>
+          <div class="project-summary-left">
+            <span class="project-number">05</span>
+            <h3 class="project-title">HABLA: Voice Anti-Spoofing for Latin American Spanish</h3>
+          </div>
+          <span class="project-chevron">&#9660;</span>
+        </summary>
+        <div class="project-body">
+          <p class="project-desc">Motivated by concerns from Colombian voice actors about AI-generated audio forgeries, this project addresses the lack of linguistic diversity in speaker verification research. We introduced HABLA &mdash; the first voice anti-spoofing dataset for Latin American Spanish, with over 22,000 authentic and 58,000 spoofed speech samples across five countries. The dataset and baseline models are openly released.</p>
+          <div class="tag-group"><span class="tag">speech</span><span class="tag">anti-spoofing</span><span class="tag">dataset</span><span class="tag">Latin American Spanish</span></div>
+          <div class="project-pubs">
+            <p class="project-pub">Tamayo, Manrique &amp; Pereira Nunes (Interspeech 2023). <em>HABLA: A Dataset of Latin American Spanish Accents for Voice Anti-spoofing.</em></p>
+          </div>
+          <a class="project-link" href="https://github.com/Ruframapi/HABLA" target="_blank" rel="noopener noreferrer">GitHub repository &#x2197;</a>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- PUBLICATIONS -->
+<section id="publications">
+  <div class="section-inner">
+    <span class="section-label">Scholarly Output</span>
+    <h2 class="section-title">Publications</h2>
+    <div class="pub-filters filter-bar" role="group" aria-label="Filter publications">
+      <button class="filter-btn active" data-pubfilter="all">All</button>
+      <button class="filter-btn" data-pubfilter="journal">Journals</button>
+      <button class="filter-btn" data-pubfilter="conference">Conferences</button>
+      <button class="filter-btn" data-pubfilter="2025">2025</button>
+      <button class="filter-btn" data-pubfilter="2024">2024</button>
+      <button class="filter-btn" data-pubfilter="2023">2023</button>
+      <button class="filter-btn" data-pubfilter="2022">2022</button>
+      <button class="filter-btn" data-pubfilter="2021">2021</button>
+    </div>
+    <div id="pub-list" class="pub-list" aria-live="polite" aria-busy="true">
+      <p style="color:var(--text-muted);font-family:'IBM Plex Mono',monospace;font-size:12px;">Loading publications&hellip;</p>
+    </div>
+    <div class="pub-pagination">
+      <div class="pub-page-info" id="pub-page-info"></div>
+      <div class="pub-nav">
+        <button class="pub-btn" id="pub-prev" disabled>&#8592; Prev</button>
+        <button class="pub-btn" id="pub-next" disabled>Next &#8594;</button>
+      </div>
+    </div>
+    <div class="scholar-cta">
+      <a class="btn btn-outline" href="https://scholar.google.com/citations?user=JBtFhPQAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">View full profile on Google Scholar &#x2197;</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats" style="background:var(--bg-surface)">
+  <div class="section-inner">
+    <span class="section-label">Analytics</span>
+    <h2 class="section-title">Publication Overview</h2>
+    <div class="charts-grid-top">
+      <div class="chart-card animate-on-scroll">
+        <h3>Publications per Year</h3>
+        <canvas id="chart-years" aria-label="Publications per year bar chart" role="img"></canvas>
+      </div>
+      <div class="chart-card animate-on-scroll">
+        <h3>Top Venues</h3>
+        <canvas id="chart-venues" aria-label="Top publication venues horizontal bar chart" role="img"></canvas>
+      </div>
+    </div>
+    <div class="charts-grid-bottom">
+      <div class="chart-card animate-on-scroll">
+        <h3 style="text-align:center">Research Topics</h3>
+        <canvas id="chart-topics" aria-label="Research topics doughnut chart" role="img"></canvas>
+        <p style="text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--text-muted);margin-top:10px;">Click a topic to filter publications</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GROUP -->
+<section id="group">
+  <div class="section-inner">
+    <div class="group-grid">
+      <div>
+        <div class="group-logo-wrap animate-on-scroll">
+          <img src="images/PLN_Logo1_positivo.png" class="group-logo" loading="lazy" alt="NLP Research Group - Procesamiento de Lenguaje Natural">
+        </div>
+        <h2 style="font-family:'Playfair Display',serif;color:var(--text-primary);margin-bottom:16px">Natural Language Processing Research Group</h2>
+        <p style="color:var(--text-secondary);font-family:'Source Serif 4',serif;font-size:15px">Founded in 2021 at the Department of Systems and Computing Engineering, Universidad de los Andes. The first dedicated NLP research line in the department, focused on language technology for underrepresented languages, multi-agent AI systems, and human-centered NLP applications.</p>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--accent-mid);margin-top:16px">Part of the <strong style="color:var(--accent)">FlagLab</strong> research group &middot; Uniandes</p>
+        <div class="research-pills" id="research-pills" aria-label="Research areas">
+          <span class="research-pill animate-on-scroll">Machine Translation</span>
+          <span class="research-pill animate-on-scroll">Indigenous Languages</span>
+          <span class="research-pill animate-on-scroll">Multi-Agent Systems</span>
+          <span class="research-pill animate-on-scroll">Medical NLP</span>
+          <span class="research-pill animate-on-scroll">Historical NLP</span>
+          <span class="research-pill animate-on-scroll">Voice Anti-Spoofing</span>
+          <span class="research-pill animate-on-scroll">Learning Analytics</span>
+          <span class="research-pill animate-on-scroll">Knowledge Graphs</span>
+          <span class="research-pill animate-on-scroll">Legal NLP</span>
+        </div>
+      </div>
+      <div>
+        <div class="group-stat-grid">
+          <div class="group-stat animate-on-scroll"><span class="group-stat-num" data-target="90">0</span><span class="group-stat-label">Students Trained</span></div>
+          <div class="group-stat animate-on-scroll"><span class="group-stat-num" data-target="18">0</span><span class="group-stat-label">Master&apos;s Theses</span></div>
+          <div class="group-stat animate-on-scroll"><span class="group-stat-num" data-target="44">0</span><span class="group-stat-label">Undergrad Theses</span></div>
+          <div class="group-stat animate-on-scroll"><span class="group-stat-num" data-target="4">0</span><span class="group-stat-label">Doctoral Students</span></div>
+        </div>
+        <div class="group-doctoral animate-on-scroll">
+          <h4>Active Doctoral Students</h4>
+          <div class="group-doctoral-item">
+            <p class="group-doctoral-name">Cristian Adri&aacute;n Mart&iacute;nez</p>
+            <p class="group-doctoral-topic">Machine translation for low-resource Colombian indigenous languages</p>
+          </div>
+          <div class="group-doctoral-item">
+            <p class="group-doctoral-name">Manuel Alejandro Mosquera Ortega</p>
+            <p class="group-doctoral-topic">Planning via World Models in LLM-based agents</p>
+          </div>
+          <div class="group-doctoral-item">
+            <p class="group-doctoral-name">Edier Becerra &Aacute;lvarez</p>
+            <p class="group-doctoral-topic">LLMs and gamified strategies for virtual assistants</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOK -->
+<section id="book">
+  <div class="section-inner">
+    <span class="section-label">Featured Publication</span>
+    <h2 class="section-title">AI Book</h2>
+    <div class="book-layout animate-on-scroll">
+      <div class="book-cover" aria-hidden="true">
+        <div class="book-spine">UNIANDES 2025</div>
+        <div class="book-face">
+          <p class="book-label">EDICIONES UNIANDES 2025</p>
+          <h3>Inteligencia artificial</h3>
+          <p class="book-subtitle">Teor&iacute;as, aplicaciones, futuro</p>
+          <p class="book-author">Juan D. Rodríguez & Rub&eacute;n Manrique (Eds.)</p>
+        </div>
+      </div>
+      <div class="book-content">
+        <h2 style="font-size:1.6rem;margin-bottom:16px">Inteligencia artificial: Teor&iacute;as, aplicaciones, futuro</h2>
+        <p style="font-size:15px;color:var(--text-secondary)">Co-edited with Professor Juan David Guti&eacute;rrez (School of Government), this interdisciplinary book brings together 36 authors from across the faculties of Universidad de los Andes. Organized around theoretical and methodological foundations, applications and societal impacts, and the interactions between AI and the State, it is the first comprehensive effort to compile the most relevant AI research from University faculty &mdash; a 19-month project with rigorous international peer review, launched on October 31, 2025.</p>
+        <p class="book-meta">Co-editor &middot; Co-author<br>Ediciones Uniandes &middot; 2025<br>ISBN 978-958-798-844-4<br>36 authors &middot; Multi-faculty &middot; Peer-reviewed</p>
+        <div class="book-badges"><span class="book-badge">Interdisciplinary</span><span class="book-badge">Multi-faculty</span><span class="book-badge">Co-editor &amp; Co-author</span></div>
+        <a class="btn btn-primary" href="https://ediciones.uniandes.edu.co/gpd-inteligencia-artificial-9789587988444-68ffb33055319.html" target="_blank" rel="noopener noreferrer">Purchase online &#x2197;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <span class="section-label" style="display:block;text-align:center">Get in Touch</span>
+    <h2 class="section-title" style="text-align:center">Contact</h2>
+    <p style="text-align:center">Interested in collaboration, research partnerships, or speaking invitations?</p>
+    <div class="contact-cards">
+      <a class="contact-card animate-on-scroll" href="mailto:rf.manrique@uniandes.edu.co">
+        <span class="contact-icon">&#9993;</span><span class="contact-label">rf.manrique@uniandes.edu.co</span>
+      </a>
+      <a class="contact-card animate-on-scroll" href="https://scholar.google.com/citations?user=JBtFhPQAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">
+        <span class="contact-icon">&#127891;</span><span class="contact-label">Google Scholar</span>
+      </a>
+      <a class="contact-card animate-on-scroll" href="https://www.researchgate.net/profile/Ruben-Manrique-3" target="_blank" rel="noopener noreferrer">
+        <span class="contact-icon">&#128300;</span><span class="contact-label">ResearchGate</span>
+      </a>
+      <a class="contact-card animate-on-scroll" href="https://www.linkedin.com/in/ruben-francisco-manrique/" target="_blank" rel="noopener noreferrer">
+        <span class="contact-icon">&#128188;</span><span class="contact-label">LinkedIn</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <img src="images/PLN_Logo1_negativo.png" class="footer-logo" loading="lazy" alt="NLP Research Group">
+  <p>Universidad de los Andes &middot; Department of Systems and Computing Engineering</p>
+  <p>&copy; <script>document.write(new Date().getFullYear())</script> Rub&eacute;n Manrique</p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+/* body loaded */
+document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){document.body.classList.add('loaded');},50);});
+
+/* nav scroll */
+var nav=document.getElementById('nav');
+window.addEventListener('scroll',function(){nav.classList.toggle('scrolled',window.scrollY>60);},{passive:true});
+
+/* nav active section */
+var navLinks=document.querySelectorAll('.nav-links a');
+var sections=document.querySelectorAll('section[id]');
+var sectionObs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id);});}
+  });
+},{threshold:0.35,rootMargin:'-60px 0px -40% 0px'});
+sections.forEach(function(s){sectionObs.observe(s);});
+
+/* hamburger */
+var hb=document.getElementById('hamburger');
+var ov=document.getElementById('nav-overlay');
+hb.addEventListener('click',function(){
+  var open=ov.classList.toggle('open');
+  hb.setAttribute('aria-expanded',open);
+  document.body.style.overflow=open?'hidden':'';
+});
+document.querySelectorAll('.nav-overlay-link').forEach(function(a){
+  a.addEventListener('click',function(){ov.classList.remove('open');hb.setAttribute('aria-expanded','false');document.body.style.overflow='';});
+});
+
+/* scroll animations */
+var scrollObs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');scrollObs.unobserve(e.target);}});
+},{threshold:0.12});
+var tlObs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');tlObs.unobserve(e.target);}});
+},{threshold:0.1});
+document.querySelectorAll('.timeline').forEach(function(el){tlObs.observe(el);});
+document.querySelectorAll('.animate-on-scroll').forEach(function(el){scrollObs.observe(el);});
+
+/* teaching filter */
+var fBtns=document.querySelectorAll('[data-filter]');
+var cCards=document.querySelectorAll('.course-card');
+fBtns.forEach(function(btn){
+  btn.addEventListener('click',function(){
+    fBtns.forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    var f=btn.dataset.filter;
+    cCards.forEach(function(c){c.classList.toggle('hidden',f!=='all'&&c.dataset.program!==f);});
+  });
+});
+
+/* BIBTEX PARSER */
+function normLtx(s){
+  if(!s)return'';
+  return s
+    .replace(/\{\\(['`^~"uvcH])([a-zA-Z])\}/g,'$2')
+    .replace(/\{\\(['`^~"uvcH])\{([a-zA-Z])\}\}/g,'$2')
+    .replace(/\\(['`^~"])\{([a-zA-Z])\}/g,'$2')
+    .replace(/\\(['`^~"])([a-zA-Z])/g,'$2')
+    .replace(/\{\\c\{([a-zA-Z])\}\}/g,'$1')
+    .replace(/\{\\v\{([a-zA-Z])\}\}/g,'$1')
+    .replace(/\{\\ss\}/g,'ss').replace(/\\ss/g,'ss')
+    .replace(/\{([^{}]+)\}/g,'$1')
+    .replace(/\\\{/g,'{').replace(/\\\}/g,'}')
+    .replace(/--/g,'\u2013')
+    .trim();
+}
+function parseFields(body){
+  var f={},pos=0,len=body.length;
+  while(pos<len){
+    while(pos<len&&/[\s,]/.test(body[pos]))pos++;
+    if(pos>=len)break;
+    var ns=pos;
+    while(pos<len&&/\w/.test(body[pos]))pos++;
+    if(pos===ns){pos++;continue;}
+    var nm=body.slice(ns,pos).toLowerCase();
+    while(pos<len&&/[\s=]/.test(body[pos]))pos++;
+    if(pos>=len)break;
+    var val='';
+    if(body[pos]==='{'){
+      var d=1;pos++;var vs=pos;
+      while(pos<len&&d>0){if(body[pos]==='{')d++;else if(body[pos]==='}')d--;pos++;}
+      val=body.slice(vs,pos-1);
+    }else if(body[pos]==='"'){
+      pos++;var vs2=pos;
+      while(pos<len&&body[pos]!=='"'){if(body[pos]==='\\')pos++;pos++;}
+      val=body.slice(vs2,pos);if(pos<len)pos++;
+    }else{
+      var vs3=pos;
+      while(pos<len&&body[pos]!==','&&body[pos]!=='\n'&&body[pos]!=='}')pos++;
+      val=body.slice(vs3,pos).trim();
+    }
+    f[nm]=normLtx(val);
+  }
+  return f;
+}
+function parseBib(txt){
+  var entries=[],pos=0,len=txt.length;
+  while(pos<len){
+    var ai=txt.indexOf('@',pos);if(ai===-1)break;pos=ai+1;
+    var ts=pos;while(pos<len&&/\w/.test(txt[pos]))pos++;
+    var type=txt.slice(ts,pos).toLowerCase();
+    if(type==='string'||type==='preamble'||type==='comment')continue;
+    while(pos<len&&/\s/.test(txt[pos]))pos++;
+    if(pos>=len||txt[pos]!=='{')continue;
+    pos++;
+    while(pos<len&&/\s/.test(txt[pos]))pos++;
+    var ks=pos;while(pos<len&&txt[pos]!==',')pos++;
+    var key=txt.slice(ks,pos).trim();
+    if(pos<len)pos++;
+    var bs=pos,depth=1;
+    while(pos<len&&depth>0){if(txt[pos]==='{')depth++;else if(txt[pos]==='}')depth--;pos++;}
+    var body=txt.slice(bs,pos-1);
+    var flds=parseFields(body);
+    entries.push(Object.assign({type:type,key:key},flds));
+  }
+  return entries;
+}
+
+/* rank detection */
+function rank(e){
+  var note=(e.note||'').toUpperCase();
+  if(note.includes('A*'))return'A*';
+  if(note.match(/\bA\b/))return'A';
+  if(note.includes('Q1'))return'Q1';
+  if(note.includes('Q2'))return'Q2';
+  if(note.match(/\bB\b/))return'B';
+  var v=((e.journal||e.booktitle||'')+' '+(e.publisher||'')).toLowerCase();
+  if(/neurips|neural information processing systems/.test(v))return'A*';
+  if(/\baaai\b/.test(v))return'A*';
+  if(/wsdm|web search and data mining/.test(v))return'A*';
+  if(/\bemnlp\b|empirical methods in natural language/.test(v))return'A';
+  if(/\bnaacl\b/.test(v))return'A';
+  if(/\binterspeech\b/.test(v))return'A';
+  if(/\bcoling\b/.test(v))return'A';
+  if(/web intelligence/.test(v)&&/(ieee|acm|wic)/.test(v))return'A';
+  if(/joint conference on digital libraries/.test(v))return'A';
+  if(/ieee transactions on artificial intelligence/.test(v))return'Q1';
+  if(/ieee transactions on learning tech/.test(v))return'Q1';
+  if(/plos one/.test(v))return'Q1';
+  if(/computational and structural biotechnology/.test(v))return'Q1';
+  if(/journal of learning analytics/.test(v))return'Q1';
+  if(/science of computer programming/.test(v))return'Q1';
+  if(/revista de estudios sociales/.test(v))return'Q1';
+  if(/sn computer science/.test(v))return'Q2';
+  if(/smart learning environments/.test(v))return'Q2';
+  if(/journal of educational data mining/.test(v))return'Q2';
+  if(/procesamiento del lenguaje natural/.test(v))return'Q2';
+  if(/tecnura/.test(v))return'Q2';
+  if(/intelligent tutoring systems/.test(v))return'B';
+  if(/\bicalt\b|advanced learning technologies/.test(v))return'B';
+  if(/learning analytics and knowledge/.test(v))return'B';
+  if(/hypertext.*social media/.test(v))return'B';
+  if(/educational data mining/.test(v))return'B';
+  if(/applied informatics|icai 20/.test(v))return'B';
+  if(/colombian conference on computing/.test(v))return'B';
+  return null;
+}
+
+function topics(e){
+  var v=((e.journal||e.booktitle||'')+' '+(e.title||'')).toLowerCase();
+  var tt=[];
+  if(/indigenous|wayuunaiki|arhuaco|inga|nasa|americasnlp/.test(v))tt.push('indigenous-lang');
+  if(/machine translation|translation system|low-resource translation/.test(v))tt.push('machine-translation');
+  if(/multi.agent|multiagent|cooperative/.test(v))tt.push('multi-agent');
+  if(/medical|clinical|health|patient|obstetric|biomedical/.test(v))tt.push('medical-NLP');
+  if(/historical|19th.centur|semantic shift|irony/.test(v))tt.push('historical-NLP');
+  if(/spoofing|anti.spoof|habla/.test(v))tt.push('speech');
+  if(/knowledge graph|semantic web|ontol|linked data/.test(v))tt.push('knowledge-graphs');
+  if(/recommender|recommendation/.test(v))tt.push('learning-analytics');
+  if(/dropout|educational|tutoring|learning analytic/.test(v))tt.push('learning-analytics');
+  if(/\bllm\b|large language model/.test(v))tt.push('LLM');
+  if(/legal|regulatory|jurisprudence/.test(v))tt.push('legal-NLP');
+  if(/robot|ros2/.test(v))tt.push('robotics');
+  if(tt.length===0)tt.push('NLP');
+  return[...new Set(tt)];
+}
+
+function fmtAuthors(s){
+  if(!s)return'';
+  var parts=s.split(' and ').map(function(a){return a.trim();});
+  if(parts.length<=3)return parts.map(function(a){var c=a.split(',');return c.length>=2?c[1].trim()+' '+c[0].trim():a;}).join(', ');
+  var f=parts[0].split(',');
+  return(f.length>=2?f[1].trim()+' '+f[0].trim():parts[0])+' et al.';
+}
+
+function esc(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function rankHtml(r){
+  if(!r)return'';
+  var cls={['A*']:'rank-astar',A:'rank-a',Q1:'rank-q1',Q2:'rank-q2',B:'rank-b'}[r]||'';
+  return'<span class="rank-badge '+cls+'">'+r+'</span>';
+}
+
+/* publications state */
+var allPubs=[],filteredPubs=[],currentPage=1,PAGE_SIZE=10,activeTopicFilter=null,activePubFilter='all';
+
+function renderPubs(){
+  var list=document.getElementById('pub-list');
+  var info=document.getElementById('pub-page-info');
+  var prev=document.getElementById('pub-prev');
+  var next=document.getElementById('pub-next');
+  if(!filteredPubs.length){
+    list.innerHTML='<p style="color:var(--text-muted);font-family:\'IBM Plex Mono\',monospace;font-size:12px;padding:20px 0">No publications match the current filter.</p>';
+    info.textContent='';prev.disabled=true;next.disabled=true;return;
+  }
+  var total=Math.ceil(filteredPubs.length/PAGE_SIZE);
+  if(currentPage>total)currentPage=total;
+  var start=(currentPage-1)*PAGE_SIZE;
+  var page=filteredPubs.slice(start,start+PAGE_SIZE);
+  list.innerHTML=page.map(function(e){
+    var r=rank(e);
+    var venue=e.journal||e.booktitle||'';
+    var link=e.doi?'https://doi.org/'+e.doi:(e.url||'');
+    var th=link?'<a href="'+esc(link)+'" target="_blank" rel="noopener noreferrer">'+esc(e.title||'')+'</a>':esc(e.title||'');
+    var tt=topics(e);
+    var chips=tt.map(function(t){return'<span class="topic-chip">'+esc(t)+'</span>';}).join(' ');
+    return'<div class="pub-item">'+
+      '<p class="pub-title">'+th+'</p>'+
+      '<p class="pub-meta"><span class="authors">'+esc(fmtAuthors(e.author||''))+'</span> &middot; <span class="venue">'+esc(venue)+'</span> &middot; <span>'+esc(e.year||'')+'</span></p>'+
+      '<div class="pub-footer">'+rankHtml(r)+chips+'</div>'+
+      '</div>';
+  }).join('');
+  info.textContent='Page '+currentPage+' of '+total+' ('+filteredPubs.length+' entries)';
+  prev.disabled=currentPage<=1;next.disabled=currentPage>=total;
+}
+
+function applyFilter(){
+  currentPage=1;
+  filteredPubs=allPubs.filter(function(e){
+    if(activeTopicFilter&&!topics(e).includes(activeTopicFilter))return false;
+    if(activePubFilter==='all')return true;
+    if(activePubFilter==='journal')return e.type==='article';
+    if(activePubFilter==='conference')return e.type==='inproceedings';
+    return e.year===activePubFilter;
+  });
+}
+
+document.querySelectorAll('[data-pubfilter]').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('[data-pubfilter]').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    activePubFilter=btn.dataset.pubfilter;
+    applyFilter();renderPubs();
+  });
+});
+document.getElementById('pub-prev').addEventListener('click',function(){
+  if(currentPage>1){currentPage--;renderPubs();document.getElementById('publications').scrollIntoView({behavior:'smooth',block:'start'});}
+});
+document.getElementById('pub-next').addEventListener('click',function(){
+  var total=Math.ceil(filteredPubs.length/PAGE_SIZE);
+  if(currentPage<total){currentPage++;renderPubs();document.getElementById('publications').scrollIntoView({behavior:'smooth',block:'start'});}
+});
+
+/* load citations */
+async function loadPubs(){
+  try{
+    var res=await fetch('docs/citations.txt');
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    return parseBib(await res.text());
+  }catch(err){console.error('citations load error:',err);return[];}
+}
+
+/* charts */
+function initCharts(pubs){
+  var mono={family:'IBM Plex Mono',size:11};
+  var grid='rgba(0,230,32,0.04)';
+  var tick='#8fa88f';
+
+  /* years */
+  var ym={};
+  pubs.forEach(function(p){
+    var y=p.year;if(!y||isNaN(parseInt(y)))return;
+    if(!ym[y])ym[y]={j:0,c:0,o:0};
+    if(p.type==='article')ym[y].j++;
+    else if(p.type==='inproceedings')ym[y].c++;
+    else ym[y].o++;
+  });
+  var years=Object.keys(ym).filter(function(y){return parseInt(y)>=2009;}).sort();
+  new Chart(document.getElementById('chart-years').getContext('2d'),{
+    type:'bar',
+    data:{labels:years,datasets:[
+      {label:'Journals',data:years.map(function(y){return ym[y].j;}),backgroundColor:'#00b818',borderRadius:3},
+      {label:'Conferences',data:years.map(function(y){return ym[y].c;}),backgroundColor:'#7ecef0',borderRadius:3},
+      {label:'Other',data:years.map(function(y){return ym[y].o;}),backgroundColor:'#4a5e4a',borderRadius:3}
+    ]},
+    options:{responsive:true,plugins:{legend:{labels:{font:mono,color:tick}}},
+      scales:{x:{stacked:true,ticks:{color:tick,font:mono},grid:{color:grid}},y:{stacked:true,ticks:{color:tick,font:mono,stepSize:1},grid:{color:grid}}}}
+  });
+
+  /* venues */
+  var vm={};
+  pubs.forEach(function(p){
+    var v=p.journal||p.booktitle;if(!v)return;
+    var k=v.length>35?v.slice(0,35)+'\u2026':v;
+    if(!vm[k])vm[k]={count:0,type:p.type};
+    vm[k].count++;
+  });
+  var va=Object.entries(vm).sort(function(a,b){return b[1].count-a[1].count;}).slice(0,12);
+  new Chart(document.getElementById('chart-venues').getContext('2d'),{
+    type:'bar',
+    data:{labels:va.map(function(v){return v[0];}),datasets:[{label:'Publications',data:va.map(function(v){return v[1].count;}),backgroundColor:va.map(function(v){return v[1].type==='article'?'#00b818':'#7ecef0';}),borderRadius:3}]},
+    options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:tick,font:mono,stepSize:1},grid:{color:grid}},y:{ticks:{color:tick,font:{family:'IBM Plex Mono',size:9}},grid:{color:grid}}}}
+  });
+
+  /* topics doughnut */
+  var tm={};
+  pubs.forEach(function(p){topics(p).forEach(function(t){tm[t]=(tm[t]||0)+1;});});
+  var ta=Object.entries(tm).sort(function(a,b){return b[1]-a[1];});
+  var tcols=['#00E620','#00b818','#007a10','#7ecef0','#1a3a4a','#2a362a','#8fa88f','#4a5e4a','#b8f5c0','#1e261e'];
+  new Chart(document.getElementById('chart-topics').getContext('2d'),{
+    type:'doughnut',
+    data:{labels:ta.map(function(t){return t[0]+' ('+t[1]+')';}),datasets:[{data:ta.map(function(t){return t[1];}),backgroundColor:ta.map(function(_,i){return tcols[i%tcols.length];}),borderColor:'#151a15',borderWidth:2}]},
+    options:{responsive:true,
+      plugins:{legend:{position:'bottom',labels:{font:{family:'IBM Plex Mono',size:10},color:tick,padding:8}}},
+      onClick:function(evt,els){
+        if(!els.length){activeTopicFilter=null;applyFilter();renderPubs();return;}
+        var idx=els[0].index;
+        var t=ta[idx][0];
+        activeTopicFilter=(activeTopicFilter===t)?null:t;
+        applyFilter();renderPubs();
+        document.getElementById('publications').scrollIntoView({behavior:'smooth'});
+      }}
+  });
+}
+
+/* group counters */
+var cStarted=false;
+var cObs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting&&!cStarted){
+      cStarted=true;
+      document.querySelectorAll('.group-stat-num[data-target]').forEach(function(el){
+        var target=parseInt(el.dataset.target);
+        var suffix=target===90?'+':'';
+        var start=null;
+        function step(ts){
+          if(!start)start=ts;
+          var prog=Math.min((ts-start)/1200,1);
+          el.textContent=Math.floor(prog*target)+(prog>=1?suffix:'');
+          if(prog<1)requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      });
+      cObs.disconnect();
+    }
+  });
+},{threshold:0.3});
+var gs=document.getElementById('group');
+if(gs)cObs.observe(gs);
+
+/* bootstrap */
+loadPubs().then(function(pubs){
+  allPubs=pubs.sort(function(a,b){return(parseInt(b.year)||0)-(parseInt(a.year)||0);});
+  filteredPubs=allPubs.slice();
+  document.getElementById('pub-list').setAttribute('aria-busy','false');
+  renderPubs();
+  initCharts(pubs);
+});
+
+}());
+</script>
+</body>
+</html>

@@ -1,0 +1,855 @@
+@inproceedings{manrique2012fault,
+  title={Fault Detection and Diagnosis for Wind Turbines using Data-Driven Approach},
+  author={Manrique, Ruben and Sofrony, Jorge},
+  booktitle={7 Congreso Colombiano de Computaci{\'o}n},
+  year={2012}
+}
+
+@inproceedings{manrique2014student,
+  title={Student Modeling via Bayesian Knowledge Tracing: a case study},
+  author={Manrique, Ruben and Lopez, Camilo and Leon, Elizabeth},
+  booktitle={Computing Colombian Conference (9CCC)},
+  year={2014}
+}
+
+@inproceedings{diego2009aplicacion,
+  title={Aplicaci{\'o}n de algoritmos de identificaci{\'o}n en lazo cerrado},
+  author={Diego Diaz, Ruben Manrique, Victor Grisales},
+  booktitle={7 Congreso Colombiano de Computacion},
+  year={2009}
+}
+
+@article{manrique2012deteccion,
+  title={Detecci{\'o}n y diagnostico de fallas en turbinas de viento usando t{\'e}cnicas de miner{\'\i}a de datos},
+  author={Manrique, Rub{\'e}n Francisco},
+  year={2012}
+}
+
+@inproceedings{manrique2014hybrid,
+  title={A hybrid approach for fault detection in wind turbines},
+  author={Manrique, Rub{\'e}n Francisco and Parrado, Jos{\'e} Joaqu{\'\i}n},
+  booktitle={2014 9th Computing Colombian Conference (9CCC)},
+  pages={222--230},
+  year={2014},
+  organization={IEEE}
+}
+
+@article{manrique2015data,
+  title={Data-Driven Fault Detection and Isolation: A wind turbine scenario},
+  author={Manrique, Ruben and Sofrony, Jorge},
+  journal={Tecnura},
+  volume={19},
+  number={44},
+  pages={71--82},
+  year={2015}
+}
+
+@inproceedings{balcazar2015aproximacion,
+  title={Aproximaci{\'o}n a un modelo de medici{\'o}n del desempe{\~n}o estudiantil mediante la aplicaci{\'o}n de miner{\'\i}a de datos educativa en ambientes virtuales de aprendizaje: un estudio de caso en la educaci{\'o}n superior.},
+  author={Balcazar, Alexander and Manrique, Rub{\'e}n},
+  booktitle={CONGRESO COLOMBIANO DE INVESTIGACI{\'O}N DE OPERACIONES (ASOCIO 2015)},
+  year={2015}
+}
+
+@inproceedings{manrique2017exploring,
+  title={Exploring the use of linked open data for user research interest modeling},
+  author={Manrique, Rub{\'e}n and Herazo, Omar and Mari{\~n}o, Olga},
+  booktitle={Colombian Conference on Computing},
+  pages={3--16},
+  year={2017},
+  organization={Springer International Publishing Cham}
+}
+
+@inproceedings{manrique2017does,
+  title={How does the size of a document affect linked open data user modeling strategies?},
+  author={Manrique, Rub{\'e}n and Mari{\~n}o, Olga},
+  booktitle={Proceedings of the International Conference on Web Intelligence},
+  pages={1246--1252},
+  year={2017}
+}
+
+@inproceedings{manrique2017towards,
+  title={Towards automatic learning content sequence via linked open data},
+  author={Manrique, Rub{\'e}n},
+  booktitle={Proceedings of the International Conference on Web Intelligence},
+  pages={1230--1233},
+  year={2017}
+}
+
+@inproceedings{manrique2017automatic,
+  title={Automatic Learning Content Sequence via Linked Open Data.},
+  author={Manrique, Rub{\'e}n Francisco},
+  booktitle={DC@ ISWC},
+  year={2017}
+}
+
+@inproceedings{manrique2017diversified,
+  title={Diversified semantic query reformulation},
+  author={Manrique, Rub{\'e}n and Mari{\~n}o, Olga},
+  booktitle={International Conference on Knowledge Engineering and the Semantic Web},
+  pages={23--37},
+  year={2017},
+  organization={Springer International Publishing Cham}
+}
+
+@inproceedings{manrique2018comparing,
+  title={Comparing graph similarity measures for semantic representations of documents},
+  author={Manrique, Rub{\'e}n and Cueto-Ramirez, Felipe and Mari{\~n}o, Olga},
+  booktitle={Colombian Conference on Computing},
+  pages={162--176},
+  year={2018},
+  organization={Springer International Publishing Cham}
+}
+
+@inproceedings{grevisse2018knowledge,
+  title={Knowledge graph-based teacher support for learning material authoring},
+  author={Gr{\'e}visse, Christian and Manrique, Rub{\'e}n and Mari{\~n}o, Olga and Rothkugel, Steffen},
+  booktitle={Colombian Conference on Computing},
+  pages={177--191},
+  year={2018},
+  organization={Springer International Publishing Cham}
+}
+
+@inproceedings{grevisse2018solemio,
+  title={SoLeMiO: semantic integration of learning material in office},
+  author={Gr{\'e}visse, Christian and Manrique, Rub{\'e}n and Mari{\~n}o, Olga and Rothkugel, Steffen},
+  booktitle={eLearn: World Conference on EdTech},
+  pages={1524--1532},
+  year={2018},
+  organization={Association for the Advancement of Computing in Education (AACE)}
+}
+
+@inproceedings{manrique2018knowledge,
+  title={Knowledge graph-based core concept identification in learning resources},
+  author={Manrique, Rub{\'e}n and Gr{\'e}visse, Christian and Marino, Olga and Rothkugel, Steffen},
+  booktitle={Joint international semantic technology conference},
+  pages={36--51},
+  year={2018},
+  organization={Springer International Publishing Cham}
+}
+
+@inproceedings{manrique2018investigating,
+  title={Investigating learning resources precedence relations via concept prerequisite learning},
+  author={Manrique, Ruben and Sosa, Juan and Marino, Olga and Nunes, Bernardo Pereira and Cardozo, Nicolas},
+  booktitle={2018 IEEE/WIC/ACM International Conference on Web Intelligence (WI)},
+  pages={198--205},
+  year={2018},
+  organization={IEEE}
+}
+
+@article{marino2018knowledge,
+  title={Knowledge graph-based weighting strategies for a scholarly paper recommendation scenario},
+  author={Mari{\~n}o, Olga},
+  year={2018}
+}
+
+@inproceedings{manrique2019analysis,
+  title={An analysis of student representation, representative features and classification algorithms to predict degree dropout},
+  author={Manrique, Rub{\'e}n and Nunes, Bernardo Pereira and Marino, Olga and Casanova, Marco Antonio and Nurmikko-Fuller, Terhi},
+  booktitle={Proceedings of the 9th international conference on learning analytics \& knowledge},
+  pages={401--410},
+  year={2019}
+}
+
+@inproceedings{tibau2019using,
+  title={Using query reformulation to compare learning behaviors in web search engines},
+  author={Tibau, Marcelo and Siqueira, Sean WM and Nunes, Bernardo Pereira and Nurmikko-Fuller, Terhi and Manrique, Ruben Francisco},
+  booktitle={2019 IEEE 19th International Conference on Advanced Learning Technologies (ICALT)},
+  volume={2161},
+  pages={219--223},
+  year={2019},
+  organization={IEEE}
+}
+
+@inproceedings{manrique2019towards,
+  title={Towards the identification of concept prerequisites via knowledge graphs},
+  author={Manrique, Ruben and Pereira, Bernardo and Marino, Olga and Cardozo, Nicolas and Wolfgand, Sean},
+  booktitle={2019 IEEE 19th International Conference on Advanced Learning Technologies (ICALT)},
+  volume={2161},
+  pages={332--336},
+  year={2019},
+  organization={IEEE}
+}
+
+@article{manrique2019exploring,
+  title={Exploring knowledge graphs for the identification of concept prerequisites},
+  author={Manrique, Rub{\'e}n and Pereira, Bernardo and Mari{\~n}o, Olga},
+  journal={Smart Learning Environments},
+  volume={6},
+  number={1},
+  pages={21},
+  year={2019},
+  publisher={Springer Singapore Singapore}
+}
+
+@article{manrique2019oportunidades,
+  title={Oportunidades y desaf{\'\i}os en la aplicaci{\'o}n de Inteligencia Artificial a procesos de Validaci{\'o}n Marcaria},
+  author={Manrique, Rub{\'e}n and Am{\'e}zquita, Nicolas and Carre{\~n}o, Juan Pablo},
+  journal={Revista Ib{\'e}rica de Sistemas e Tecnologias de Informa{\c{c}}{\~a}o},
+  number={E24},
+  pages={221--233},
+  year={2019},
+  publisher={Associa{\c{c}}{\~a}o Ib{\'e}rica de Sistemas e Tecnologias de Informacao}
+}
+
+@inproceedings{pereira2020little,
+  title={‘A Little Knowledge is a Dangerous Thing’: A method to automatically detect knowledge compartmentalization and oversimplification},
+  author={Pereira, Crystiam Kelle and Nunes, Bernardo Pereira and Siqueira, Sean WM and Manrique, Ruben and Medeiros, Jerry Fernes},
+  booktitle={2020 IEEE 20th International Conference on Advanced Learning Technologies (ICALT)},
+  pages={140--144},
+  year={2020},
+  organization={IEEE}
+}
+
+@article{rodriguez2020uso,
+  title={El uso de sistemas inteligentes (IA) en el registro de la propiedad industrial},
+  author={Rodr{\'\i}guez, Emilio Garc{\'\i}a and Dugu{\'e}, David and Manrique, Rub{\'e}n and Giraldo, Fabian},
+  journal={Revista la propiedad inmaterial},
+  number={30},
+  pages={295--326},
+  year={2020},
+  publisher={Universidad Externado de Colombia}
+}
+
+@article{garcia2020use,
+  title={Use of Intelligent Systems (AI) for IP Registrer Office},
+  author={Garcia Rodriguez, Emilio and Duque Arias, David and Manrique, Ruben and Giraldo, Fabian},
+  journal={Rev. Prop. Inmaterial},
+  volume={30},
+  pages={295},
+  year={2020}
+}
+
+@article{garcia2020uso,
+  title={El uso de sistemas inteligentes (IA) en el registro de la propiedad industrial (Use of Intelligent Systems (AI) For IP Registrer Office)},
+  author={Garc{\'\i}a Rodr{\'\i}guez, Emilio and Duque Arias, David and Manrique, Rub{\'e}n and Giraldo, Fabian},
+  journal={La Propiedad Inmaterial},
+  number={30},
+  year={2020}
+}
+
+@incollection{manrique2021trademark,
+  title={A trademark image retrieval tool based on deep learning features},
+  author={Manrique, Rub{\'e}n and Duque-Arias, David},
+  booktitle={Marketing and Smart Technologies: Proceedings of ICMarkTech 2020},
+  pages={23--33},
+  year={2021},
+  publisher={Springer Singapore Singapore}
+}
+
+@inproceedings{xu2021rip,
+  title={RIP emojis and words to contextualize mourning on Twitter},
+  author={Xu, Xinyuan and Manrique, Ruben and Pereira Nunes, Bernardo},
+  booktitle={Proceedings of the 32nd ACM Conference on Hypertext and Social Media},
+  pages={257--263},
+  year={2021}
+}
+
+@inproceedings{cheng2022not,
+  title={Not another hardcoded solution to the student dropout prediction problem: A novel approach using genetic algorithms for feature selection},
+  author={Cheng, Yixin and Pereira Nunes, Bernardo and Manrique, Rub{\'e}n},
+  booktitle={International Conference on Intelligent Tutoring Systems},
+  pages={238--251},
+  year={2022},
+  organization={Springer International Publishing Cham}
+}
+
+@inproceedings{juan2022log,
+  title={Log mining for course recommendation in limited information scenarios},
+  author={Juan, Sanguino and Manrique, Ruben and Mari{\~n}o, Olga and Linares, Mario and Cardozo, Nicolas},
+  booktitle={The 15th International Conference on Educational Data Mining},
+  pages={430--437},
+  year={2022},
+  organization={International Educational Data Mining Society}
+}
+
+@misc{tamayo2022latin,
+  title={Latin-American voice anti-spoofing dataset},
+  author={Tamayo, Pablo and Manrique, Ruben},
+  journal={https://zenodo.org/record/7370805\#.Y6CBuXbMJD8},
+  year={2022}
+}
+
+@article{perez2022course,
+  title={A course hybrid recommender system for limited information scenarios},
+  author={Perez, Juan Camilo Sanguino and Manrique, Ruben Francisco and Mari{\~n}o, Olga and V{\'a}squez, Mario Linares and Cardozo, Nicol{\'a}s and others},
+  journal={Journal of Educational Data Mining},
+  volume={14},
+  number={3},
+  pages={162--188},
+  year={2022}
+}
+
+@inproceedings{holguin2023leave,
+  title={Leave no one behind-A massive online learning platform free for everyone},
+  author={Holguin Giraldo, Alejandra and Lozano Guti{\'e}rrez, Andrea and {\'A}lvarez Leyton, Gustavo and Sanguino, Juan Camilo and Manrique, Rub{\'e}n},
+  booktitle={International Conference on Artificial Intelligence in Education},
+  pages={175--186},
+  year={2023},
+  organization={Springer Nature Switzerland Cham}
+}
+
+@inproceedings{tamayo2023habla,
+  title={HABLA: A dataset of Latin American Spanish accents for voice anti-spoofing},
+  author={Tamayo, Pablo and Manrique, Rub{\'e}n and Nunes, Bernardo Pereira},
+  booktitle={INTERSPEECH 2023, 20-24 August 2023, Dublin, Ireland},
+  year={2023}
+}
+
+@inproceedings{vega2023enhancing,
+  title={Enhancing Face Anti-spoofing Systems Through Synthetic Image Generation},
+  author={Vega, C{\'e}sar and Manrique, Ruben},
+  booktitle={International Conference on Applied Informatics},
+  pages={16--30},
+  year={2023},
+  organization={Springer Nature Switzerland Cham}
+}
+
+@article{tian2023predicting,
+  title={Predicting student engagement using sequential ensemble model},
+  author={Tian, Xinran and Nunes, Bernardo Pereira and Liu, Yifeng and Manrique, Ruben},
+  journal={IEEE Transactions on Learning Technologies},
+  volume={17},
+  pages={939--950},
+  year={2023},
+  publisher={IEEE}
+}
+
+@article{sanguino2023semantic,
+  title={A semantic enhanced course recommender system via knowledge graphs for limited user information scenarios},
+  author={Sanguino, Juan and Manrique, Ruben and Mari{\~n}o, Olga},
+  journal={SN Computer Science},
+  volume={5},
+  number={1},
+  pages={120},
+  year={2023},
+  publisher={Springer Nature Singapore Singapore}
+}
+
+@article{becerra2024improving,
+  title={Improving Autonomy and Natural Interaction of Pepper Robot via Large Language Models},
+  author={Becerra, Luccas Rojas and Colmenares, Juan Andr{\'e}s Romero and Manrique, Rub{\'e}n},
+  year={2024}
+}
+
+@inproceedings{robles2024preserving,
+  title={Preserving heritage: Developing a translation tool for indigenous dialects},
+  author={Robles, Melissa and Mart{\'\i}nez, Cristian A and Prieto, Juan C and Palacios, Sara and Manrique, Rub{\'e}n},
+  booktitle={Proceedings of the 17th ACM International Conference on Web Search and Data Mining},
+  pages={1200--1203},
+  year={2024}
+}
+
+@article{mosquera2025can,
+  title={Can LLM-augmented autonomous agents cooperate? An evaluation of their cooperative capabilities through melting pot},
+  author={Mosquera, Manuel and Pinzon, Juan Sebastian and Fonseca, Yesid and R{\'\i}os, Manuel and Quijano, Nicanor and Giraldo, Luis Felipe and Manrique, Ruben},
+  journal={IEEE Transactions on Artificial Intelligence},
+  year={2025},
+  publisher={IEEE}
+}
+
+@inproceedings{amaya2024analysis,
+  title={Analysis of Machine Learning Models for Academic Performance Prediction},
+  author={Amaya, Andres Benitez and Barrera, Harold Castro and Manrique, Ruben},
+  booktitle={International Conference on Intelligent Tutoring Systems},
+  pages={150--161},
+  year={2024},
+  organization={Springer Nature Switzerland Cham}
+}
+
+@inproceedings{becerra2024enhancing,
+  title={Enhancing autonomous task execution in social robots with large language models},
+  author={Becerra, Luccas Rojas and Colmenares, Juan Romero and Manrique, Ruben},
+  booktitle={2024 10th International Conference on Automation, Robotics and Applications (ICARA)},
+  pages={40--44},
+  year={2024},
+  organization={IEEE}
+}
+
+@inproceedings{prieto2024translation,
+  title={Translation systems for low-resource colombian indigenous languages, a first step towards cultural preservation},
+  author={Prieto, Juan and Martinez, Cristian and Robles, Melissa and Moreno, Alberto and Palacios, Sara and Manrique, Rub{\'e}n},
+  booktitle={Proceedings of the 4th Workshop on Natural Language Processing for Indigenous Languages of the Americas (AmericasNLP 2024)},
+  pages={7--14},
+  year={2024}
+}
+
+@article{salazar2024bridging,
+  title={Bridging the gap in health literacy: Harnessing the power of large language models to generate plain language summaries from biomedical texts},
+  author={Salazar-Lara, Carolina and Arias Russi, Andr{\'e}s Felipe and Manrique, Rub{\'e}n},
+  journal={medRxiv},
+  pages={2024--07},
+  year={2024},
+  publisher={Cold Spring Harbor Laboratory Press}
+}
+
+@inproceedings{manrique2024historical,
+  title={Historical ink: 19th century latin american spanish newspaper corpus with llm ocr correction},
+  author={Manrique-G{\'o}mez, Laura and Montes, Tony and Herrera, Arturo Rodriguez and Manrique, Rub{\'e}n},
+  booktitle={Proceedings of the 4th International Conference on Natural Language Processing for Digital Humanities},
+  pages={132--139},
+  year={2024}
+}
+
+@inproceedings{montes2024historical,
+  title={Historical ink: Semantic shift detection for 19th century spanish},
+  author={Montes, Tony and Manrique-G{\'o}mez, Laura and Manrique, Rub{\'e}n},
+  booktitle={Proceedings of the 5th Workshop on Computational Approaches to Historical Language Change},
+  pages={29--41},
+  year={2024}
+}
+
+@inproceedings{gomez2024lessons,
+  title={Lessons from the NLBSE 2024 Competition: Towards Building Efficient Models for GitHub Issue Classification},
+  author={G{\'o}mez-Barrera, Daniel Fernando and Rojas Becerra, Luccas and Pinz{\'o}n Roncancio, Juan and Ortiz Almanza, David and Arboleda, Juan and Linares-V{\'a}squez, Mario and Manrique, Rub{\'e}n Francisco},
+  booktitle={Proceedings of the Third ACM/IEEE International Workshop on NL-based Software Engineering},
+  pages={45--48},
+  year={2024}
+}
+
+@inproceedings{tejon2024multimf,
+  title={MultiMF: A Deep Multimodal Academic Resources Recommendation System},
+  author={Tej{\'o}n, Rafael and Sanguino, Juan and Manrique, Ruben},
+  booktitle={International Conference on Applied Informatics},
+  pages={89--104},
+  year={2024},
+  organization={Springer Nature Switzerland Cham}
+}
+
+@article{reales2024core,
+  title={Core concept identification in educational resources via knowledge graphs and large language models},
+  author={Reales, Daniel and Manrique, Rub{\'e}n and Gr{\'e}visse, Christian},
+  journal={SN Computer Science},
+  volume={5},
+  number={8},
+  pages={1029},
+  year={2024},
+  publisher={Springer Nature Singapore Singapore}
+}
+
+@article{chacon2025cooperative,
+  title={Cooperative resilience in artificial intelligence multiagent systems},
+  author={Chacon-Chamorro, Manuela and Giraldo, Luis Felipe and Quijano, Nicanor and Vargas-Panesso, Vicente and Gonz{\'a}lez, C{\'e}sar and Pinz{\'o}n, Juan Sebasti{\'a}n and Manrique, Rub{\'e}n and R{\'\i}os, Manuel and Fonseca, Yesid and G{\'o}mez-Barrera, Daniel and others},
+  journal={IEEE Transactions on Artificial Intelligence},
+  year={2025},
+  publisher={IEEE}
+}
+
+@inproceedings{martinez2025scalable,
+  title={A Scalable Framework for Legal Text Understanding in Regulatory and Financial Contexts.},
+  author={Mart{\'\i}nez, Santiago and Casta{\~n}eda, Juan Manuel and Manrique, Rub{\'e}n},
+  booktitle={Proceedings of the Joint Workshop of the 9th Financial Technology and Natural Language Processing (FinNLP), the 6th Financial Narrative Processing (FNP), and the 1st Workshop on Large Language Models for Finance and Legal (LLMFinLegal)},
+  pages={326--334},
+  year={2025}
+}
+
+@article{ravvselj2025higher,
+  title={Higher education students’ perceptions of ChatGPT: A global study of early reactions},
+  author={Rav{\v{s}}elj, Dejan and Ker{\v{z}}i{\v{c}}, Damijana and Toma{\v{z}}evi{\v{c}}, Nina and Umek, Lan and Brezovar, Nejc and Iahad, Noorminshah A and Abdulla, Ali Abdulla and Akopyan, Anait and Segura, Magdalena Waleska Aldana and AlHumaid, Jehan and others},
+  journal={PLoS One},
+  volume={20},
+  number={2},
+  pages={e0315011},
+  year={2025},
+  publisher={Public Library of Science}
+}
+
+@article{ravvselj2024higher,
+  title={Higher education students' early perceptions of ChatGPT: Global survey data},
+  author={Rav{\v{s}}elj, Dejan and Aristovnik, Aleksander and Ker{\v{z}}i{\v{c}}, Damijana and Toma{\v{z}}evi{\v{c}}, Nina and Umek, Lan and Brezovar, Nejc and Aiahad, N and Abdulla, AA and Akopyan, A and Aldana Segura, MW and others},
+  journal={Mendeley Data},
+  pages={1--1},
+  year={2024}
+}
+
+@inproceedings{cheng2022genetic,
+  title={Genetic Algorithms for Feature Selection},
+  author={Cheng, Yixin and Nunes$^1$, Bernardo Pereira and Manrique, Rub{\'e}n},
+  booktitle={Intelligent Tutoring Systems: 18th International Conference, ITS 2022, Bucharest, Romania, June 29--July 1, 2022, Proceedings},
+  pages={238},
+  year={2022},
+  organization={Springer Nature}
+}
+
+@article{pardo2023graph,
+  title={Graph neural networks vs. Traditional methods for recommending MOOC courses: a comparative analysis},
+  author={Pardo Bravo, Santiago},
+  year={2023},
+  publisher={Universidad de los Andes}
+}
+
+@article{portela2025esnlir,
+  title={Esnlir: A spanish multi-genre dataset with causal relationships},
+  author={Portela, Johan R and Perez, Nicol{\'a}s and Manrique, Rub{\'e}n},
+  journal={arXiv preprint arXiv:2503.08803},
+  year={2025}
+}
+
+@inproceedings{yang2024towards,
+  title={Towards comprehensive artwork representation: Motivations and challenges in capturing multi-dimensional art descriptions},
+  author={Yang, Can and Pereira Nunes, Bernardo and Rodr{\'\i}guez M{\'e}ndez, Sergio and Chen, Yige and Manrique, Rub{\'e}n and Casanova, Marco Antonio},
+  booktitle={Proceedings of the 24th ACM/IEEE Joint Conference on Digital Libraries},
+  pages={1--5},
+  year={2024}
+}
+
+@inproceedings{cohen2025historical,
+  title={Historical ink: exploring large language models for irony detection in 19th-century Spanish},
+  author={Cohen, K Bretonnel and Manrique-G{\'o}mez, Laura and Manrique, Rub{\'e}n},
+  booktitle={Proceedings of the 5th International Conference on Natural Language Processing for Digital Humanities},
+  pages={559--569},
+  year={2025}
+}
+
+@inproceedings{carrion2024uniandes,
+  title={Uniandes at the regulations challenge task: A scalable framework for legal text understanding in regulatory and financial contexts},
+  author={Carri{\'o}n, Santiago Mart{\'\i}nez and Casta{\~n}eda, Juan Manuel and Manrique, Rub{\'e}n},
+  booktitle={Proceedings of the Joint Workshop of the 9th Financial Technology and Natural Language Processing (FinNLP), the 6th Financial Narrative Processing (FNP), and the 1st Workshop on Large Language Models for Finance and Legal (LLMFin-Legal)},
+  year={2024}
+}
+
+@inproceedings{de2025findings,
+  title={Findings of the AmericasNLP 2025 shared tasks on machine translation, creation of educational material, and translation metrics for indigenous languages of the Americas},
+  author={De Gibert, Ona and Pugh, Robert and Marashian, Ali and V{\'a}zquez, Ra{\'u}l and Ebrahimi, Abteen and Denisov, Pavel and Rice, Enora and Gow-Smith, Edward and Prieto, Juan and Robles, Melissa and others},
+  booktitle={Proceedings of the Fifth Workshop on NLP for Indigenous Languages of the Americas (AmericasNLP)},
+  pages={134--152},
+  year={2025}
+}
+
+@inproceedings{arias2025bridging,
+  title={Bridging the Gap in Health Literacy: Harnessing the Power of Large Language Models to Generate Plain Language Summaries from Biomedical Texts},
+  author={Arias-Russi, Andr{\'e}s and Salazar-Lara, Carolina and Manrique, Rub{\'e}n},
+  booktitle={Proceedings of the Second Workshop on Patient-Oriented Language Processing (CL4Health)},
+  pages={269--284},
+  year={2025}
+}
+
+@article{paquette2023semantic,
+  title={Semantic web innovations for higher education},
+  author={Paquette, Gilbert and Marino, Olga and Manrique, Ruben},
+  journal={IEEE Transactions on Learning Technologies},
+  year={2023}
+}
+
+@article{laverde2025integrating,
+  title={Integrating large language model-based agents into a virtual patient chatbot for clinical anamnesis training},
+  author={Laverde, Nicolas and Gr{\'e}visse, Christian and Jaramillo, Sandra and Manrique, Ruben},
+  journal={Computational and Structural Biotechnology Journal},
+  volume={27},
+  pages={2481--2491},
+  year={2025},
+  publisher={Elsevier}
+}
+
+@article{yang2025towards,
+  title={Towards comprehensive artwork representation},
+  author={Yang, Can and Nunes, Bernardo Pereira and M{\'e}ndez, Sergio Rodr{\'\i}guez and Chen, Yige and Manrique, Rub{\'e}n and Casanova, Marco Antonio},
+  year={2025},
+  publisher={Institute of Electrical and Electronics Engineers Inc.}
+}
+
+@article{jaramillo2025doctorbot,
+  title={DoctorBOT: An AI-powered Chatbot for Evidence-Based Obstetric Hemorrhage Management in Low-Resource Settings},
+  author={Jaramillo-Rinc{\'o}n, Sandra and Mychalski, Ambre and Yepes-Nu{\~n}ez, Juan and Manrique, Ruben},
+  year={2025}
+}
+
+@article{cohen2023recuperacion,
+  title={Recuperaci{\'o}n Aumentada Generativa (RAG) para la creaci{\'o}n de chatbot de dominio espec{\'\i}fico},
+  author={Cohen Solano, Kevin},
+  year={2023},
+  publisher={Universidad de los Andes}
+}
+
+@article{manrique2019prerequisite,
+  title={Prerequisite identification via knowledge graphs},
+  author={Manrique Piramanrique, Rub{\'e}n Francisco},
+  year={2019},
+  publisher={Universidad de los Andes}
+}
+
+@article{manrique2025gender,
+  title={Gender Semantics and Historical Feminisms: An Interdisciplinary Approach through Natural Language Processing},
+  author={Manrique-G{\'o}mez, Laura and Montes, Tony and Manrique, Rub{\'e}n},
+  journal={Revista de Estudios Sociales},
+  number={93},
+  pages={19--38},
+  year={2025},
+  publisher={Universidad de los Andes}
+}
+
+@inproceedings{klopstock2025manchita,
+  title={Manchita: An ai-powered gamified learning environment},
+  author={Klopstock, Nicol{\'a}s and Duarte, Ernesto Jos{\'e} and Becerra, Edier and Manrique, Rub{\'e}n},
+  booktitle={International Conference on Intelligent Tutoring Systems},
+  pages={202--212},
+  year={2025},
+  organization={Springer Nature Switzerland Cham}
+}
+
+@inproceedings{esteban2025ai,
+  title={AI-Generated Code Detection: An Examination of Current Tools in Education},
+  author={Esteban Cuellar Argotty, Juan and Manrique, Ruben},
+  booktitle={International Conference on Intelligent Tutoring Systems},
+  pages={192--201},
+  year={2025},
+  organization={Springer Nature Switzerland Cham}
+}
+
+@inproceedings{lugo2025ai,
+  title={AI-Powered Tutoring for Novice Programmers: Supporting Students Throughout Project Development},
+  author={Lugo S{\'a}nchez, Juan Diego and Ribeiro, Brena Marques and Manrique, Rub{\'e}n and Garc{\'e}s, Kelly},
+  booktitle={International Conference on Intelligent Tutoring Systems},
+  pages={131--143},
+  year={2025},
+  organization={Springer Nature Switzerland Cham}
+}
+
+@article{salazar2025machine,
+  title={Machine Translation Strategies for Low-Resource Colombian Indigenous Languages},
+  author={Salazar, Ivan and Manrique, Ruben and Pereira Nunes, Bernardo},
+  journal={SN Computer Science},
+  volume={6},
+  number={6},
+  pages={720},
+  year={2025},
+  publisher={Springer Nature Singapore Singapore}
+}
+
+@article{manrique2025semantica,
+  title={Sem{\'a}ntica de g{\'e}nero y feminismos hist{\'o}ricos: un enfoque interdisciplinario desde el procesamiento de lenguaje natural},
+  author={Manrique-G{\'o}mez, Laura and Montes, Tony and Manrique, Rub{\'e}n},
+  journal={Revista de Estudios Sociales},
+  number={93},
+  pages={19},
+  year={2025},
+  publisher={Universidad de Los Andes, UNIANDES Journals (Revistas UNIANDES)}
+}
+
+@article{manrique2019towards,
+  title={Towards automatic learning resources organization via knowledge graphs},
+  author={Manrique Piramanrique, Rub{\'e}n Francisco},
+  year={2019},
+  publisher={Uniandes}
+}
+
+@article{rayo2025analyzing,
+  title={Analyzing retrieval scaling in rag systems for complex qa benchmarks},
+  author={Rayo Mosquera, Jhon Stewar and Manrique, Rub{\'e}n Francisco},
+  journal={SN Computer Science},
+  volume={6},
+  number={7},
+  pages={762},
+  year={2025},
+  publisher={Springer Nature Singapore Singapore}
+}
+
+@article{herrera2025exploring,
+  title={Exploring multimodal humor detection in latin-american spanish with ls-funny},
+  author={Herrera-Alba, Eduardo and Manrique, Rub{\'e}n},
+  journal={SN Computer Science},
+  volume={6},
+  number={7},
+  pages={770},
+  year={2025},
+  publisher={Springer Nature Singapore Singapore}
+}
+
+@article{ruidias2025assessing,
+  title={Assessing Data Landscapes for Quality Education in Latin America: A FAIRness Perspective on Brazil, Colombia, and Peru},
+  author={Ruidias, Rosa Rosmery Soto and Nunes, Bernardo Pereira and Manrique, Ruben and Siqueira, Sean},
+  journal={Journal of Learning Analytics},
+  year={2025}
+}
+
+@inproceedings{mosquera2026improving,
+  title={Improving Low-Resource Translation with Dictionary-Guided Fine-Tuning and RL: A Spanish-to-Wayuunaiki Study},
+  author={Mosquera, Manuel and Robles, Melissa Ver{\'o}nica and Portela, Johan R and Manrique, Rub{\'e}n},
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume={40},
+  number={46},
+  pages={39042--39050},
+  year={2026}
+}
+
+@article{bel2025overview,
+  title={Overview of HOMO-LAT at IberLEF 2025: Human-centric polarity detection in Online Messages Oriented to the Latin American-speaking LGBTQ+ populaTion},
+  author={Bel-Enguix, Gemma and G{\'o}mez-Adorno, Helena and Ojeda-Trueba, Sergio and Sierra, Gerardo and Barco, Jessica and Lee-Romero, Edgar and Dunstan, Jocelyn and Manrique, Ruben},
+  journal={Procesamiento del lenguaje natural},
+  volume={75},
+  pages={413--424},
+  year={2025}
+}
+
+@article{apolo2020metodologia,
+  title={Metodolog{\'\i}a para selecci{\'o}n de Sistemas de Levantamiento Artificial en campos petroleros del Ecuador},
+  author={Apolo, Byron and Manrique, Ruben and Rodriguez, Marlon and Martinez, Ivan and Esparza, Marcel and Lliguizaca-Davila, Jorge and Arcentales-Bastidas, Danilo and Escobar-Segovia, Kenny},
+  journal={LACCEI Inc.},
+  year={2020},
+  publisher={LACCEI Inc.}
+}
+
+@article{garcia1959uso,
+  title={EL USO DE SISTEMAS INTELIGENTES (IA) EN EL REGISTRO DE LA PROPIEDAD INDUSTRIAL},
+  author={GARC{\'I}A, RODR{\'I}GUEZ E and DUQUE, ARIAS D and MANRIQUE, R and GIRALDO, F},
+  journal={LA PROPIEDAD INMATERIAL},
+  year={1959}
+}
+
+@article{apolo2020grafica,
+  title={Gr{\'a}fica de selecci{\'o}n del sistema de levantamiento artificial basado en el de {\'\i}ndice de presi{\'o}n del yacimiento e {\'\i}ndice de productividad},
+  author={Apolo, Byron and Manrique, Rub{\'e}n and Rodr{\'\i}guez, Marlon and Mart{\'\i}nez, Iv{\'a}n and Esparza, Marcel},
+  journal={Alternativas},
+  volume={21},
+  number={2},
+  pages={32--40},
+  year={2020}
+}
+
+@inproceedings{cuevas2025evaluating,
+  title={Evaluating LLM-Based Autonomous Agent Architectures for Task Execution with Social Robots},
+  author={Cuevas, David and Manrique, Ruben},
+  booktitle={Applied Informatics: 8th International Conference, ICAI 2025, Ben Guerir, Morocco, October 8--11, 2025, Proceedings},
+  pages={397},
+  year={2025},
+  organization={Springer Nature}
+}
+
+@inproceedings{oliveros2025ros2,
+  title={ROS2 Pipeline for Open-Vocabulary Object Detection and 3D Reconstruction},
+  author={Oliveros, Sergio and Manrique, Rub{\'e}n},
+  booktitle={Applied Informatics: 8th International Conference, ICAI 2025, Ben Guerir, Morocco, October 8--11, 2025, Proceedings},
+  pages={413},
+  year={2025},
+  organization={Springer Nature}
+}
+
+@inproceedings{bonet2025findings,
+  title={Findings of the AmericasNLP 2025 Shared Tasks on Machine Translation, Creation of Educational Material, and Translation Metrics for Indigenous Languages of the Americas},
+  author={Bonet, Ona De Gibert and Pugh, Robert and Marashian, Ali and Vazquez, Raul and Ebrahimi, Abteen and Denisov, Pavel and Rice, Enora and Gow-Smith, Edward and Prieto, Juan C and Robles, Melissa and others},
+  booktitle={Workshop on NLP for Indigenous Languages of the Americas},
+  pages={137--152},
+  year={2025},
+  organization={Association for Computational Linguistics (ACL)}
+}
+
+@article{de2025findings,
+  title={Findings of the AmericasNLP 2025 Shared Tasks on Machine Translation, Creation of Educational Material, and Translation Metrics for Indigenous Languages of the Americas},
+  author={De Gibert Bonet, Ona and Pugh, Robert and Marashian, Ali and Vazquez, Raul and Ebrahimi, Abteen and Denisov, Pavel and Rice, Enora and Gow-Smith, Edward and C Prieto, Juan and Robles, Melissa and others},
+  year={2025}
+}
+
+@inproceedings{russi2025multi,
+  title={A Multi-Agent Framework with Diagnostic Feedback for Iterative Plain Language Summary Generation from Cochrane Medical Abstracts},
+  author={Russi, Felipe Arias and Salazar-Lara, Carolina and Manrique, Rub{\'e}n},
+  booktitle={Proceedings of the Fourth Workshop on Text Simplification, Accessibility and Readability (TSAR 2025)},
+  pages={87--104},
+  year={2025}
+}
+
+@inproceedings{russi2025uniandes,
+  title={Uniandes at TSAR 2025 Shared Task Multi-Agent CEFR Text Simplification with Automated Quality Assessment and Iterative Refinement},
+  author={Russi, Felipe Arias and Solano, Kevin Cohen and Manrique, Rub{\'e}n},
+  booktitle={Proceedings of the Fourth Workshop on Text Simplification, Accessibility and Readability (TSAR 2025)},
+  pages={211--216},
+  year={2025}
+}
+
+@article{marino2025innovaciones,
+  title={INNOVACIONES DE LA WEB SEM{\'A}NTICA PARA LA EDUCACI{\'O}N SUPERIOR},
+  author={Mari{\~n}o, Olga and Paquette, Gilbert and Manrique, Rub{\'e}n},
+  journal={Inteligencia artificial: Teor{\'\i}as, aplicaciones, futuro},
+  pages={165},
+  year={2025},
+  publisher={Universidad de los Andes}
+}
+
+@misc{gutierrez2025inteligencia,
+  title={Inteligencia artificial: Teor{\'\i}as, aplicaciones, futuro},
+  author={Guti{\'e}rrez, Juan David and Manrique, Rub{\'e}n},
+  year={2025},
+  publisher={Universidad de los Andes}
+}
+
+@article{smith2025evaluating,
+  title={Evaluating generalization capabilities of LLM-based agents in mixed-motive scenarios using concordia},
+  author={Smith, Chandler and Abdulhai, Marwa and Diaz, Manfred and Tesic, Marko and Trivedi, Rakshit S and Vezhnevets, Alexander Sasha and Hammond, Lewis and Clifton, Jesse and Chang, Minsuk and Du{\'e}{\~n}ez-Guzm{\'a}n, Edgar A and others},
+  journal={arXiv preprint arXiv:2512.03318},
+  year={2025}
+}
+
+@inproceedings{portela2025esnlir,
+  title={ESNLIR: Expanding Spanish NLI Benchmarks with Multi-genre and Causal Annotation},
+  author={Portela, Johan R and Perez, Nicolas and Manrique, Rub{\'e}n},
+  booktitle={Applied Informatics: 8th International Conference, ICAI 2025, Ben Guerir, Morocco, October 8--11, 2025, Proceedings},
+  pages={345},
+  url={https://link.springer.com/chapter/10.1007/978-3-032-07175-0\_23},
+  year={2025},
+  organization={Springer Nature}
+}
+
+@inproceedings{guatibonza2025evaluating,
+  title={Evaluating an AI-Driven Chatbot Tutor for Enhancing Introductory Programming Learning},
+  author={Guatibonza Brice{\~n}o, Pablo Alejandro and Osorio C{\'a}rdenas, Daniel and Manrique Piramanrique, Rub{\'e}n and Rosales Rosero, Edgar Eduardo and S{\'a}nchez Puccini, Mario Eduardo},
+  booktitle={International Conference on Intelligent Tutoring Systems},
+  pages={235--245},
+  year={2025},
+  organization={Springer}
+}
+
+@article{gomez2025cffitst,
+  title={CFFitST: Classification Few-Shot Fit Sentence Transformer},
+  author={G{\'o}mez-Barrera, Daniel Fernando and Becerra, Rojas Luccas and Roncancio, Juan Pinz{\'o}n and Almanza, David Ortiz and Arboleda, Juan and Linares-V{\'a}squez, Mario and Manrique, Rub{\'e}n Francisco},
+  journal={Science of Computer Programming},
+  pages={103420},
+  year={2025},
+  publisher={Elsevier}
+}
+
+@article{rios2025illusion,
+  title={The Illusion of Rationality: Tacit Bias and Strategic Dominance in Frontier LLM Negotiation Games},
+  author={R{\'\i}os, Manuel S and Manrique, Ruben F and Quijano, Nicanor and Giraldo, Luis F},
+  journal={arXiv preprint arXiv:2512.09254},
+  year={2025}
+}
+
+@article{chacon2025evaluating,
+  title={Evaluating Cooperative Resilience in Multiagent Systems: A Comparison Between Humans and LLMs},
+  author={Chacon-Chamorro, Manuela and Pinz{\'o}n, Juan Sebasti{\'a}n and Manrique, Rub{\'e}n and Giraldo, Luis Felipe and Quijano, Nicanor},
+  journal={arXiv preprint arXiv:2512.11689},
+  year={2025}
+}
+
+@inproceedings{oliveros2025ros2,
+  title={ROS2 Pipeline for Open-Vocabulary Object Detection and 3D Reconstruction on Jetson Orin Nano},
+  author={Oliveros, Sergio and Manrique, Rub{\'e}n},
+  booktitle={International Conference on Applied Informatics},
+  pages={413--428},
+  year={2025},
+  organization={Springer Nature Switzerland Cham}
+}
+
+@inproceedings{yang2025arto,
+  title={ARTO: An Artwork Object Ontology for Descriptive and Contextual Representation},
+  author={Yang, Can and Nunes, Bernardo Pereira and M{\'e}ndez, Sergio Rodr{\'\i}guez and Chen, Yige and Manrique, Rub{\'e}n and Casanova, Marco A},
+  booktitle={2025 ACM/IEEE Joint Conference on Digital Libraries (JCDL)},
+  pages={89--98},
+  year={2025},
+  organization={IEEE}
+}
+
+@inproceedings{manrique2018comparing,
+  title={Comparing Graph Similarity Measures for Semantic Representations},
+  author={Manrique, Rub{\'e}n},
+  booktitle={Advances in Computing: 13th Colombian Conference, CCC 2018, Cartagena, Colombia, September 26--28, 2018, Proceedings},
+  pages={162},
+  year={2018},
+  organization={Springer}
+}
+
+@article{garcia2020uso,
+  title={El uso de sistemas inteligentes (IA) en el registro de la propiedad industrial},
+  author={Garc{\'\i}a Rodr{\'\i}guez, Emilio and Duque Arias, David and Manrique, Rub{\'e}n and Giraldo, Fabian},
+  year={2020},
+  publisher={Centro de Estudios de la Propiedad Intelectual}
+}
