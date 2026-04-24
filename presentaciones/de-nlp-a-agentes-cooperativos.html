@@ -1,0 +1,3208 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De NLP a Agentes Cooperativos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+:root {
+  --bg: #ffffff;
+  --bg2: #f8fafc;
+  --surface: #f1f5f9;
+  --surface2: #e2e8f0;
+  --accent: #0284c7;
+  --accent2: #6d28d9;
+  --accent3: #059669;
+  --accent4: #d97706;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --text-dim: #334155;
+  --border: rgba(2,132,199,0.2);
+  --glow: 0 0 30px rgba(2,132,199,0.1);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  user-select: none;
+}
+
+/* ===== PRESENTATION CONTAINER ===== */
+#deck {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 48px 64px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  transform: translateX(60px);
+  overflow: hidden;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(0);
+}
+
+.slide.exit {
+  opacity: 0;
+  transform: translateX(-60px);
+}
+
+/* ===== SLIDE TYPES ===== */
+.slide-cover {
+  background: var(--bg);
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.slide-cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 60% 50% at 80% 50%, rgba(2,132,199,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 20% 80%, rgba(109,40,217,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.slide-section {
+  background: var(--bg);
+  justify-content: center;
+  align-items: flex-start;
+}
+.slide-section .section-num {
+  opacity: 1;
+}
+
+.slide-content {
+  background: var(--bg);
+}
+
+/* Grid pattern overlay */
+.slide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(2,132,199,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(2,132,199,0.06) 1px, transparent 1px);
+  background-size: 64px 64px;
+  pointer-events: none;
+}
+
+/* ===== TYPOGRAPHY ===== */
+.tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tag::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background: var(--accent);
+}
+
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(42px, 5vw, 72px);
+  font-weight: 800;
+  line-height: 1.05;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
+h1 .accent { color: var(--accent); }
+h1 .accent2 { color: var(--accent2); }
+h1 .accent3 { color: var(--accent3); }
+
+h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(28px, 3.5vw, 46px);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+p, li {
+  font-size: clamp(14px, 1.4vw, 17px);
+  line-height: 1.65;
+  color: var(--text-dim);
+}
+
+.lead {
+  font-size: clamp(16px, 1.8vw, 22px);
+  color: var(--text);
+  line-height: 1.5;
+  max-width: 680px;
+}
+
+/* ===== LAYOUT HELPERS ===== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  flex: 1;
+  align-items: start;
+  margin-top: 20px;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+  flex: 1;
+  align-items: start;
+  margin-top: 20px;
+}
+
+.col { display: flex; flex-direction: column; }
+
+/* ===== CARDS ===== */
+.slide.active .card {
+  animation: fadeUp 0.5s ease both;
+}
+.slide.active .card:nth-child(2) { animation-delay: 0.08s; }
+.slide.active .card:nth-child(3) { animation-delay: 0.16s; }
+.slide.active .card:nth-child(4) { animation-delay: 0.24s; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+}
+
+.card.purple::before { background: linear-gradient(90deg, var(--accent2), transparent); }
+.card.green::before { background: linear-gradient(90deg, var(--accent3), transparent); }
+.card.amber::before { background: linear-gradient(90deg, var(--accent4), transparent); }
+
+.card h3 { font-size: 16px; margin-bottom: 10px; }
+.card p, .card li { font-size: 14px; }
+.card ul { padding-left: 16px; }
+.card ul li { margin-bottom: 6px; }
+
+/* ===== PILLS / BADGES ===== */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.pill-cyan { background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.3); }
+.pill-purple { background: rgba(124,58,237,0.1); color: #a78bfa; border: 1px solid rgba(124,58,237,0.3); }
+.pill-green { background: rgba(16,185,129,0.1); color: var(--accent3); border: 1px solid rgba(16,185,129,0.3); }
+.pill-amber { background: rgba(245,158,11,0.1); color: var(--accent4); border: 1px solid rgba(245,158,11,0.3); }
+
+/* ===== IMG CONTAINER ===== */
+.img-frame {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.img-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* ===== HIGHLIGHT BOX ===== */
+.highlight {
+  background: rgba(0,212,255,0.05);
+  border-left: 3px solid var(--accent);
+  padding: 16px 20px;
+  border-radius: 0 8px 8px 0;
+  margin: 12px 0;
+}
+
+.highlight.purple { border-color: var(--accent2); background: rgba(124,58,237,0.05); }
+.highlight.green { border-color: var(--accent3); background: rgba(16,185,129,0.05); }
+.highlight.amber { border-color: var(--accent4); background: rgba(245,158,11,0.05); }
+
+/* ===== CODE ===== */
+code {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  background: rgba(0,212,255,0.08);
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.code-block {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  background: #1e293b;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  color: #7dd3fc;
+  line-height: 1.7;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+/* ===== TIMELINE ===== */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  padding-left: 24px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px; bottom: 8px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--accent), var(--accent2), transparent);
+}
+
+.timeline-item {
+  position: relative;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -28px;
+  top: 8px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+}
+
+/* ===== SECTION DIVIDER (big number) ===== */
+.section-num {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(100px, 12vw, 180px);
+  font-weight: 800;
+  color: rgba(2,132,199,0.07);
+  position: absolute;
+  right: 48px;
+  top: 50%;
+  transform: translateY(-50%);
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* ===== PROGRESS BAR ===== */
+#progress-bar {
+  position: fixed;
+  bottom: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transition: width 0.3s ease;
+  z-index: 100;
+  box-shadow: 0 0 8px var(--accent);
+}
+
+/* ===== NAV ===== */
+#nav {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+#slide-counter {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.nav-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  font-size: 16px;
+}
+
+.nav-btn:hover {
+  background: rgba(2,132,199,0.1);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ===== SECTION NAV (dots) ===== */
+#section-nav {
+  position: fixed;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 100;
+}
+
+.section-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.section-dot.active {
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  transform: scale(1.4);
+}
+
+.section-dot:hover::after {
+  content: attr(title);
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  background: var(--surface);
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+/* ===== FULLSCREEN KEY HINT ===== */
+#hint {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  display: flex; gap: 16px;
+}
+
+.key-hint span { 
+  display: inline-block;
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  margin-right: 4px;
+}
+
+/* ===== SVG DIAGRAMS ===== */
+.diagram-svg {
+  width: 100%;
+  height: auto;
+  max-height: 340px;
+}
+
+/* ===== STEP LIST ===== */
+.step-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.step-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.step-num {
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(0,212,255,0.1);
+  border: 1px solid rgba(0,212,255,0.3);
+  color: var(--accent);
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.step-content { flex: 1; }
+.step-content strong { color: var(--text); font-size: 14px; display: block; margin-bottom: 3px; }
+.step-content span { font-size: 13px; color: var(--text-muted); }
+
+/* ===== FORMULA BOX ===== */
+.formula {
+  background: #1e293b;
+  border: 1px solid rgba(2,132,199,0.25);
+  border-radius: 10px;
+  padding: 20px 28px;
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(14px, 1.5vw, 18px);
+  color: var(--accent);
+  margin: 16px 0;
+  letter-spacing: 0.05em;
+}
+
+/* ===== COMPARISON TABLE ===== */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.compare-table th {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  text-align: left;
+}
+
+.compare-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: var(--text-dim);
+  vertical-align: top;
+}
+
+.compare-table tr:hover td { background: rgba(0,0,0,0.03); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .slide { padding: 32px; }
+  .two-col { grid-template-columns: 1fr; gap: 24px; }
+  .three-col { grid-template-columns: 1fr 1fr; gap: 16px; }
+}
+/* ===== REMOVED SLIDES ===== */
+.slide-removed { display: none !important; }
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+<!-- SLIDE 1: COVER -->
+<div class="slide slide-cover active" id="s1">
+  <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;">
+    <!-- Animated orbs -->
+    <div style="position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(2,132,199,0.1),transparent 70%);right:-100px;top:-100px;animation:float1 8s ease-in-out infinite;"></div>
+    <div style="position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(109,40,217,0.1),transparent 70%);left:100px;bottom:-50px;animation:float2 10s ease-in-out infinite;"></div>
+  </div>
+  <div style="position:relative;z-index:1;max-width:900px;padding-top:60px;">
+    <div class="tag">Uniandes · 2026</div>
+    <h1>De <span class="accent">NLP</span> a<br>Agentes <span class="accent2">Cooperativos</span></h1>
+    <p class="lead" style="margin-bottom:40px;">LLMs, razonamiento con Chain of Thought, RAG, agentes autónomos con MCP y arquitecturas multi-agente. Culmina con una evaluación empírica de cooperación entre agentes.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:48px;">
+      <span class="pill pill-purple">LLMs & Prompting</span>
+      <span class="pill pill-green">Chain of Thought</span>
+      <span class="pill pill-amber">RAG</span>
+      <span class="pill pill-cyan">Agentes & MCP</span>
+      <span class="pill pill-purple">Multi-Agente</span>
+      <span class="pill pill-cyan">Agentes Cooperativos</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:20px;">
+      <img src="../images/flag-logo.png" alt="FlagLAB" style="height:48px;width:auto;object-fit:contain;">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="font-size:15px;font-weight:600;color:var(--text);">Rubén Manrique</div>
+        <div style="font-size:12px;color:var(--accent);font-family:Space Mono,monospace;">rf.manrique@uniandes.edu.co</div>
+      </div>
+    </div>
+  </div>
+  <style>
+    @keyframes float1 { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-20px) rotate(5deg)} }
+    @keyframes float2 { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(15px) rotate(-5deg)} }
+  </style>
+</div>
+
+<!-- SLIDE 2: AGENDA -->
+<div class="slide slide-content" id="s2">
+  <div class="tag">Contenido</div>
+  <h2>Agenda de hoy</h2>
+  <div class="two-col" style="gap:32px;">
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="card purple">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+          <span style="font-family:Space Mono,monospace;font-size:22px;font-weight:700;color:rgba(109,40,217,0.4);">01</span>
+          <h3 style="margin:0;color:#a78bfa;">LLMs & Prompting</h3>
+        </div>
+        <p>Modelos de lenguaje, in-context learning, zero/few-shot, ingeniería de prompts.</p>
+      </div>
+      <div class="card green">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+          <span style="font-family:Space Mono,monospace;font-size:22px;font-weight:700;color:rgba(5,150,105,0.4);">02</span>
+          <h3 style="margin:0;color:var(--accent3);">Chain of Thought</h3>
+        </div>
+        <p>Razonamiento paso a paso. Zero-shot CoT. Por qué funciona.</p>
+      </div>
+      <div class="card amber">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+          <span style="font-family:Space Mono,monospace;font-size:22px;font-weight:700;color:rgba(217,119,6,0.4);">03</span>
+          <h3 style="margin:0;color:var(--accent4);">RAG</h3>
+        </div>
+        <p>Generación aumentada por recuperación. Embeddings y bases vectoriales.</p>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+          <span style="font-family:Space Mono,monospace;font-size:22px;font-weight:700;color:rgba(2,132,199,0.3);">04</span>
+          <h3 style="margin:0;">Agentes, MCP & Multi-Agente</h3>
+        </div>
+        <p>ReAct, herramientas, Model Context Protocol y arquitecturas multi-agente.</p>
+      </div>
+      <div class="card purple" style="border-color:rgba(109,40,217,0.4);border-width:2px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+          <span style="font-family:Space Mono,monospace;font-size:22px;font-weight:700;color:rgba(109,40,217,0.5);">05</span>
+          <h3 style="margin:0;color:#a78bfa;">Agentes Cooperativos ★</h3>
+        </div>
+        <p>¿Pueden los agentes LLM cooperar? Evaluación con Melting Pot. <em>Can LLM-Augmented Autonomous Agents Cooperate?</em></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- SLIDE 4: MODELO DISCRIMINATIVO — Animación D3 (REMOVED) -->
+<div class="slide-removed" id="s4-disc">
+  <style>
+    #disc-container { display:flex; flex-direction:column; width:100%; height:100%; position:relative; }
+    #disc-header { flex-shrink:0; margin-bottom:4px; }
+    #disc-stage { flex:1; display:flex; align-items:stretch; justify-content:center; position:relative; min-height:0; }
+    #disc-svg { width:100%; height:100%; }
+    #disc-caption { flex-shrink:0; text-align:center; font-family:'Space Mono',monospace; font-size:11px; color:var(--text-muted); letter-spacing:0.08em; min-height:24px; padding:3px 0 1px; }
+    #disc-replay { position:absolute; bottom:8px; right:8px; background:var(--surface2); border:1px solid var(--border); color:var(--accent3); font-family:'Space Mono',monospace; font-size:10px; padding:4px 10px; border-radius:6px; cursor:pointer; letter-spacing:0.08em; opacity:0; pointer-events:none; transition:opacity 0.4s; z-index:10; }
+    #disc-replay.visible { opacity:1; pointer-events:all; }
+    #disc-replay:hover { background:rgba(16,185,129,0.1); }
+  </style>
+  <div id="disc-container">
+    <div id="disc-header">
+      <div class="tag" style="color:var(--accent3);">Modelos Generativos · Parte 2 / 2</div>
+      <h2>Modelo <span style="color:var(--accent3)">Discriminativo</span>: aprende P(y | x)</h2>
+    </div>
+    <div id="disc-stage">
+      <svg id="disc-svg"></svg>
+      <button id="disc-replay">↺ Replay</button>
+    </div>
+    <div id="disc-caption">Inicializando...</div>
+  </div>
+  <script>
+  (function() {
+    'use strict';
+    const SLIDE_ID = 's4-disc';
+    let animationStarted = false;
+    let timeouts = [];
+    function defer(fn, ms) { const id = setTimeout(fn, ms); timeouts.push(id); return id; }
+    function clearAll() { timeouts.forEach(clearTimeout); timeouts = []; }
+
+    const seed = (function() { let s=42; return function(){ s=(s*16807+0)%2147483647; return (s-1)/2147483646; }; })();
+    function gaussian(mean, std) { const u=1-seed(),v=seed(); return mean+std*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+    const classA = Array.from({length:22}, ()=>({ x:gaussian(0.28,0.10), y:gaussian(0.38,0.10), cls:'A' }));
+    const classB = Array.from({length:22}, ()=>({ x:gaussian(0.65,0.10), y:gaussian(0.62,0.10), cls:'B' }));
+    const allPoints = [...classA, ...classB];
+    const testPoint = { x:0.47, y:0.48 };
+
+    function runAnimation() {
+      clearAll(); animationStarted = true;
+      document.getElementById('disc-replay').classList.remove('visible');
+      const stage = document.getElementById('disc-stage');
+      const W = stage.clientWidth || 800, H = stage.clientHeight || 420;
+      const svg = d3.select('#disc-svg').attr('viewBox',`0 0 ${W} ${H}`).attr('preserveAspectRatio','xMidYMid meet');
+      svg.selectAll('*').remove();
+
+      const defs = svg.append('defs');
+      const flt = defs.append('filter').attr('id','disc-glow').attr('x','-50%').attr('y','-50%').attr('width','200%').attr('height','200%');
+      flt.append('feGaussianBlur').attr('in','SourceGraphic').attr('stdDeviation','3').attr('result','blur');
+      const mg = flt.append('feMerge'); mg.append('feMergeNode').attr('in','blur'); mg.append('feMergeNode').attr('in','SourceGraphic');
+
+      const PAD=40, px=v=>PAD+v*(W-2*PAD), py=v=>PAD+(1-v)*(H-2*PAD);
+
+      // Axes
+      for (let v=0.2;v<1;v+=0.2) {
+        svg.append('line').attr('x1',px(v)).attr('y1',H-PAD+4).attr('x2',px(v)).attr('y2',H-PAD+10).attr('stroke','rgba(100,116,139,0.25)').attr('stroke-width',1);
+        svg.append('line').attr('x1',PAD-10).attr('y1',py(v)).attr('x2',PAD-4).attr('y2',py(v)).attr('stroke','rgba(100,116,139,0.25)').attr('stroke-width',1);
+      }
+      svg.append('line').attr('x1',PAD).attr('y1',H-PAD).attr('x2',W-PAD).attr('y2',H-PAD).attr('stroke','rgba(100,116,139,0.2)').attr('stroke-width',1);
+      svg.append('line').attr('x1',PAD).attr('y1',PAD).attr('x2',PAD).attr('y2',H-PAD).attr('stroke','rgba(100,116,139,0.2)').attr('stroke-width',1);
+      svg.append('text').attr('x',W/2).attr('y',H-4).attr('text-anchor','middle').attr('font-family','Space Mono,monospace').attr('font-size',9).attr('fill','rgba(100,116,139,0.5)').text('Feature 1 (x₁)');
+      svg.append('text').attr('x',10).attr('y',H/2).attr('text-anchor','middle').attr('font-family','Space Mono,monospace').attr('font-size',9).attr('fill','rgba(100,116,139,0.5)').attr('transform',`rotate(-90,10,${H/2})`).text('Feature 2 (x₂)');
+
+      // Legend
+      [[0.78,'#3b82f6','Clase A (azul)'],[0.92,'#ef4444','Clase B (rojo)']].forEach(([yy,color,lbl]) => {
+        svg.append('circle').attr('cx',W-PAD-120).attr('cy',py(yy)).attr('r',5).attr('fill',color).attr('opacity',0.85);
+        svg.append('text').attr('x',W-PAD-110).attr('y',py(yy)+4).attr('font-family','Space Mono,monospace').attr('font-size',9).attr('fill','rgba(148,163,184,0.7)').text(lbl);
+      });
+
+      const scatterG  = svg.append('g').attr('class','scatter');
+      const regionG   = svg.append('g').attr('class','regions').attr('opacity',0);
+      const boundaryG = svg.append('g').attr('class','boundary').attr('opacity',0);
+      const testG     = svg.append('g').attr('class','testpoints');
+      const caption   = document.getElementById('disc-caption');
+      function setCaption(t) { caption.textContent = t; }
+
+      setCaption('Paso 1 — Los mismos datos de entrenamiento...');
+
+      // STEP 1: scatter points
+      defer(() => {
+        allPoints.forEach((d,i) => {
+          defer(() => {
+            scatterG.append('circle').attr('cx',px(d.x)).attr('cy',py(d.y)).attr('r',0)
+              .attr('fill', d.cls==='A'?'#3b82f6':'#ef4444').attr('opacity',0.85).attr('filter','url(#disc-glow)')
+              .transition().duration(300).ease(d3.easeBackOut).attr('r',5);
+          }, i*35);
+        });
+      }, 400);
+
+      // STEP 2: boundary training animation
+      const T2 = 400 + allPoints.length*35 + 500;
+      defer(() => {
+        setCaption('Paso 2 — El modelo busca la frontera óptima entre clases (simulando entrenamiento)...');
+        boundaryG.attr('opacity',1);
+
+        // Epoch counter label
+        const epochLbl = boundaryG.append('text').attr('x',PAD+8).attr('y',PAD+18)
+          .attr('font-family','Space Mono,monospace').attr('font-size',10).attr('fill','rgba(16,185,129,0.6)').text('epoch: 0');
+
+        const bLine = boundaryG.append('line').attr('stroke','#10b981').attr('stroke-width',2.5).attr('stroke-linecap','round');
+        const wiggles = [
+          {x1:px(0.10),y1:py(0.65),x2:px(0.90),y2:py(0.35), ep:1},
+          {x1:px(0.12),y1:py(0.82),x2:px(0.88),y2:py(0.18), ep:2},
+          {x1:px(0.06),y1:py(0.78),x2:px(0.94),y2:py(0.22), ep:3},
+          {x1:px(0.05),y1:py(0.72),x2:px(0.95),y2:py(0.28), ep:4},
+          {x1:px(0.05),y1:py(0.95),x2:px(0.95),y2:py(0.05), ep:'✓ convergido'},
+        ];
+
+        bLine.attr('x1',wiggles[0].x1).attr('y1',wiggles[0].y1).attr('x2',wiggles[0].x2).attr('y2',wiggles[0].y2).attr('opacity',0)
+          .transition().duration(400).attr('opacity',1);
+        epochLbl.text('epoch: 1');
+
+        let chain = bLine.transition().duration(350).ease(d3.easeLinear).attr('x1',wiggles[1].x1).attr('y1',wiggles[1].y1).attr('x2',wiggles[1].x2).attr('y2',wiggles[1].y2);
+        wiggles.slice(2).forEach((w,i) => {
+          chain = chain.transition().duration(350).ease(d3.easeLinear).attr('x1',w.x1).attr('y1',w.y1).attr('x2',w.x2).attr('y2',w.y2)
+            .on('start', () => epochLbl.text('epoch: '+w.ep));
+        });
+
+        // After settling: show regions + labels
+        defer(() => {
+          setCaption('Paso 2 — La frontera separa el espacio: región A y región B...');
+
+          regionG.append('polygon')
+            .attr('points',`${px(0)},${py(1)} ${px(0.05)},${py(0.95)} ${px(0.95)},${py(0.05)} ${px(0)},${py(0)}`)
+            .attr('fill','#3b82f6').attr('fill-opacity',0).transition().duration(700).attr('fill-opacity',0.07);
+          regionG.append('polygon')
+            .attr('points',`${px(0.05)},${py(0.95)} ${px(1)},${py(1)} ${px(1)},${py(0)} ${px(0.95)},${py(0.05)}`)
+            .attr('fill','#ef4444').attr('fill-opacity',0).transition().duration(700).attr('fill-opacity',0.07);
+          regionG.transition().duration(600).attr('opacity',1);
+
+          boundaryG.append('text').attr('x',px(0.10)).attr('y',py(0.14))
+            .attr('font-family','Space Mono,monospace').attr('font-size',11).attr('fill','#3b82f6').attr('font-weight','bold').attr('opacity',0)
+            .text('Región A').transition().duration(500).attr('opacity',0.8);
+          boundaryG.append('text').attr('x',px(0.68)).attr('y',py(0.86))
+            .attr('font-family','Space Mono,monospace').attr('font-size',11).attr('fill','#ef4444').attr('font-weight','bold').attr('opacity',0)
+            .text('Región B').transition().duration(500).attr('opacity',0.8);
+
+          // Boundary label
+          boundaryG.append('text').attr('x',(px(0.05)+px(0.95))/2+10).attr('y',(py(0.95)+py(0.05))/2-10)
+            .attr('text-anchor','middle').attr('font-family','Space Mono,monospace').attr('font-size',9)
+            .attr('fill','#10b981').attr('opacity',0).attr('transform',`rotate(-45,${(px(0.05)+px(0.95))/2+10},${(py(0.95)+py(0.05))/2-10})`)
+            .text('frontera de decisión').transition().delay(300).duration(500).attr('opacity',0.7);
+        }, wiggles.length * 350 + 200);
+      }, T2);
+
+      // STEP 3: test point
+      const T3 = T2 + wiggles.length * 350 + 200 + 1400;
+      defer(() => {
+        setCaption('Paso 3 — Nuevo punto: ¿a qué lado de la frontera cae?');
+        const tp = testG.append('circle').attr('cx',px(testPoint.x)).attr('cy',py(testPoint.y)).attr('r',0)
+          .attr('fill','#0f172a').attr('stroke','#e2e8f0').attr('stroke-width',2.5);
+        tp.transition().duration(400).ease(d3.easeBackOut).attr('r',8);
+        const qmark = testG.append('text').attr('x',px(testPoint.x)).attr('y',py(testPoint.y)+4)
+          .attr('text-anchor','middle').attr('font-family','Syne,sans-serif').attr('font-size',10).attr('fill','#e2e8f0').attr('opacity',0).text('?');
+        qmark.transition().delay(300).duration(300).attr('opacity',1);
+
+        defer(() => {
+          // Perpendicular drop line to boundary
+          // Boundary: line from (0.05,0.95)→(0.95,0.05); parametric midpoint at t=0.5 → (0.5,0.5)
+          // Closest point on line to testPoint — simplified: project onto line direction
+          const lx1=0.05,ly1=0.95,lx2=0.95,ly2=0.05;
+          const dx=lx2-lx1, dy=ly2-ly1, lenSq=dx*dx+dy*dy;
+          const t=Math.min(1,Math.max(0,((testPoint.x-lx1)*dx+(testPoint.y-ly1)*dy)/lenSq));
+          const projX=lx1+t*dx, projY=ly1+t*dy;
+
+          testG.append('line')
+            .attr('x1',px(testPoint.x)).attr('y1',py(testPoint.y))
+            .attr('x2',px(testPoint.x)).attr('y2',py(testPoint.y))
+            .attr('stroke','rgba(255,255,255,0.4)').attr('stroke-width',1).attr('stroke-dasharray','4,3')
+            .transition().duration(600).attr('x2',px(projX)).attr('y2',py(projY));
+
+          defer(() => {
+            const side = (testPoint.y + testPoint.x - 1) > 0 ? 'A' : 'B';
+            const winColor = side === 'A' ? '#3b82f6' : '#ef4444';
+            qmark.transition().duration(300).attr('opacity',0);
+            tp.transition().duration(500).attr('fill',winColor).attr('stroke',winColor);
+            testG.append('text').attr('x',px(testPoint.x)).attr('y',py(testPoint.y)+4)
+              .attr('text-anchor','middle').attr('font-family','Syne,sans-serif').attr('font-size',10).attr('fill','#fff').attr('opacity',0)
+              .text('✓').transition().duration(400).attr('opacity',1);
+            testG.append('text').attr('x',px(testPoint.x)+14).attr('y',py(testPoint.y)-12)
+              .attr('fill',winColor).attr('font-family','Space Mono,monospace').attr('font-size',12).attr('font-weight','bold').attr('opacity',0)
+              .text('→ Clase '+side).transition().duration(500).attr('opacity',1);
+            setCaption('Resultado: se evalúa directamente P(y | x) — sin modelar las distribuciones individuales.');
+            defer(() => { document.getElementById('disc-replay').classList.add('visible'); }, 800);
+          }, 700);
+        }, 600);
+      }, T3);
+    }
+
+    const slideEl = document.getElementById(SLIDE_ID);
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class') {
+          const isActive = slideEl.classList.contains('active');
+          if (isActive && !animationStarted) runAnimation();
+          if (!isActive) animationStarted = false;
+        }
+      }
+    });
+    observer.observe(slideEl, { attributes: true });
+    document.getElementById('disc-replay').addEventListener('click', () => { animationStarted=false; if(slideEl.classList.contains('active')) runAnimation(); });
+    if (slideEl.classList.contains('active')) runAnimation();
+  })();
+  </script>
+</div>
+
+<!-- SLIDE 5: MODELO GENERATIVO — Animación D3 (REMOVED) -->
+<div class="slide-removed" id="s4-gen">
+  <style>
+    #gen-container { display:flex; flex-direction:column; width:100%; height:100%; position:relative; }
+    #gen-header { flex-shrink:0; margin-bottom:4px; }
+    #gen-stage { flex:1; display:flex; align-items:stretch; justify-content:center; position:relative; min-height:0; }
+    #gen-svg { width:100%; height:100%; }
+    #gen-caption { flex-shrink:0; text-align:center; font-family:'Space Mono',monospace; font-size:11px; color:var(--text-muted); letter-spacing:0.08em; min-height:24px; padding:3px 0 1px; }
+    #gen-replay { position:absolute; bottom:8px; right:8px; background:var(--surface2); border:1px solid var(--border); color:var(--accent); font-family:'Space Mono',monospace; font-size:10px; padding:4px 10px; border-radius:6px; cursor:pointer; letter-spacing:0.08em; opacity:0; pointer-events:none; transition:opacity 0.4s; z-index:10; }
+    #gen-replay.visible { opacity:1; pointer-events:all; }
+    #gen-replay:hover { background:rgba(0,212,255,0.1); }
+  </style>
+  <div id="gen-container">
+    <div id="gen-header">
+      <div class="tag">Modelos Generativos · Parte 1 / 2</div>
+      <h2>Modelo <span style="color:var(--accent)">Generativo</span>: aprende P(x | y)</h2>
+    </div>
+    <div id="gen-stage">
+      <svg id="gen-svg"></svg>
+      <button id="gen-replay">↺ Replay</button>
+    </div>
+    <div id="gen-caption">Inicializando...</div>
+  </div>
+  <script>
+  (function() {
+    'use strict';
+    const SLIDE_ID = 's4-gen';
+    let animationStarted = false;
+    let timeouts = [];
+    function defer(fn, ms) { const id = setTimeout(fn, ms); timeouts.push(id); return id; }
+    function clearAll() { timeouts.forEach(clearTimeout); timeouts = []; }
+
+    const seed = (function() { let s=42; return function(){ s=(s*16807+0)%2147483647; return (s-1)/2147483646; }; })();
+    function gaussian(mean, std) { const u=1-seed(),v=seed(); return mean+std*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+    const classA = Array.from({length:22}, ()=>({ x:gaussian(0.28,0.10), y:gaussian(0.38,0.10), cls:'A' }));
+    const classB = Array.from({length:22}, ()=>({ x:gaussian(0.65,0.10), y:gaussian(0.62,0.10), cls:'B' }));
+    const allPoints = [...classA, ...classB];
+    const testPoint = { x:0.47, y:0.52 };
+    const ellipseA  = { cx:0.28, cy:0.38, rx:0.13, ry:0.13 };
+    const ellipseB  = { cx:0.65, cy:0.62, rx:0.13, ry:0.13 };
+
+    function runAnimation() {
+      clearAll(); animationStarted = true;
+      document.getElementById('gen-replay').classList.remove('visible');
+      const stage = document.getElementById('gen-stage');
+      const W = stage.clientWidth || 800, H = stage.clientHeight || 420;
+      const svg = d3.select('#gen-svg').attr('viewBox',`0 0 ${W} ${H}`).attr('preserveAspectRatio','xMidYMid meet');
+      svg.selectAll('*').remove();
+
+      const defs = svg.append('defs');
+      const flt = defs.append('filter').attr('id','gen-glow').attr('x','-50%').attr('y','-50%').attr('width','200%').attr('height','200%');
+      flt.append('feGaussianBlur').attr('in','SourceGraphic').attr('stdDeviation','3').attr('result','blur');
+      const mg = flt.append('feMerge'); mg.append('feMergeNode').attr('in','blur'); mg.append('feMergeNode').attr('in','SourceGraphic');
+
+      const PAD=40, px=v=>PAD+v*(W-2*PAD), py=v=>PAD+(1-v)*(H-2*PAD);
+
+      // Axes
+      for (let v=0.2;v<1;v+=0.2) {
+        svg.append('line').attr('x1',px(v)).attr('y1',H-PAD+4).attr('x2',px(v)).attr('y2',H-PAD+10).attr('stroke','rgba(100,116,139,0.25)').attr('stroke-width',1);
+        svg.append('line').attr('x1',PAD-10).attr('y1',py(v)).attr('x2',PAD-4).attr('y2',py(v)).attr('stroke','rgba(100,116,139,0.25)').attr('stroke-width',1);
+      }
+      svg.append('line').attr('x1',PAD).attr('y1',H-PAD).attr('x2',W-PAD).attr('y2',H-PAD).attr('stroke','rgba(100,116,139,0.2)').attr('stroke-width',1);
+      svg.append('line').attr('x1',PAD).attr('y1',PAD).attr('x2',PAD).attr('y2',H-PAD).attr('stroke','rgba(100,116,139,0.2)').attr('stroke-width',1);
+      // Axis labels
+      svg.append('text').attr('x',W/2).attr('y',H-4).attr('text-anchor','middle').attr('font-family','Space Mono,monospace').attr('font-size',9).attr('fill','rgba(100,116,139,0.5)').text('Feature 1 (x₁)');
+      svg.append('text').attr('x',10).attr('y',H/2).attr('text-anchor','middle').attr('font-family','Space Mono,monospace').attr('font-size',9).attr('fill','rgba(100,116,139,0.5)').attr('transform',`rotate(-90,10,${H/2})`).text('Feature 2 (x₂)');
+
+      // Class legend
+      [[0.78,'#3b82f6','Clase A (azul)'],[0.92,'#ef4444','Clase B (rojo)']].forEach(([yy,color,lbl]) => {
+        svg.append('circle').attr('cx',W-PAD-120).attr('cy',py(yy)).attr('r',5).attr('fill',color).attr('opacity',0.85);
+        svg.append('text').attr('x',W-PAD-110).attr('y',py(yy)+4).attr('font-family','Space Mono,monospace').attr('font-size',9).attr('fill','rgba(148,163,184,0.7)').text(lbl);
+      });
+
+      const scatterG = svg.append('g').attr('class','scatter');
+      const ellipseG = svg.append('g').attr('class','ellipses').attr('opacity',0);
+      const testG    = svg.append('g').attr('class','testpoints');
+      const caption  = document.getElementById('gen-caption');
+      function setCaption(t) { caption.textContent = t; }
+
+      setCaption('Paso 1 — Datos de entrenamiento: dos clases en el espacio de características...');
+
+      // STEP 1: scatter points
+      defer(() => {
+        allPoints.forEach((d,i) => {
+          defer(() => {
+            scatterG.append('circle').attr('cx',px(d.x)).attr('cy',py(d.y)).attr('r',0)
+              .attr('fill', d.cls==='A'?'#3b82f6':'#ef4444').attr('opacity',0.85).attr('filter','url(#gen-glow)')
+              .transition().duration(300).ease(d3.easeBackOut).attr('r',5);
+          }, i*35);
+        });
+      }, 400);
+
+      // STEP 2: ellipses expand
+      const T2 = 400 + allPoints.length*35 + 500;
+      defer(() => {
+        setCaption('Paso 2 — El modelo aprende la distribución P(x | y) de cada clase...');
+        // Outer ellipses
+        [[ellipseA,'#3b82f6',0.10],[ellipseB,'#ef4444',0.10]].forEach(([e,color,alpha]) => {
+          ellipseG.append('ellipse').attr('cx',px(e.cx)).attr('cy',py(e.cy)).attr('rx',0).attr('ry',0)
+            .attr('fill',color).attr('fill-opacity',alpha).attr('stroke',color).attr('stroke-opacity',0.35).attr('stroke-width',1.5)
+            .transition().duration(900).ease(d3.easeElasticOut.period(0.5))
+            .attr('rx',(e.rx*2.5)*(W-2*PAD)).attr('ry',(e.ry*2.5)*(H-2*PAD));
+        });
+        // Inner ellipses
+        [[ellipseA,'#3b82f6',0.15],[ellipseB,'#ef4444',0.15]].forEach(([e,color,alpha]) => {
+          ellipseG.append('ellipse').attr('cx',px(e.cx)).attr('cy',py(e.cy)).attr('rx',0).attr('ry',0)
+            .attr('fill',color).attr('fill-opacity',alpha).attr('stroke',color).attr('stroke-opacity',0.55).attr('stroke-width',1)
+            .transition().duration(900).ease(d3.easeElasticOut.period(0.5))
+            .attr('rx',(e.rx*1.5)*(W-2*PAD)).attr('ry',(e.ry*1.5)*(H-2*PAD));
+        });
+        // Mean dots
+        [[ellipseA,'#3b82f6'],[ellipseB,'#ef4444']].forEach(([e,color]) => {
+          ellipseG.append('circle').attr('cx',px(e.cx)).attr('cy',py(e.cy)).attr('r',0).attr('fill',color).attr('opacity',0.9)
+            .transition().delay(500).duration(400).attr('r',5);
+          ellipseG.append('text').attr('x',px(e.cx)+8).attr('y',py(e.cy)-8)
+            .attr('font-family','Space Mono,monospace').attr('font-size',9).attr('fill',color).attr('opacity',0)
+            .text('μ').transition().delay(700).duration(400).attr('opacity',0.8);
+        });
+        // Sigma labels
+        [[ellipseA,'#3b82f6'],[ellipseB,'#ef4444']].forEach(([e,color]) => {
+          ellipseG.append('text').attr('x',px(e.cx+(e.rx*2.5)*0.9)).attr('y',py(e.cy))
+            .attr('font-family','Space Mono,monospace').attr('font-size',9).attr('fill',color).attr('opacity',0)
+            .text('σ').transition().delay(900).duration(400).attr('opacity',0.6);
+        });
+        ellipseG.transition().duration(600).attr('opacity',1);
+      }, T2);
+
+      // STEP 3: test point + lines
+      const T3 = T2 + 1600;
+      defer(() => {
+        setCaption('Paso 3 — Nuevo punto: calculamos P(x | Clase A) y P(x | Clase B)...');
+        const tp = testG.append('circle').attr('cx',px(testPoint.x)).attr('cy',py(testPoint.y)).attr('r',0)
+          .attr('fill','#0f172a').attr('stroke','#e2e8f0').attr('stroke-width',2.5);
+        tp.transition().duration(400).ease(d3.easeBackOut).attr('r',8);
+        // Question mark
+        const qmark = testG.append('text').attr('x',px(testPoint.x)).attr('y',py(testPoint.y)+4)
+          .attr('text-anchor','middle').attr('font-family','Syne,sans-serif').attr('font-size',10).attr('fill','#e2e8f0').attr('opacity',0).text('?');
+        qmark.transition().delay(300).duration(300).attr('opacity',1);
+
+        defer(() => {
+          setCaption('Paso 3 — Midiendo distancia a cada distribución...');
+          [[ellipseA,'#3b82f6'],[ellipseB,'#ef4444']].forEach(([e,color]) => {
+            testG.append('line')
+              .attr('x1',px(testPoint.x)).attr('y1',py(testPoint.y))
+              .attr('x2',px(testPoint.x)).attr('y2',py(testPoint.y))
+              .attr('stroke',color).attr('stroke-width',1.5).attr('stroke-dasharray','5,3').attr('opacity',0.75)
+              .transition().duration(700).attr('x2',px(e.cx)).attr('y2',py(e.cy));
+          });
+          defer(() => {
+            const dist = (e) => Math.hypot(testPoint.x-e.cx, testPoint.y-e.cy);
+            const isA  = dist(ellipseA) < dist(ellipseB);
+            const winColor = isA ? '#3b82f6' : '#ef4444';
+            const wLabel   = isA ? 'Clase A' : 'Clase B';
+            qmark.transition().duration(300).attr('opacity',0);
+            tp.transition().duration(500).attr('fill',winColor).attr('stroke',winColor);
+            // checkmark
+            testG.append('text').attr('x',px(testPoint.x)).attr('y',py(testPoint.y)+4)
+              .attr('text-anchor','middle').attr('font-family','Syne,sans-serif').attr('font-size',10).attr('fill','#fff').attr('opacity',0)
+              .text('✓').transition().duration(400).attr('opacity',1);
+            // verdict label
+            testG.append('text').attr('x',px(testPoint.x)+14).attr('y',py(testPoint.y)-12)
+              .attr('fill',winColor).attr('font-family','Space Mono,monospace').attr('font-size',12).attr('font-weight','bold').attr('opacity',0)
+              .text('→ P('+wLabel+') mayor').transition().duration(500).attr('opacity',1);
+            setCaption('Resultado: el punto se asigna a la clase con mayor verosimilitud P(x | y) · P(y)');
+            defer(() => {
+              document.getElementById('gen-replay').classList.add('visible');
+            }, 800);
+          }, 800);
+        }, 600);
+      }, T3);
+    }
+
+    const slideEl = document.getElementById(SLIDE_ID);
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === 'class') {
+          const isActive = slideEl.classList.contains('active');
+          if (isActive && !animationStarted) runAnimation();
+          if (!isActive) animationStarted = false;
+        }
+      }
+    });
+    observer.observe(slideEl, { attributes: true });
+    document.getElementById('gen-replay').addEventListener('click', () => { animationStarted=false; if(slideEl.classList.contains('active')) runAnimation(); });
+    if (slideEl.classList.contains('active')) runAnimation();
+  })();
+  </script>
+</div>
+
+
+<!-- SLIDE 6: DISCRIMINATIVO vs GENERATIVO (REMOVED) -->
+<div class="slide-removed" id="s4">
+  <div class="tag">Modelos Generativos</div>
+  <h2>Discriminativo vs. Generativo</h2>
+  <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:28px;flex:1;align-items:center;margin-top:16px;">
+
+    <!-- Columna izquierda: Discriminativo -->
+    <div>
+      <div class="card" style="margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#ef4444;"></div>
+          <h3 style="margin:0;color:#f87171;">Discriminativo</h3>
+        </div>
+        <p style="margin-bottom:12px;">Aprende a distinguir entre clases buscando <strong style="color:var(--text);">diferencias clave</strong>. Ignora información redundante.</p>
+        <div class="highlight" style="border-color:#ef4444;background:rgba(239,68,68,0.05);">
+          <p style="font-size:13px;">💡 <em>"¡Mira! Los perros tienen collar y los gatos no. Ignoremos todo lo demás."</em></p>
+        </div>
+        <p style="font-size:13px;margin-top:12px;color:var(--text-muted);">Ejemplos: CNN clasificadora, SVM, regresión logística.</p>
+      </div>
+      <div class="formula" style="font-size:13px;padding:12px 16px;">
+        P(Y|X) → Solo la frontera de decisión
+      </div>
+    </div>
+
+    <!-- Centro: imagen -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+      <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border);background:#fff;box-shadow:0 0 32px rgba(0,212,255,0.08);width:260px;">
+        <img src="../images/gato-perro.jpg" alt="Gato y perro — clasificación" style="width:100%;display:block;object-fit:cover;">
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase;">¿Gato o Perro?</span>
+        <div style="display:flex;gap:8px;">
+          <span class="pill pill-cyan" style="font-size:10px;">🐱 Gato</span>
+          <span class="pill pill-amber" style="font-size:10px;">🐶 Perro</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna derecha: Generativo -->
+    <div>
+      <div class="card green" style="margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--accent3);"></div>
+          <h3 style="margin:0;color:var(--accent3);">Generativo</h3>
+        </div>
+        <p style="margin-bottom:12px;">Aprende la <strong style="color:var(--text);">distribución completa</strong> de los datos. Puede generar nuevo contenido.</p>
+        <div class="highlight green">
+          <p style="font-size:13px;">💡 <em>"Aprendamos TODO sobre perros — textos, imágenes, características — para poder describir uno desde cero."</em></p>
+        </div>
+        <p style="font-size:13px;margin-top:12px;color:var(--text-muted);">Ejemplos: GPT, LLaMA, DALL-E, Stable Diffusion.</p>
+      </div>
+      <div class="formula" style="font-size:13px;padding:12px 16px;">
+        P(X) → Aprende la distribución completa
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SLIDE 7: QUE ES IA GENERATIVA (REMOVED) -->
+<div class="slide-removed" id="s5">
+  <div class="tag">Modelos Generativos</div>
+  <h2>¿Qué es la IA Generativa?</h2>
+  <div class="two-col" style="align-items:center;">
+    <div>
+      <p style="margin-bottom:20px;">La IA generativa crea <strong style="color:var(--accent);">nuevo contenido</strong> aprendiendo de contenido existente. El proceso de aprendizaje se llama <strong style="color:var(--text);">entrenamiento</strong> y produce un <strong style="color:var(--accent2);">modelo probabilístico</strong>.</p>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <strong>Entrenamiento masivo</strong>
+            <span>Se expone al modelo a enormes corpus de datos (texto, imágenes, código...)</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <strong>Modelo probabilístico</strong>
+            <span>El modelo aprende qué secuencias son más/menos probables</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <strong>Prompt → Predicción</strong>
+            <span>Dada una instrucción, predice cuál sería una respuesta esperada</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <h3>Tipos de modelos generativos</h3>
+        <table class="compare-table" style="width:100%;">
+          <tr><th>Modalidad</th><th>Modelos</th></tr>
+          <tr><td>📝 Texto</td><td><code>GPT, LLaMA, PaLM</code></td></tr>
+          <tr><td>🖼️ Imagen</td><td><code>DALL-E, Stable Diffusion</code></td></tr>
+          <tr><td>🎵 Audio</td><td><code>AudioLM, MusicGen</code></td></tr>
+          <tr><td>🎬 Video</td><td><code>Sora, Runway</code></td></tr>
+          <tr><td>💻 Código</td><td><code>Codex, DeepSeek-Coder</code></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: SECTION BREAK - LLMs -->
+<div class="slide slide-section" id="s6">
+  <div class="section-num">02</div>
+  <div style="position:relative;z-index:1;padding-top:40px;">
+    <div class="tag">Sección 02</div>
+    <h1 style="font-size:clamp(48px,6vw,80px);">Large Language<br><span class="accent2">Models</span></h1>
+    <p class="lead">Cómo funcionan los LLMs. In-context learning.<br>Zero-shot, few-shot y prompt engineering.</p>
+    <!-- Mini timeline of LLM evolution -->
+    <div style="display:flex;gap:0;margin-top:32px;max-width:720px;">
+      <div style="text-align:center;flex:1;position:relative;">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--accent);margin:0 auto 6px;box-shadow:0 0 8px var(--accent);"></div>
+        <div style="font-family:Space Mono,monospace;font-size:9px;color:var(--accent);">2017</div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">Transformer</div>
+        <div style="position:absolute;top:4px;left:50%;width:100%;height:1px;background:linear-gradient(90deg,var(--accent),rgba(0,212,255,0.3));z-index:-1;"></div>
+      </div>
+      <div style="text-align:center;flex:1;position:relative;">
+        <div style="width:10px;height:10px;border-radius:50%;background:#a78bfa;margin:0 auto 6px;box-shadow:0 0 8px #a78bfa;"></div>
+        <div style="font-family:Space Mono,monospace;font-size:9px;color:#a78bfa;">2020</div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">GPT-3</div>
+        <div style="position:absolute;top:4px;left:50%;width:100%;height:1px;background:linear-gradient(90deg,rgba(167,139,250,0.4),rgba(16,185,129,0.3));z-index:-1;"></div>
+      </div>
+      <div style="text-align:center;flex:1;position:relative;">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--accent3);margin:0 auto 6px;box-shadow:0 0 8px var(--accent3);"></div>
+        <div style="font-family:Space Mono,monospace;font-size:9px;color:var(--accent3);">2022</div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">ChatGPT</div>
+        <div style="position:absolute;top:4px;left:50%;width:100%;height:1px;background:linear-gradient(90deg,rgba(16,185,129,0.4),rgba(245,158,11,0.3));z-index:-1;"></div>
+      </div>
+      <div style="text-align:center;flex:1;position:relative;">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--accent4);margin:0 auto 6px;box-shadow:0 0 8px var(--accent4);"></div>
+        <div style="font-family:Space Mono,monospace;font-size:9px;color:var(--accent4);">2023</div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">GPT-4, LLaMA</div>
+        <div style="position:absolute;top:4px;left:50%;width:100%;height:1px;background:linear-gradient(90deg,rgba(245,158,11,0.4),rgba(0,212,255,0.3));z-index:-1;"></div>
+      </div>
+      <div style="text-align:center;flex:1;">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--accent);margin:0 auto 6px;box-shadow:0 0 8px var(--accent);"></div>
+        <div style="font-family:Space Mono,monospace;font-size:9px;color:var(--accent);">2025+</div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">Agentes, MCP</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9: MODELOS DE LENGUAJE — NEXT TOKEN PREDICTION -->
+<div class="slide slide-content" id="s7" style="padding:20px 28px;">
+  <div class="tag">LLMs</div>
+  <h2 style="margin-bottom:10px;">¿Cómo predice el siguiente token un LLM?</h2>
+
+  <div style="display:flex;gap:24px;align-items:flex-start;height:calc(100% - 80px);">
+
+    <!-- LEFT PANEL -->
+    <div style="flex:1;display:flex;flex-direction:column;gap:12px;">
+      <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:2px;">Contexto (secuencia de entrada)</div>
+
+      <!-- Sentence display -->
+      <div id="s7-sentence" style="
+        background:rgba(2,132,199,0.04);
+        border:1px solid rgba(2,132,199,0.18);
+        border-radius:10px;
+        padding:18px 20px;
+        font-size:18px;
+        font-weight:600;
+        letter-spacing:.02em;
+        min-height:66px;
+        display:flex;
+        flex-wrap:wrap;
+        gap:6px;
+        align-items:center;
+      "></div>
+
+      <!-- Formula -->
+      <div style="text-align:center;padding:6px 0 4px;font-size:13px;color:var(--text-muted);">
+        P(w<sub>t</sub> | w<sub>1</sub>, …, w<sub>t-1</sub>)
+      </div>
+
+      <!-- Step label -->
+      <div id="s7-step-label" style="
+        font-size:10px;
+        letter-spacing:.06em;
+        text-transform:uppercase;
+        color:var(--accent);
+        min-height:16px;
+        text-align:center;
+      "></div>
+
+      <!-- Controls -->
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px;">
+        <button id="s7-btn-run" style="
+          background:linear-gradient(135deg,#3b82f6,#2563eb);
+          color:#fff;border:none;border-radius:8px;
+          padding:9px 18px;font-size:13px;font-weight:600;
+          cursor:pointer;letter-spacing:.04em;
+          box-shadow:0 2px 12px rgba(59,130,246,.35);
+          transition:transform .15s,box-shadow .15s;
+        ">▶ Siguiente predicción</button>
+
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:11px;color:var(--text-muted);white-space:nowrap;">🌡 Temperatura:</span>
+          <input type="range" id="s7-temp" min="1" max="30" value="5" style="flex:1;accent-color:#3b82f6;">
+          <span id="s7-temp-val" style="font-size:11px;color:var(--accent);width:28px;text-align:right;">0.5</span>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);text-align:center;">
+          Temperatura baja → distribución más pronunciada
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div style="flex:1.3;display:flex;flex-direction:column;">
+      <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">
+        Distribución de probabilidad P(siguiente token | contexto)
+      </div>
+      <div id="s7-chart" style="flex:1;min-height:220px;"></div>
+      <div id="s7-sample-label" style="
+        font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+        color:#15803d;text-align:center;min-height:18px;margin-top:4px;
+      "></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  if (document.getElementById('s7-init-done')) return;
+  var marker = document.createElement('span');
+  marker.id = 's7-init-done';
+  document.body.appendChild(marker);
+
+  // ── Configuration ──────────────────────────────────────────────
+  var CONTEXTS = [
+    { sentence: ['Lima', 'es', 'la', 'capital', 'de'], candidates: [
+        { word: 'Perú',      base: 0.62 },
+        { word: 'España',    base: 0.14 },
+        { word: 'México',    base: 0.10 },
+        { word: 'Colombia',  base: 0.08 },
+        { word: 'Chile',     base: 0.06 },
+      ]
+    },
+    { sentence: ['El', 'modelo', 'predice', 'la', 'siguiente'], candidates: [
+        { word: 'palabra',   base: 0.55 },
+        { word: 'oración',   base: 0.18 },
+        { word: 'respuesta', base: 0.13 },
+        { word: 'token',     base: 0.09 },
+        { word: 'frase',     base: 0.05 },
+      ]
+    },
+    { sentence: ['Los', 'transformers', 'usan', 'atención', 'de'], candidates: [
+        { word: 'múltiples', base: 0.57 },
+        { word: 'cabezas',   base: 0.19 },
+        { word: 'capas',     base: 0.11 },
+        { word: 'pesos',     base: 0.07 },
+        { word: 'tokens',    base: 0.06 },
+      ]
+    },
+  ];
+
+  var COLORS = {
+    bar:      '#3b82f6',
+    selected: '#16a34a',
+    text:     'rgba(15,23,42,0.85)',
+    axis:     'rgba(15,23,42,0.25)',
+    grid:     'rgba(15,23,42,0.10)',
+  };
+
+  // ── State ──────────────────────────────────────────────────────
+  var ctxIdx      = 0;
+  var animRunning = false;
+  var hasRun      = false;
+
+  // ── DOM refs ───────────────────────────────────────────────────
+  var sentenceEl    = document.getElementById('s7-sentence');
+  var stepLabelEl   = document.getElementById('s7-step-label');
+  var sampleLabelEl = document.getElementById('s7-sample-label');
+  var chartEl       = document.getElementById('s7-chart');
+  var btnRun        = document.getElementById('s7-btn-run');
+  var tempSlider    = document.getElementById('s7-temp');
+  var tempValEl     = document.getElementById('s7-temp-val');
+
+  // ── D3 setup ───────────────────────────────────────────────────
+  var W = 420, H = 250;
+  var margin = { top: 8, right: 24, bottom: 32, left: 84 };
+  var iW = W - margin.left - margin.right;
+  var iH = H - margin.top  - margin.bottom;
+
+  var svg = d3.select(chartEl)
+    .append('svg')
+    .attr('viewBox', '0 0 ' + W + ' ' + H)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .style('width', '100%')
+    .style('height', 'auto');
+
+  var g = svg.append('g')
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+  var xScale = d3.scaleLinear().domain([0, 1]).range([0, iW]);
+  var yScale = d3.scaleBand().padding(0.30).range([0, iH]);
+
+  var xAxisG = g.append('g')
+    .attr('transform', 'translate(0,' + iH + ')')
+    .attr('class', 's7xaxis');
+
+  var yAxisG = g.append('g').attr('class', 's7yaxis');
+  var gridG  = g.append('g');
+  var barsG  = g.append('g');
+  var labelsG= g.append('g');
+
+  function styleAxes() {
+    svg.selectAll('.s7xaxis .domain,.s7xaxis .tick line').attr('stroke', COLORS.axis);
+    svg.selectAll('.s7xaxis .tick text').attr('fill', COLORS.text).style('font-size','10px');
+    svg.selectAll('.s7yaxis .domain').attr('stroke','none');
+    svg.selectAll('.s7yaxis .tick line').attr('stroke','none');
+    svg.selectAll('.s7yaxis .tick text').attr('fill', COLORS.text).style('font-size','13px').style('font-weight','600');
+  }
+
+  function getTemp() {
+    return parseInt(tempSlider.value, 10) / 10;
+  }
+
+  function softmax(candidates, temp) {
+    var logits = candidates.map(function(c){ return Math.log(c.base + 1e-9) / temp; });
+    var maxL   = Math.max.apply(null, logits);
+    var exps   = logits.map(function(l){ return Math.exp(l - maxL); });
+    var sum    = exps.reduce(function(a,b){ return a+b; }, 0);
+    return exps.map(function(e){ return e / sum; });
+  }
+
+  function initChart(candidates) {
+    yScale.domain(candidates.map(function(c){ return c.word; }));
+    yAxisG.call(d3.axisLeft(yScale).tickSize(0));
+    xAxisG.call(d3.axisBottom(xScale).ticks(5).tickFormat(d3.format('.0%')));
+
+    gridG.selectAll('line').remove();
+    gridG.selectAll('line')
+      .data(xScale.ticks(5))
+      .join('line')
+      .attr('x1', function(d){ return xScale(d); })
+      .attr('x2', function(d){ return xScale(d); })
+      .attr('y1', 0).attr('y2', iH)
+      .attr('stroke', COLORS.grid)
+      .attr('stroke-dasharray','3,3');
+
+    barsG.selectAll('rect').remove();
+    barsG.selectAll('rect')
+      .data(candidates)
+      .join('rect')
+      .attr('y',      function(c){ return yScale(c.word); })
+      .attr('x', 0).attr('height', yScale.bandwidth()).attr('width', 0)
+      .attr('rx', 4).attr('fill', COLORS.bar);
+
+    labelsG.selectAll('text').remove();
+    labelsG.selectAll('text')
+      .data(candidates)
+      .join('text')
+      .attr('y', function(c){ return yScale(c.word) + yScale.bandwidth()/2 + 4; })
+      .attr('x', 4).attr('fill','transparent')
+      .style('font-size','11px').style('font-weight','600').text('');
+
+    styleAxes();
+  }
+
+  function animateBars(candidates, probs, onDone) {
+    barsG.selectAll('rect')
+      .data(candidates)
+      .transition().duration(900).ease(d3.easeCubicOut)
+      .attr('width', function(_,i){ return xScale(probs[i]); });
+
+    labelsG.selectAll('text')
+      .data(candidates)
+      .transition().duration(900).ease(d3.easeCubicOut)
+      .attr('x', function(_,i){ return xScale(probs[i]) + 6; })
+      .attr('fill', COLORS.text)
+      .tween('text', function(d, i) {
+        var node  = this;
+        var interp= d3.interpolateNumber(0, probs[i]);
+        return function(t){ node.textContent = d3.format('.1%')(interp(t)); };
+      });
+
+    setTimeout(onDone, 950);
+  }
+
+  function highlightBar(idx) {
+    barsG.selectAll('rect')
+      .transition().duration(300)
+      .attr('fill', function(_,i){ return i === idx ? COLORS.selected : COLORS.bar; });
+    yAxisG.selectAll('.tick text')
+      .transition().duration(300)
+      .attr('fill', function(_,i){ return i === idx ? COLORS.selected : COLORS.text; });
+  }
+
+  function renderSentence(words, appended) {
+    sentenceEl.innerHTML = '';
+    words.forEach(function(w) {
+      var span = document.createElement('span');
+      span.textContent = w;
+      span.style.cssText = 'background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.35);border-radius:5px;padding:2px 8px;color:rgba(15,23,42,0.9);';
+      sentenceEl.appendChild(span);
+    });
+    if (appended) {
+      var span = document.createElement('span');
+      span.textContent = appended;
+      span.style.cssText = 'background:rgba(22,163,74,0.12);border:1px solid rgba(22,163,74,0.50);border-radius:5px;padding:2px 8px;color:#15803d;font-weight:700;animation:s7glow 1s ease-in-out infinite alternate;';
+      sentenceEl.appendChild(span);
+    } else {
+      var cursor = document.createElement('span');
+      cursor.textContent = '___';
+      cursor.style.cssText = 'color:var(--accent);opacity:.7;animation:s7blink 1s step-start infinite;padding:2px 8px;';
+      sentenceEl.appendChild(cursor);
+    }
+  }
+
+  function runAnimation() {
+    if (animRunning) return;
+    animRunning = true;
+    hasRun      = true;
+    btnRun.disabled      = true;
+    btnRun.style.opacity = '0.5';
+    sampleLabelEl.textContent = '';
+
+    var ctx  = CONTEXTS[ctxIdx % CONTEXTS.length];
+    var temp = getTemp();
+    var probs= softmax(ctx.candidates, temp);
+    var selIdx = probs.indexOf(Math.max.apply(null, probs));
+
+    initChart(ctx.candidates);
+
+    // Phase 1: build context word by word
+    stepLabelEl.textContent = 'Fase 1 — Construcción del contexto';
+    sentenceEl.innerHTML = '';
+
+    var wi = 0;
+    function addWord() {
+      if (wi < ctx.sentence.length) {
+        renderSentence(ctx.sentence.slice(0, wi + 1), null);
+        wi++;
+        setTimeout(addWord, 320);
+      } else {
+        // Phase 2: probability distribution
+        setTimeout(function () {
+          stepLabelEl.textContent = 'Fase 2 — Distribución de probabilidad P(siguiente token | contexto)';
+          animateBars(ctx.candidates, probs, function () {
+            // Phase 3: sample
+            stepLabelEl.textContent = 'Fase 3 — Sampling / Argmax selection';
+            sampleLabelEl.textContent = '▶ Token seleccionado: "' + ctx.candidates[selIdx].word + '" (' + (probs[selIdx]*100).toFixed(1) + '%)';
+            highlightBar(selIdx);
+            // Phase 4: append token
+            setTimeout(function () {
+              stepLabelEl.textContent = 'Fase 4 — Token agregado a la secuencia';
+              renderSentence(ctx.sentence, ctx.candidates[selIdx].word);
+              ctxIdx++;
+              animRunning          = false;
+              btnRun.disabled      = false;
+              btnRun.style.opacity = '1';
+            }, 1200);
+          });
+        }, 400);
+      }
+    }
+    addWord();
+  }
+
+  // ── Controls ───────────────────────────────────────────────────
+  btnRun.addEventListener('click', runAnimation);
+  tempSlider.addEventListener('input', function () {
+    tempValEl.textContent = (parseInt(tempSlider.value, 10) / 10).toFixed(1);
+  });
+
+  // ── Keyframe styles ────────────────────────────────────────────
+  if (!document.getElementById('s7-keyframes')) {
+    var st = document.createElement('style');
+    st.id = 's7-keyframes';
+    st.textContent = '@keyframes s7blink{50%{opacity:0}}@keyframes s7glow{from{box-shadow:0 0 4px rgba(22,163,74,.4)}to{box-shadow:0 0 14px rgba(22,163,74,.9)}}#s7-btn-run:not(:disabled):hover{transform:translateY(-1px);box-shadow:0 4px 18px rgba(59,130,246,.55)}';
+    document.head.appendChild(st);
+  }
+
+  // ── Reveal.js trigger ──────────────────────────────────────────
+  if (typeof Reveal !== 'undefined') {
+    Reveal.on('slidechanged', function (event) {
+      var el = event.currentSlide;
+      if (el && el.id === 's7' && !hasRun) {
+        setTimeout(runAnimation, 600);
+      }
+    });
+    // If slide is already active when script loads
+    var cur = Reveal.getCurrentSlide && Reveal.getCurrentSlide();
+    if (cur && cur.id === 's7' && !hasRun) {
+      setTimeout(runAnimation, 800);
+    }
+  } else {
+    setTimeout(runAnimation, 800);
+  }
+})();
+</script>
+
+<!-- SLIDE 10: IN-CONTEXT LEARNING -->
+<div class="slide slide-content" id="s8">
+  <div class="tag">LLMs</div>
+  <h2>Aprendizaje en contexto</h2>
+  <div class="highlight" style="margin-bottom:10px;font-size:0.75em;padding:10px 16px;">
+    <p>A medida que los modelos crecen, exhiben una propiedad emergente: el <strong style="color:var(--accent);">in-context learning</strong>. Aprenden nuevas tareas <strong>sin actualizar sus pesos</strong>, solo a partir de ejemplos en el prompt.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:20px;align-items:start;">
+    <!-- Left: cards -->
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="card" style="padding:10px 14px;">
+        <h3 style="font-size:13px;margin-bottom:4px;">Zero-shot</h3>
+        <p style="font-size:12px;margin:0 0 6px;">Sin ejemplos. Solo descripci&oacute;n de la tarea.</p>
+        <div class="code-block" style="margin-top:4px;font-size:11px;padding:6px 10px;">Traduce al franc&eacute;s: &quot;cheese&quot;</div>
+      </div>
+      <div class="card purple" style="padding:10px 14px;">
+        <h3 style="color:#a78bfa;font-size:13px;margin-bottom:4px;">One-shot</h3>
+        <p style="font-size:12px;margin:0 0 6px;">Un ejemplo antes de la pregunta.</p>
+        <div class="code-block" style="margin-top:4px;font-size:11px;padding:6px 10px;">cat &rarr; chat<br>cheese &rarr; ?</div>
+      </div>
+      <div class="card green" style="padding:10px 14px;">
+        <h3 style="color:var(--accent3);font-size:13px;margin-bottom:4px;">Few-shot</h3>
+        <p style="font-size:12px;margin:0 0 6px;">Varios ejemplos. Mayor precisi&oacute;n.</p>
+        <div class="code-block" style="margin-top:4px;font-size:11px;padding:6px 10px;">cat&rarr;chat, dog&rarr;chien<br>apple&rarr;pomme, cheese&rarr;?</div>
+      </div>
+    </div>
+    <!-- Right: image + caption -->
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div class="img-frame" style="background:#1e293b;">
+        <img src="../images/zerofewshot.png" alt="Zero-shot, one-shot y few-shot prompting — Brown et al. 2020" style="width:80%;height:auto;display:block;">
+      </div>
+      <p style="font-size:11px;color:var(--text-muted);line-height:1.5;font-family:'Space Mono',monospace;">
+        Tom B. Brown, et al. 2020. Language models are few-shot learners. In <em>Proceedings of the 34th International Conference on Neural Information Processing Systems</em> (NIPS &apos;20). Curran Associates Inc., Red Hook, NY, USA, Article 159, 1877&ndash;1901.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 11: PROMPT ENGINEERING -->
+<div class="slide slide-content" id="s9">
+  <div class="tag">LLMs · Prompting</div>
+  <h2>Ingeniería de Prompts</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <p style="margin-bottom:20px;">Un <strong style="color:var(--accent);">prompt</strong> es la cadena de texto que enviamos al LLM. Crea un contexto que guía la generación. La ingeniería de prompts es el proceso de diseñar prompts efectivos.</p>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num" style="background:rgba(0,212,255,0.15);font-size:14px;">📝</div>
+          <div class="step-content">
+            <strong>Sé específico y claro</strong>
+            <span>Cuanto más contexto y detalle, mejor la respuesta</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num" style="background:rgba(124,58,237,0.15);font-size:14px;">🎭</div>
+          <div class="step-content">
+            <strong>Asigna un rol</strong>
+            <span>"Actúa como experto en..." mejora la calidad</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num" style="background:rgba(16,185,129,0.15);font-size:14px;">📋</div>
+          <div class="step-content">
+            <strong>Usa ejemplos (few-shot)</strong>
+            <span>Los ejemplos guían el formato y estilo esperado</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num" style="background:rgba(245,158,11,0.15);font-size:14px;">🔗</div>
+          <div class="step-content">
+            <strong>Encadena el razonamiento</strong>
+            <span>"Piensa paso a paso" → Chain of Thought</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="img-frame" style="max-height:380px;margin-bottom:8px;">
+        <img src="../images/ingprompts.jpg" alt="Mago negro en laboratorio de magia escribiendo en un teclado mágico" style="width:70%;height:auto;display:block;">
+      </div>
+      <p style="font-size:11px;color:var(--text-muted);line-height:1.5;font-family:'Space Mono',monospace;margin-bottom:16px;">
+        Prompt: Genera la imagen de un mago negro escribiendo unas palabras en un teclado m&aacute;gico. El escenario donde ocurre es un laboratorio ultra sofisticado de magia. (Generado con Flux 1.1)
+      </p>
+
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 12: SECTION BREAK - CHAIN OF THOUGHT -->
+<div class="slide slide-section" id="s10">
+  <div class="section-num">03</div>
+  <div style="position:relative;z-index:1;padding-top:40px;">
+    <div class="tag">Sección 03</div>
+    <h1 style="font-size:clamp(48px,6vw,80px);">Chain of<br><span class="accent3">Thought</span></h1>
+    <p class="lead">Razonamiento paso a paso. Cómo enseñar a los LLMs<br>a pensar antes de responder.</p>
+  </div>
+</div>
+
+<!-- SLIDE 13: COT EXPLICACION -->
+<div class="slide slide-content" id="s11">
+  <div class="tag">Chain of Thought</div>
+  <h2>Cadena de Pensamiento (CoT)</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="highlight green" style="margin-bottom:12px;padding:10px 14px;font-size:0.8em;">
+        <p>En lugar de pedir una respuesta directa, <strong style="color:var(--accent3);">guiamos al modelo a descomponer el problema</strong> en pasos intermedios, como lo haría un humano. Wei et al., 2022.</p>
+      </div>
+      <div class="card" style="margin-bottom:8px;padding:10px 14px;">
+        <h3 style="font-size:13px;margin-bottom:4px;color:#f87171;">❌ Standard Prompting</h3>
+        <div class="code-block" style="font-size:10px;padding:6px 10px;margin-top:4px;">P: Roger tiene 5 pelotas. Compra 2 latas
+   de 3 pelotas cada una. ¿Cuántas tiene?
+R: 11 ✓
+
+P: La cafetería tenía 23 manzanas...
+R: 27 ✗  ← ERROR</div>
+      </div>
+      <div class="card green" style="padding:10px 14px;">
+        <h3 style="font-size:13px;margin-bottom:4px;color:var(--accent3);">✅ Chain-of-Thought Prompting</h3>
+        <div class="code-block" style="font-size:10px;padding:6px 10px;margin-top:4px;">R: Roger tenía 5 pelotas. Compró 2 latas
+   × 3 = 6 pelotas. 5 + 6 = <span style="color:#00d4ff;">11</span> ✓
+
+R: Tenían 23 - 20 = 3 manzanas.
+   Compraron 6 más. 3 + 6 = <span style="color:#00d4ff;">9</span> ✓</div>
+      </div>
+    </div>
+    <div>
+      <div class="img-frame" style="max-height:360px;">
+        <img src="../images/CoT.png" alt="Chain-of-thought prompting — Wei et al. 2022" style="width:100%;height:auto;display:block;">
+      </div>
+      <p style="font-size:11px;color:var(--text-muted);margin-top:6px;line-height:1.4;font-family:'Space Mono',monospace;">
+        Wei et al. 2022. Chain-of-thought prompting elicits reasoning in large language models. In <em>Proceedings of the 36th International Conference on Neural Information Processing Systems</em> (NIPS &apos;22). Curran Associates Inc., Red Hook, NY, USA, Article 1800, 24824&ndash;24837.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 14: ZERO-SHOT COT -->
+<div class="slide slide-content" id="s12">
+  <div class="tag">Chain of Thought</div>
+  <h2>Zero-Shot CoT: "Let's think step by step"</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <p style="margin-bottom:16px;">Kojima et al. (2022) demostró que <strong style="color:var(--accent);">no hacen falta ejemplos</strong>. Basta con pedirle al modelo que razone.</p>
+      <div class="card amber" style="margin-bottom:16px;">
+        <h3 style="color:var(--accent4);">La instrucción mágica</h3>
+        <div class="formula" style="margin:10px 0;font-size:20px;">
+          "Let's think step by step"
+        </div>
+        <p style="font-size:13px;">Esta simple frase mejora dramáticamente los resultados en tareas de razonamiento matemático.</p>
+      </div>
+      <div class="card">
+        <h3>Resultados en benchmarks</h3>
+        <table class="compare-table" style="width:100%;">
+          <tr><th>Dataset</th><th>Baseline</th><th>+ CoT</th><th>Mejora</th></tr>
+          <tr><td>MultiArith</td><td style="color:#ef4444;">17.7%</td><td style="color:var(--accent3);">78.7%</td><td><span class="pill pill-green">+61pp</span></td></tr>
+          <tr><td>GSM8K</td><td style="color:#ef4444;">10.4%</td><td style="color:var(--accent3);">40.7%</td><td><span class="pill pill-green">+30pp</span></td></tr>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="img-frame" style="max-height:240px;margin-bottom:8px;">
+        <img src="../images/ZeroCoT.png" alt="Zero-shot CoT — Kojima et al. 2022" style="width:100%;height:auto;display:block;">
+      </div>
+      <p style="font-size:11px;color:var(--text-muted);margin-top:6px;margin-bottom:10px;line-height:1.4;font-family:'Space Mono',monospace;">
+        Kojima et al. 2022. Large language models are zero-shot reasoners. In <em>Proceedings of the 36th International Conference on Neural Information Processing Systems</em> (NIPS &apos;22). Curran Associates Inc., Red Hook, NY, USA, Article 1613, 22199&ndash;22213.
+      </p>
+      <div class="highlight" style="margin-top:0;">
+        <p style="font-size:13px;">Con few-shot + CoT se puede llegar a <strong style="color:var(--accent);">93% de precisión</strong> en MultiArith con solo 8 ejemplos.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 15: SECTION BREAK - RAG -->
+<div class="slide slide-section" id="s13">
+  <div class="section-num">04</div>
+  <div style="position:relative;z-index:1;padding-top:40px;">
+    <div class="tag">Sección 04</div>
+    <h1 style="font-size:clamp(48px,6vw,80px);">RAG:<br><span class="accent4">Retrieval-Augmented</span><br>Generation</h1>
+    <p class="lead">Cómo dar memoria externa a los LLMs<br>para reducir alucinaciones.</p>
+  </div>
+</div>
+
+<!-- SLIDE 16: RAG -->
+<div class="slide slide-content" id="s14">
+  <div class="tag">RAG</div>
+  <h2>Generación Aumentada por Recuperación</h2>
+  <div class="two-col" style="align-items:start;grid-template-columns:2fr 3fr;">
+    <div>
+      <p style="margin-bottom:16px;">RAG combina <strong style="color:var(--accent);">recuperación de información</strong> con <strong style="color:var(--accent2);">generación de texto</strong>. Permite al LLM responder con información actualizada y específica. Lewis et al., 2020.</p>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <strong>Indexación de documentos</strong>
+            <span>Los docs se dividen en chunks y se convierten en vectores (embeddings con BERT/E5)</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <strong>Búsqueda por similitud</strong>
+            <span>La pregunta del usuario se convierte en vector y se buscan los chunks más similares (coseno)</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <strong>Generación enriquecida</strong>
+            <span>El LLM recibe: prompt + contexto recuperado → genera respuesta precisa y citable</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="img-frame" style="max-height:420px;">
+        <img src="../images/RAG.png" alt="RAG" style="width:100%;height:auto;display:block;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 17: SECTION BREAK - AGENTES -->
+<div class="slide slide-section" id="s15">
+  <div class="section-num">05</div>
+  <div style="position:relative;z-index:1;padding-top:40px;">
+    <div class="tag">Sección 05</div>
+    <h1 style="font-size:clamp(48px,6vw,80px);">De LLMs a<br><span class="accent">Agentes</span><br><span style="font-size:0.6em;color:var(--accent2);">Autónomos</span></h1>
+    <p class="lead">ReAct, herramientas, memoria y la transición<br>a sistemas que pueden <em>actuar</em> en el mundo.</p>
+  </div>
+</div>
+
+<!-- SLIDE 18: EL PROBLEMA DEL LLM SOLO -->
+<div class="slide slide-content" id="s16">
+  <div class="tag">IA Agéntica</div>
+  <h2>El LLM como "cerebro en un frasco"</h2>
+  <div class="two-col" style="align-items:center;">
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <h3 style="color:#f87171;">❌ LLM solo: limitaciones</h3>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;">
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#ef4444;">✕</span><span>No puede acceder a Internet ni datos en tiempo real</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#ef4444;">✕</span><span>No puede ejecutar código ni interactuar con sistemas</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#ef4444;">✕</span><span>No tiene memoria persistente entre conversaciones</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#ef4444;">✕</span><span>No puede tomar acciones en el mundo físico o digital</span></li>
+        </ul>
+      </div>
+      <div class="card green">
+        <h3 style="color:var(--accent3);">✅ Agente = LLM + Ambiente externo</h3>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;">
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--accent3);">✓</span><span>Percibe el entorno (web, archivos, APIs, sensores)</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--accent3);">✓</span><span>Razona sobre las percepciones con el LLM</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--accent3);">✓</span><span>Ejecuta acciones que modifican el entorno</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--accent3);">✓</span><span>Mantiene memoria a corto y largo plazo</span></li>
+        </ul>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <!-- Agent loop SVG -->
+      <svg viewBox="0 0 300 260" style="width:100%;max-width:480px;height:auto;">
+        <!-- Central LLM -->
+        <rect x="90" y="100" width="120" height="60" rx="10" fill="rgba(0,212,255,0.1)" stroke="rgba(0,212,255,0.4)" stroke-width="1.5"/>
+        <text x="150" y="125" fill="#00d4ff" font-size="13" font-family="Syne,sans-serif" font-weight="700" text-anchor="middle">LLM</text>
+        <text x="150" y="142" fill="#64748b" font-size="10" font-family="DM Sans,sans-serif" text-anchor="middle">Cerebro razonador</text>
+        
+        <!-- Percepciones arriba -->
+        <rect x="75" y="15" width="150" height="40" rx="8" fill="rgba(124,58,237,0.1)" stroke="rgba(124,58,237,0.3)" stroke-width="1"/>
+        <text x="150" y="39" fill="#a78bfa" font-size="11" font-family="DM Sans,sans-serif" text-anchor="middle">🌍 Percepciones / Observaciones</text>
+        <!-- Arrow down -->
+        <line x1="150" y1="55" x2="150" y2="98" stroke="rgba(124,58,237,0.5)" stroke-width="1.5" marker-end="url(#arr-purple)"/>
+        
+        <!-- Acciones abajo -->
+        <rect x="75" y="205" width="150" height="40" rx="8" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.3)" stroke-width="1"/>
+        <text x="150" y="229" fill="#10b981" font-size="11" font-family="DM Sans,sans-serif" text-anchor="middle">⚡ Acciones / Herramientas</text>
+        <!-- Arrow down -->
+        <line x1="150" y1="160" x2="150" y2="203" stroke="rgba(16,185,129,0.5)" stroke-width="1.5" marker-end="url(#arr-green)"/>
+        
+        <!-- Feedback loop -->
+        <path d="M 225 235 Q 270 235 270 130 Q 270 25 225 25" fill="none" stroke="rgba(0,212,255,0.2)" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="275" y="132" fill="#64748b" font-size="9" font-family="Space Mono,monospace" text-anchor="middle" transform="rotate(90,275,132)">feedback loop</text>
+        
+        <defs>
+          <marker id="arr-purple" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="rgba(124,58,237,0.6)"/>
+          </marker>
+          <marker id="arr-green" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="rgba(16,185,129,0.6)"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 19: REACT -->
+<div class="slide slide-content" id="s17">
+  <div class="tag">IA Agéntica · ReAct</div>
+  <h2>ReAct: Razonar para Actuar</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="highlight" style="margin-bottom:16px;">
+        <p><strong style="color:var(--accent);">ReAct</strong> (Yao et al., 2022) combina razonamiento con acciones. El modelo alterna entre <em>pensar</em> sobre qué hacer y <em>ejecutar</em> acciones en el entorno.</p>
+      </div>
+      <div class="code-block" style="font-size:11px;line-height:1.8;">
+<span style="color:#a78bfa;">Thought:</span> Necesito buscar el precio actual del dólar.
+<span style="color:#10b981;">Action:</span> search("precio dólar hoy Colombia")
+<span style="color:#f59e0b;">Observation:</span> 1 USD = 4.120 COP (23 Mar 2026)
+
+<span style="color:#a78bfa;">Thought:</span> Ya tengo el dato. Puedo responder.
+<span style="color:#10b981;">Action:</span> finish("El dólar está a $4.120 COP")
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+        <div class="pill pill-purple">Thought</div>
+        <span style="color:var(--text-muted);font-size:12px;">→</span>
+        <div class="pill pill-green">Action</div>
+        <span style="color:var(--text-muted);font-size:12px;">→</span>
+        <div class="pill pill-amber">Observation</div>
+        <span style="color:var(--text-muted);font-size:12px;">→ (repite)</span>
+      </div>
+    </div>
+    <div>
+      <div class="img-frame" style="max-height:260px;margin-bottom:8px;">
+        <img src="../images/Percepciones-Acciones.png" alt="Percepciones y Acciones — ReAct" style="width:100%;height:auto;display:block;">
+      </div>
+      <p style="font-size:11px;color:var(--text-muted);margin-top:6px;margin-bottom:12px;line-height:1.4;font-family:'Space Mono',monospace;">
+        Mapear una observación directamente a una acción sin un proceso de razonamiento es difícil.
+      </p>
+      <div class="card">
+        <h3>Herramientas disponibles</h3>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;">
+          <li style="display:flex;gap:8px;font-size:13px;"><span style="color:var(--accent);">🔍</span><span><strong style="color:var(--text);">Búsqueda Web</strong> — info actualizada</span></li>
+          <li style="display:flex;gap:8px;font-size:13px;"><span style="color:var(--accent);">💻</span><span><strong style="color:var(--text);">Ejecución de código</strong> — Python, bash</span></li>
+          <li style="display:flex;gap:8px;font-size:13px;"><span style="color:var(--accent);">🔌</span><span><strong style="color:var(--text);">APIs externas</strong> — GitHub, Slack, Spotify</span></li>
+          <li style="display:flex;gap:8px;font-size:13px;"><span style="color:var(--accent);">🗃️</span><span><strong style="color:var(--text);">Retrieval / RAG</strong> — memoria semántica</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 20: SECTION BREAK - MCP -->
+<div class="slide slide-section" id="s18">
+  <div class="section-num">06</div>
+  <div style="position:relative;z-index:1;padding-top:40px;">
+    <div class="tag">Sección 06 · Nuevo</div>
+    <h1 style="font-size:clamp(40px,5vw,68px);">Model Context<br><span class="accent">Protocol</span><br><span style="font-size:0.55em;color:var(--text-muted);">(MCP)</span></h1>
+    <p class="lead">El estándar abierto para conectar agentes<br>con herramientas y datos externos. Anthropic, 2024.</p>
+  </div>
+</div>
+
+<!-- SLIDE 21: MCP QUE ES -->
+<div class="slide slide-content" id="s19">
+  <div class="tag">MCP · Model Context Protocol</div>
+  <h2>¿Qué es MCP y por qué importa?</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="highlight" style="margin-bottom:16px;">
+        <p><strong style="color:var(--accent);">MCP</strong> es un protocolo abierto propuesto por Anthropic (2024) para estandarizar cómo los LLMs se conectan con herramientas, datos y sistemas externos. Es el <strong>"USB-C de los agentes de IA"</strong>.</p>
+      </div>
+      <div class="card" style="margin-bottom:14px;">
+        <h3>Problema que resuelve</h3>
+        <p style="margin-bottom:10px;">Antes de MCP, cada herramienta necesitaba una integración personalizada. <strong style="color:var(--text);">N modelos × M herramientas = N×M integraciones.</strong></p>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span class="pill pill-cyan">Con MCP</span>
+          <span style="color:var(--text-dim);font-size:13px;">N modelos + M herramientas =</span>
+          <span class="pill pill-green">N + M conexiones</span>
+        </div>
+      </div>
+      <div class="card amber">
+        <h3 style="color:var(--accent4);">Analogía HTTP</h3>
+        <p style="font-size:13px;">Así como HTTP estandarizó cómo los navegadores hablan con servidores web, <strong style="color:var(--text);">MCP estandariza cómo los agentes hablan con herramientas</strong>.</p>
+      </div>
+    </div>
+    <div>
+      <!-- MCP Architecture Diagram -->
+      <svg viewBox="0 0 300 320" style="width:100%;max-width:360px;">
+        <!-- Host -->
+        <rect x="60" y="10" width="180" height="50" rx="8" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.3)" stroke-width="1.5"/>
+        <text x="150" y="30" fill="#00d4ff" font-size="11" font-family="Syne,sans-serif" font-weight="700" text-anchor="middle">HOST (App)</text>
+        <text x="150" y="48" fill="#64748b" font-size="9" font-family="Space Mono,monospace" text-anchor="middle">Claude Desktop / IDE / Tu App</text>
+
+        <!-- Client -->
+        <rect x="85" y="90" width="130" height="44" rx="8" fill="rgba(124,58,237,0.1)" stroke="rgba(124,58,237,0.3)" stroke-width="1.5"/>
+        <text x="150" y="107" fill="#a78bfa" font-size="11" font-family="Syne,sans-serif" font-weight="700" text-anchor="middle">MCP CLIENT</text>
+        <text x="150" y="123" fill="#64748b" font-size="9" font-family="Space Mono,monospace" text-anchor="middle">Gestiona protocolo</text>
+        
+        <!-- Arrow Host → Client -->
+        <line x1="150" y1="60" x2="150" y2="88" stroke="rgba(0,212,255,0.4)" stroke-width="1.5" marker-end="url(#arr1)"/>
+
+        <!-- Servers -->
+        <rect x="10" y="175" width="110" height="44" rx="8" fill="rgba(16,185,129,0.08)" stroke="rgba(16,185,129,0.3)" stroke-width="1"/>
+        <text x="65" y="192" fill="#10b981" font-size="10" font-family="Syne,sans-serif" font-weight="700" text-anchor="middle">MCP SERVER</text>
+        <text x="65" y="208" fill="#64748b" font-size="9" font-family="Space Mono,monospace" text-anchor="middle">📁 Filesystem</text>
+
+        <rect x="130" y="175" width="110" height="44" rx="8" fill="rgba(16,185,129,0.08)" stroke="rgba(16,185,129,0.3)" stroke-width="1"/>
+        <text x="185" y="192" fill="#10b981" font-size="10" font-family="Syne,sans-serif" font-weight="700" text-anchor="middle">MCP SERVER</text>
+        <text x="185" y="208" fill="#64748b" font-size="9" font-family="Space Mono,monospace" text-anchor="middle">🐙 GitHub</text>
+
+        <!-- Arrows Client → Servers -->
+        <line x1="130" y1="134" x2="80" y2="173" stroke="rgba(124,58,237,0.4)" stroke-width="1" marker-end="url(#arr2)"/>
+        <line x1="165" y1="134" x2="175" y2="173" stroke="rgba(124,58,237,0.4)" stroke-width="1" marker-end="url(#arr2)"/>
+
+        <!-- Resources -->
+        <rect x="10" y="250" width="110" height="40" rx="6" fill="rgba(245,158,11,0.06)" stroke="rgba(245,158,11,0.2)" stroke-width="1"/>
+        <text x="65" y="265" fill="#f59e0b" font-size="9" font-family="DM Sans,sans-serif" text-anchor="middle">Recursos locales</text>
+        <text x="65" y="280" fill="#64748b" font-size="9" font-family="Space Mono,monospace" text-anchor="middle">Archivos, DBs, Shell</text>
+        
+        <rect x="130" y="250" width="110" height="40" rx="6" fill="rgba(245,158,11,0.06)" stroke="rgba(245,158,11,0.2)" stroke-width="1"/>
+        <text x="185" y="265" fill="#f59e0b" font-size="9" font-family="DM Sans,sans-serif" text-anchor="middle">Servicios remotos</text>
+        <text x="185" y="280" fill="#64748b" font-size="9" font-family="Space Mono,monospace" text-anchor="middle">APIs, GitHub, Slack</text>
+
+        <line x1="65" y1="219" x2="65" y2="248" stroke="rgba(16,185,129,0.3)" stroke-width="1"/>
+        <line x1="185" y1="219" x2="185" y2="248" stroke="rgba(16,185,129,0.3)" stroke-width="1"/>
+        
+        <!-- Labels for protocol -->
+        <text x="150" y="75" fill="#64748b" font-size="8" font-family="Space Mono,monospace" text-anchor="middle">JSON-RPC 2.0</text>
+
+        <defs>
+          <marker id="arr1" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="rgba(0,212,255,0.6)"/>
+          </marker>
+          <marker id="arr2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="rgba(124,58,237,0.6)"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 22: MCP COMPONENTES -->
+<div class="slide slide-content" id="s20">
+  <div class="tag">MCP · Componentes</div>
+  <h2>Primitivas de MCP</h2>
+  <div class="three-col" style="margin-top:24px;">
+    <div class="card">
+      <div style="font-size:32px;margin-bottom:10px;">🔧</div>
+      <h3>Tools</h3>
+      <p style="font-size:13px;margin-bottom:10px;">Funciones que el LLM puede invocar. El modelo solicita ejecutar una tool y recibe el resultado.</p>
+      <div class="code-block" style="font-size:10px;">
+get_weather(city)
+read_file(path)
+execute_sql(query)
+      </div>
+      <div style="margin-top:10px;"><span class="pill pill-green">Model-controlled</span></div>
+    </div>
+    <div class="card purple">
+      <div style="font-size:32px;margin-bottom:10px;">📚</div>
+      <h3 style="color:#a78bfa;">Resources</h3>
+      <p style="font-size:13px;margin-bottom:10px;">Fuentes de datos que el servidor expone al contexto del modelo: archivos, bases de datos, URLs.</p>
+      <div class="code-block" style="font-size:10px;">
+file://docs/manual.pdf
+db://users/table
+https://api.example.com
+      </div>
+      <div style="margin-top:10px;"><span class="pill pill-purple">App-controlled</span></div>
+    </div>
+    <div class="card amber">
+      <div style="font-size:32px;margin-bottom:10px;">💬</div>
+      <h3 style="color:var(--accent4);">Prompts</h3>
+      <p style="font-size:13px;margin-bottom:10px;">Plantillas de prompts reutilizables y flujos de conversación definidos por el servidor MCP.</p>
+      <div class="code-block" style="font-size:10px;">
+code_review_template
+summarize_document
+debug_error_prompt
+      </div>
+      <div style="margin-top:10px;"><span class="pill pill-amber">User-controlled</span></div>
+    </div>
+  </div>
+  <div class="highlight" style="margin-top:20px;">
+    <p style="font-size:13px;">🌟 Servers MCP populares: <code>filesystem</code> · <code>github</code> · <code>slack</code> · <code>postgres</code> · <code>brave-search</code> · <code>puppeteer</code></p>
+  </div>
+</div>
+
+<!-- SLIDE 23: SECTION BREAK - MULTI-AGENT -->
+<div class="slide slide-section" id="s21">
+  <div class="section-num">07</div>
+  <div style="position:relative;z-index:1;padding-top:40px;">
+    <div class="tag">Sección 07 · Nuevo</div>
+    <h1 style="font-size:clamp(40px,5vw,68px);">Arquitecturas<br><span class="accent2">Multi-Agente</span></h1>
+    <p class="lead">Cuando un agente no es suficiente.<br>LangGraph, CrewAI, AutoGen y patrones de orquestación.</p>
+  </div>
+</div>
+
+<!-- SLIDE 24: MULTI-AGENTE PATRONES -->
+<div class="slide slide-content" id="s22">
+  <div class="tag">Multi-Agente</div>
+  <h2>¿Por qué múltiples agentes?</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="highlight purple" style="margin-bottom:16px;">
+        <p>Un solo agente tiene límites de <strong style="color:#a78bfa;">contexto</strong>, <strong style="color:#a78bfa;">especialización</strong> y <strong style="color:#a78bfa;">paralelismo</strong>. Los sistemas multi-agente permiten dividir tareas complejas entre agentes especializados.</p>
+      </div>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num" style="background:rgba(0,212,255,0.15);">🎯</div>
+          <div class="step-content">
+            <strong>Especialización</strong>
+            <span>Cada agente domina un dominio: investigador, escritor, revisor, coder...</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num" style="background:rgba(124,58,237,0.15);">⚡</div>
+          <div class="step-content">
+            <strong>Paralelismo</strong>
+            <span>Subtareas independientes se ejecutan en paralelo, reduciendo la latencia</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num" style="background:rgba(16,185,129,0.15);">🔍</div>
+          <div class="step-content">
+            <strong>Checks & balances</strong>
+            <span>Un agente genera, otro critica, otro verifica: mayor calidad</span>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num" style="background:rgba(245,158,11,0.15);">📦</div>
+          <div class="step-content">
+            <strong>Contextos independientes</strong>
+            <span>Cada agente maneja su propio contexto, evitando el "context overflow"</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <!-- Multi-agent diagram -->
+      <svg viewBox="0 0 300 280" style="width:100%;max-height:280px;">
+        <!-- Orchestrator -->
+        <rect x="90" y="10" width="120" height="50" rx="8" fill="rgba(0,212,255,0.1)" stroke="rgba(0,212,255,0.4)" stroke-width="2"/>
+        <text x="150" y="28" fill="#00d4ff" font-size="11" font-family="Syne,sans-serif" font-weight="700" text-anchor="middle">🧠 Orquestador</text>
+        <text x="150" y="44" fill="#64748b" font-size="9" font-family="Space Mono,monospace" text-anchor="middle">LLM Manager</text>
+        
+        <!-- Sub-agents -->
+        <rect x="10" y="110" width="80" height="44" rx="8" fill="rgba(124,58,237,0.08)" stroke="rgba(124,58,237,0.3)" stroke-width="1"/>
+        <text x="50" y="127" fill="#a78bfa" font-size="9" font-family="Syne,sans-serif" font-weight="700" text-anchor="middle">🔍 Investigador</text>
+        <text x="50" y="142" fill="#64748b" font-size="8" text-anchor="middle">Web search</text>
+
+        <rect x="105" y="110" width="80" height="44" rx="8" fill="rgba(16,185,129,0.08)" stroke="rgba(16,185,129,0.3)" stroke-width="1"/>
+        <text x="145" y="127" fill="#10b981" font-size="9" font-family="Syne,sans-serif" font-weight="700" text-anchor="middle">✍️ Escritor</text>
+        <text x="145" y="142" fill="#64748b" font-size="8" text-anchor="middle">Genera texto</text>
+        
+        <rect x="200" y="110" width="80" height="44" rx="8" fill="rgba(245,158,11,0.08)" stroke="rgba(245,158,11,0.3)" stroke-width="1"/>
+        <text x="240" y="127" fill="#f59e0b" font-size="9" font-family="Syne,sans-serif" font-weight="700" text-anchor="middle">✅ Revisor</text>
+        <text x="240" y="142" fill="#64748b" font-size="8" text-anchor="middle">QA/Critic</text>
+        
+        <!-- Arrows -->
+        <line x1="130" y1="60" x2="65" y2="108" stroke="rgba(0,212,255,0.3)" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <line x1="150" y1="60" x2="145" y2="108" stroke="rgba(0,212,255,0.3)" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <line x1="170" y1="60" x2="225" y2="108" stroke="rgba(0,212,255,0.3)" stroke-width="1.5" stroke-dasharray="4,2"/>
+        
+        <!-- Tools -->
+        <rect x="10" y="195" width="80" height="32" rx="6" fill="rgba(0,0,0,0.4)" stroke="rgba(124,58,237,0.2)" stroke-width="1"/>
+        <text x="50" y="212" fill="#64748b" font-size="8" font-family="Space Mono,monospace" text-anchor="middle">tavily, brave</text>
+
+        <rect x="105" y="195" width="80" height="32" rx="6" fill="rgba(0,0,0,0.4)" stroke="rgba(16,185,129,0.2)" stroke-width="1"/>
+        <text x="145" y="212" fill="#64748b" font-size="8" font-family="Space Mono,monospace" text-anchor="middle">file, memory</text>
+        
+        <rect x="200" y="195" width="80" height="32" rx="6" fill="rgba(0,0,0,0.4)" stroke="rgba(245,158,11,0.2)" stroke-width="1"/>
+        <text x="240" y="212" fill="#64748b" font-size="8" font-family="Space Mono,monospace" text-anchor="middle">eval, check</text>
+        
+        <line x1="50" y1="154" x2="50" y2="193" stroke="rgba(124,58,237,0.2)" stroke-width="1"/>
+        <line x1="145" y1="154" x2="145" y2="193" stroke="rgba(16,185,129,0.2)" stroke-width="1"/>
+        <line x1="240" y1="154" x2="240" y2="193" stroke="rgba(245,158,11,0.2)" stroke-width="1"/>
+        
+        <!-- Result back to orchestrator -->
+        <path d="M 50 110 Q 50 80 90 60" fill="none" stroke="rgba(124,58,237,0.2)" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="150" y="265" fill="#64748b" font-size="9" font-family="Space Mono,monospace" text-anchor="middle">→ Resultado final consolidado</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 25: FRAMEWORKS -->
+<div class="slide slide-content" id="s23">
+  <div class="tag">Multi-Agente · Frameworks</div>
+  <h2>Frameworks Multi-Agente</h2>
+  <div class="three-col" style="margin-top:20px;">
+    <div class="card">
+      <div style="font-family:Space Mono,monospace;font-size:22px;margin-bottom:8px;color:var(--accent);">🦜</div>
+      <h3>LangGraph</h3>
+      <p style="font-size:13px;margin-bottom:12px;">Framework de LangChain para flujos de agentes como <strong style="color:var(--text);">grafos dirigidos</strong> con estado. Control preciso del flujo.</p>
+      <ul style="font-size:12px;padding-left:14px;color:var(--text-muted);">
+        <li>Ciclos y condicionales</li>
+        <li>Estado persistente</li>
+        <li>Human-in-the-loop</li>
+        <li>Streaming nativo</li>
+      </ul>
+      <div style="margin-top:12px;"><span class="pill pill-cyan">Python · TypeScript</span></div>
+    </div>
+    <div class="card purple">
+      <div style="font-family:Space Mono,monospace;font-size:22px;margin-bottom:8px;color:#a78bfa;">👥</div>
+      <h3 style="color:#a78bfa;">CrewAI</h3>
+      <p style="font-size:13px;margin-bottom:12px;">Agentes con <strong style="color:var(--text);">roles, metas y backstory</strong>. Ideal para simular equipos humanos (investigador, analista, CEO...).</p>
+      <ul style="font-size:12px;padding-left:14px;color:var(--text-muted);">
+        <li>Role-based agents</li>
+        <li>Tasks con dependencias</li>
+        <li>Process: sequential / hierarchical</li>
+        <li>Memory integrada</li>
+      </ul>
+      <div style="margin-top:12px;"><span class="pill pill-purple">Python</span></div>
+    </div>
+    <div class="card green">
+      <div style="font-family:Space Mono,monospace;font-size:22px;margin-bottom:8px;color:var(--accent3);">🤖</div>
+      <h3 style="color:var(--accent3);">AutoGen (Microsoft)</h3>
+      <p style="font-size:13px;margin-bottom:12px;">Conversaciones <strong style="color:var(--text);">multi-agente</strong> donde los agentes se comunican entre sí. Enfocado en código y debugging.</p>
+      <ul style="font-size:12px;padding-left:14px;color:var(--text-muted);">
+        <li>Conversational agents</li>
+        <li>Code execution sandbox</li>
+        <li>GroupChat manager</li>
+        <li>Human proxy agent</li>
+      </ul>
+      <div style="margin-top:12px;"><span class="pill pill-green">Python</span></div>
+    </div>
+  </div>
+  <div class="highlight amber" style="margin-top:16px;">
+    <p style="font-size:13px;">📌 <strong style="color:var(--accent4);">¿Cuándo usar cuál?</strong> LangGraph → control detallado y producción · CrewAI → prototipos rápidos · AutoGen → tareas de código y debugging</p>
+  </div>
+</div>
+
+<!-- SLIDE 26: SECTION BREAK - SLMs (REMOVED) -->
+<div class="slide-removed" id="s24">
+  <div class="section-num">08</div>
+  <div style="position:relative;z-index:1;padding-top:40px;">
+    <div class="tag">Sección 08 · Nuevo</div>
+    <h1 style="font-size:clamp(40px,5vw,68px);">Small Language<br><span class="accent3">Models</span><br><span style="font-size:0.55em;color:var(--text-muted);">para Agentes</span></h1>
+    <p class="lead">¿Siempre necesitamos GPT-4? Modelos pequeños<br>especializados para tareas agénticas específicas.</p>
+  </div>
+</div>
+
+<!-- SLIDE 27: SLMs vs LLMs (REMOVED) -->
+<div class="slide-removed" id="s25">
+  <div class="tag">SLMs · Small Language Models</div>
+  <h2>SLMs: Potencia donde se necesita</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="highlight green" style="margin-bottom:16px;">
+        <p>Los SLMs (1B–13B parámetros) pueden ser <strong style="color:var(--accent3);">tan efectivos como LLMs grandes</strong> en tareas específicas, con ventajas clave para despliegues agénticos.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card" style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:24px;">⚡</span>
+          <div>
+            <strong style="color:var(--text);font-size:14px;">Latencia 10-50× menor</strong>
+            <p style="font-size:12px;margin:0;">Ideal para agentes que requieren respuestas en tiempo real</p>
+          </div>
+        </div>
+        <div class="card purple" style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:24px;">💰</span>
+          <div>
+            <strong style="color:var(--text);font-size:14px;">Costo 100× menor</strong>
+            <p style="font-size:12px;margin:0;">Para agentes que hacen miles de llamadas diarias</p>
+          </div>
+        </div>
+        <div class="card green" style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:24px;">🔒</span>
+          <div>
+            <strong style="color:var(--text);font-size:14px;">On-premise / privacidad</strong>
+            <p style="font-size:12px;margin:0;">Datos sensibles sin salir de tu infraestructura</p>
+          </div>
+        </div>
+        <div class="card amber" style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:24px;">📱</span>
+          <div>
+            <strong style="color:var(--text);font-size:14px;">Edge / On-device</strong>
+            <p style="font-size:12px;margin:0;">Agentes en dispositivos móviles, IoT, sin internet</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <h3>SLMs líderes (2025)</h3>
+        <table class="compare-table" style="width:100%;">
+          <tr><th>Modelo</th><th>Params</th><th>Fortaleza</th></tr>
+          <tr><td><strong style="color:var(--text);">Phi-4</strong> (Microsoft)</td><td><span class="pill pill-cyan" style="font-size:10px;">14B</span></td><td>Razonamiento, código</td></tr>
+          <tr><td><strong style="color:var(--text);">Mistral 7B</strong></td><td><span class="pill pill-cyan" style="font-size:10px;">7B</span></td><td>General, eficiente</td></tr>
+          <tr><td><strong style="color:var(--text);">Gemma 2</strong> (Google)</td><td><span class="pill pill-cyan" style="font-size:10px;">2B / 9B</span></td><td>On-device, multilingüe</td></tr>
+          <tr><td><strong style="color:var(--text);">LLaMA 3.2</strong> (Meta)</td><td><span class="pill pill-cyan" style="font-size:10px;">1B / 3B</span></td><td>Edge, instrucción</td></tr>
+          <tr><td><strong style="color:var(--text);">Qwen 2.5</strong> (Alibaba)</td><td><span class="pill pill-cyan" style="font-size:10px;">0.5B–7B</span></td><td>Multilingüe, código</td></tr>
+        </table>
+      </div>
+      <div class="highlight">
+        <p style="font-size:13px;">🎯 <strong style="color:var(--accent);">Regla de oro:</strong> Si la tarea está bien definida y hay datos de entrenamiento → SLM + fine-tuning supera al LLM genérico.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 28: SECTION BREAK - FINE-TUNING (REMOVED) -->
+<div class="slide-removed" id="s26">
+  <div class="section-num">09</div>
+  <div style="position:relative;z-index:1;padding-top:40px;">
+    <div class="tag">Sección 09 · Nuevo</div>
+    <h1 style="font-size:clamp(40px,5vw,66px);">Fine-Tuning<br>con <span class="accent">LoRA</span> &<br><span class="accent2">QLoRA</span></h1>
+    <p class="lead">Adaptar modelos a dominios específicos con<br>recursos mínimos. La técnica que democratizó el fine-tuning.</p>
+  </div>
+</div>
+
+<!-- SLIDE 29: CUANDO FINE-TUNE (REMOVED) -->
+<div class="slide-removed" id="s27">
+  <div class="tag">Fine-Tuning</div>
+  <h2>¿Cuándo hacer fine-tuning?</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <table class="compare-table" style="width:100%;margin-bottom:20px;">
+        <tr>
+          <th></th>
+          <th style="color:var(--accent);">Prompting</th>
+          <th style="color:var(--accent3);">Fine-tuning</th>
+        </tr>
+        <tr>
+          <td>⏱️ Tiempo setup</td>
+          <td>Minutos</td>
+          <td>Horas/días</td>
+        </tr>
+        <tr>
+          <td>📊 Datos necesarios</td>
+          <td>0 – pocos ejemplos</td>
+          <td>100 – miles de ejemplos</td>
+        </tr>
+        <tr>
+          <td>🎯 Consistencia</td>
+          <td>Variable</td>
+          <td>Alta y predecible</td>
+        </tr>
+        <tr>
+          <td>💰 Costo inferencia</td>
+          <td>Alto (prompt largo)</td>
+          <td>Bajo (prompt corto)</td>
+        </tr>
+        <tr>
+          <td>🧠 Conocimiento dominio</td>
+          <td>Limitado</td>
+          <td>Profundo</td>
+        </tr>
+      </table>
+      <div class="highlight amber">
+        <p style="font-size:13px;">💡 <strong style="color:var(--accent4);">Regla práctica:</strong> Empieza siempre con prompting. Si llegas a un plateau de calidad o el costo es prohibitivo → fine-tuning.</p>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px;">
+        <h3>✅ Buenas razones para fine-tuning</h3>
+        <ul style="font-size:13px;padding-left:16px;display:flex;flex-direction:column;gap:8px;">
+          <li>Formato de salida muy específico (JSON estructurado, esquemas fijos)</li>
+          <li>Terminología / jerga de dominio (médico, legal, código)</li>
+          <li>Latencia crítica (prompt corto = respuesta rápida)</li>
+          <li>Privacidad: no puedes enviar datos al proveedor</li>
+          <li>Miles de llamadas/día: costo de inferencia domina</li>
+        </ul>
+      </div>
+      <div class="card purple">
+        <h3 style="color:#f87171;">❌ Malas razones</h3>
+        <ul style="font-size:13px;padding-left:16px;display:flex;flex-direction:column;gap:6px;">
+          <li>Quieres que el modelo "sepa" nueva información → usa RAG</li>
+          <li>No tienes datos de calidad → prompting primero</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 30: LORA EXPLICADO (REMOVED) -->
+<div class="slide-removed" id="s28">
+  <div class="tag">Fine-Tuning · LoRA</div>
+  <h2>LoRA: Low-Rank Adaptation</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="highlight" style="margin-bottom:16px;">
+        <p><strong style="color:var(--accent);">LoRA</strong> (Hu et al., 2021) no modifica los pesos originales del modelo. En cambio, añade <strong>matrices pequeñas de bajo rango</strong> que aprenden la adaptación. Hu et al., 2021.</p>
+      </div>
+      <!-- LoRA math diagram -->
+      <div style="background:#1e293b;border:1px solid rgba(2,132,199,0.2);border-radius:10px;padding:20px;margin-bottom:16px;">
+        <p style="font-family:Space Mono,monospace;font-size:12px;color:#64748b;margin-bottom:8px;">// Pesos originales (congelados):</p>
+        <p style="font-family:Space Mono,monospace;font-size:14px;color:var(--accent);margin-bottom:14px;">W₀ ∈ ℝ<sup>d×k</sup>  ← NO se modifica</p>
+        <p style="font-family:Space Mono,monospace;font-size:12px;color:#64748b;margin-bottom:8px;">// Adaptación LoRA (entrenamos solo A y B):</p>
+        <p style="font-family:Space Mono,monospace;font-size:14px;color:#a78bfa;">ΔW = B × A</p>
+        <p style="font-family:Space Mono,monospace;font-size:11px;color:#64748b;margin-top:4px;">A ∈ ℝ<sup>r×k</sup>,  B ∈ ℝ<sup>d×r</sup>,  r ≪ d,k</p>
+        <div style="border-top:1px solid rgba(0,212,255,0.1);margin-top:12px;padding-top:10px;">
+          <p style="font-family:Space Mono,monospace;font-size:14px;color:var(--accent3);">h = W₀x + (B × A)x</p>
+        </div>
+      </div>
+      <div class="highlight green">
+        <p style="font-size:13px;">📉 Con <strong style="color:var(--accent3);">r = 8</strong>, LoRA reduce los parámetros entrenables hasta <strong style="color:var(--accent3);">10,000×</strong> vs. fine-tuning completo.</p>
+      </div>
+    </div>
+    <div>
+      <!-- Visual: Full FT vs LoRA -->
+      <div class="card" style="margin-bottom:14px;">
+        <h3>Full Fine-tuning vs LoRA</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px;">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:4px;">
+              <span>Full FT — Llama 7B</span><span style="color:#ef4444;">~28GB VRAM</span>
+            </div>
+            <div style="height:12px;border-radius:6px;background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.3);width:100%;">
+              <div style="height:100%;border-radius:6px;background:#ef4444;width:100%;"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:4px;">
+              <span>LoRA (r=16) — Llama 7B</span><span style="color:var(--accent);">~16GB VRAM</span>
+            </div>
+            <div style="height:12px;border-radius:6px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);width:100%;">
+              <div style="height:100%;border-radius:6px;background:var(--accent);width:57%;"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:4px;">
+              <span>QLoRA (4-bit) — Llama 7B</span><span style="color:var(--accent3);">~6GB VRAM ✓</span>
+            </div>
+            <div style="height:12px;border-radius:6px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);width:100%;">
+              <div style="height:100%;border-radius:6px;background:var(--accent3);width:21%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card green">
+        <h3 style="color:var(--accent3);">QLoRA = LoRA + Cuantización 4-bit</h3>
+        <p style="font-size:13px;">Cuantiza el modelo base a 4-bit, luego aplica LoRA. Permite fine-tuning de <strong style="color:var(--text);">modelos 7B en una GPU de 8GB</strong> (RTX 3080 o Colab gratuito).</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 31: PIPELINE FINE-TUNING (REMOVED) -->
+<div class="slide-removed" id="s29">
+  <div class="tag">Fine-Tuning · Pipeline</div>
+  <h2>Pipeline de Fine-Tuning para Agentes</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;flex:1;margin-top:20px;">
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="card" style="flex:1;">
+        <div style="font-size:28px;margin-bottom:8px;">📊</div>
+        <h3>1. Datos</h3>
+        <ul style="font-size:12px;padding-left:14px;color:var(--text-muted);line-height:1.8;">
+          <li>Formato chat (instruction-following)</li>
+          <li>100-10K ejemplos calidad > cantidad</li>
+          <li>Incluir tool calls y razonamiento</li>
+          <li>Validar con expertos del dominio</li>
+        </ul>
+      </div>
+      <div class="code-block" style="font-size:10px;">{"role":"user",
+ "content":"..."}
+{"role":"assistant", 
+ "content":"Voy a 
+ buscar...
+ <tool_call>..."}
+</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="card purple" style="flex:1;">
+        <div style="font-size:28px;margin-bottom:8px;">⚙️</div>
+        <h3 style="color:#a78bfa;">2. Entrenamiento</h3>
+        <ul style="font-size:12px;padding-left:14px;color:var(--text-muted);line-height:1.8;">
+          <li>Base: SFT (Supervised Fine-tuning)</li>
+          <li>QLoRA para eficiencia</li>
+          <li>Learning rate 1e-4 → 2e-5</li>
+          <li>Epochs: 1-5 (overfitting risk)</li>
+        </ul>
+      </div>
+      <div class="card" style="padding:12px;">
+        <p style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">Herramientas:</p>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;">
+          <span class="pill pill-cyan" style="font-size:10px;">Unsloth</span>
+          <span class="pill pill-purple" style="font-size:10px;">TRL/SFTTrainer</span>
+          <span class="pill pill-green" style="font-size:10px;">Axolotl</span>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="card green" style="flex:1;">
+        <div style="font-size:28px;margin-bottom:8px;">🔬</div>
+        <h3 style="color:var(--accent3);">3. Evaluación</h3>
+        <ul style="font-size:12px;padding-left:14px;color:var(--text-muted);line-height:1.8;">
+          <li>Benchmark task-specific</li>
+          <li>LLM-as-judge (GPT-4 evalúa)</li>
+          <li>Tasa de tool call correctas</li>
+          <li>Comparar vs. modelo base</li>
+        </ul>
+      </div>
+      <div class="highlight green" style="padding:12px;">
+        <p style="font-size:11px;">Métricas: <strong style="color:var(--accent3);">Exact Match · F1 · Tool Accuracy</strong></p>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="card amber" style="flex:1;">
+        <div style="font-size:28px;margin-bottom:8px;">🚀</div>
+        <h3 style="color:var(--accent4);">4. Deploy</h3>
+        <ul style="font-size:12px;padding-left:14px;color:var(--text-muted);line-height:1.8;">
+          <li>Merge LoRA → modelo base</li>
+          <li>Cuantizar (GGUF) para CPU</li>
+          <li>Ollama / llama.cpp / vLLM</li>
+          <li>OpenAI-compatible API</li>
+        </ul>
+      </div>
+      <div class="card" style="padding:12px;">
+        <p style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">Servidores:</p>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;">
+          <span class="pill pill-amber" style="font-size:10px;">Ollama</span>
+          <span class="pill pill-cyan" style="font-size:10px;">vLLM</span>
+          <span class="pill pill-green" style="font-size:10px;">HF TGI</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECCIÓN: AGENTES COOPERATIVOS ===== -->
+
+<!-- SLIDE AC-0: SECTION BREAK - AGENTES COOPERATIVOS -->
+<div class="slide slide-section" id="scoop0">
+  <div class="section-num">07</div>
+  <div style="position:relative;z-index:1;padding-top:40px;">
+    <div class="tag">Sección 07</div>
+    <h1 style="font-size:clamp(44px,5.5vw,76px);">Agentes<br><span class="accent2">Cooperativos</span></h1>
+    <p class="lead">¿Pueden los agentes LLM cooperar en entornos sociales complejos?<br>Evaluación empírica mediante Melting Pot.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;">
+      <span class="pill pill-cyan">LLM-Augmented Agents</span>
+      <span class="pill pill-purple">Melting Pot</span>
+      <span class="pill pill-green">Generative Agents</span>
+      <span class="pill pill-amber">Multi-Agente</span>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE AC-1: PAPER COVER -->
+<div class="slide slide-content" id="scoop1">
+  <div class="tag">Universidad de los Andes · Google Research Scholar Program · 2024</div>
+  <div style="display:flex;flex-direction:column;justify-content:center;flex:1;max-width:860px;">
+    <h2 style="font-size:clamp(18px,2.2vw,30px);line-height:1.3;margin-bottom:20px;">
+      Can LLM-Augmented Autonomous Agents Cooperate?<br>
+      <span style="color:var(--accent);">An Evaluation of Their Cooperative Capabilities<br>Through Melting Pot</span>
+    </h2>
+    <p style="font-size:14px;color:var(--text-muted);margin-bottom:24px;">Mosquera · Pinzón · Fonseca · Ríos · Quijano · Giraldo · Manrique</p>
+    <div class="two-col" style="gap:24px;margin-top:0;">
+      <div>
+        <div class="highlight" style="margin-bottom:14px;">
+          <p><strong style="color:var(--accent);">Pregunta central:</strong> ¿Las arquitecturas LAA (LLM-Augmented Agents) pueden cooperar en entornos sociales complejos con múltiples agentes interdependientes?</p>
+        </div>
+        <div class="highlight purple">
+          <p><strong style="color:var(--accent2);">Plataforma:</strong> Melting Pot (DeepMind) — evaluación de cooperación en dilemas sociales con bots adversariales.</p>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:12px;">
+          <h3 style="font-size:14px;">Contribuciones clave</h3>
+          <div class="step-list">
+            <div class="step-item"><div class="step-num">1</div><div class="step-content"><strong>Benchmark empírico</strong><span>LAAs vs. RL baseline y CoT en 3 escenarios</span></div></div>
+            <div class="step-item"><div class="step-num">2</div><div class="step-content"><strong>Arquitectura Generative Agents</strong><span>Memoria + planificación + reflexión + acción SWOT</span></div></div>
+            <div class="step-item"><div class="step-num">3</div><div class="step-content"><strong>Impacto de personalidad</strong><span>Cooperativo, egoísta y conocimiento social</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE AC-2: MOTIVACION Y PROBLEMA -->
+<div class="slide slide-content" id="scoop2">
+  <div class="tag">Motivación</div>
+  <h2>¿Por qué estudiar la cooperación en LAAs?</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="highlight amber" style="margin-bottom:16px;">
+        <p><strong style="color:var(--accent4);">Contexto:</strong> La IA se despliega cada vez más en sistemas multi-agente — vehículos autónomos, atención al cliente, robótica colaborativa. La inteligencia <em>social</em> sigue siendo un reto abierto.</p>
+      </div>
+      <div class="card" style="margin-bottom:14px;">
+        <h3>Las 4 capacidades cooperativas (Dafoe et al.)</h3>
+        <div class="step-list">
+          <div class="step-item"><div class="step-num">1</div><div class="step-content"><strong>Comprensión</strong><span>Anticipar consecuencias y entender otros agentes</span></div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-content"><strong>Comunicación</strong><span>Intercambio intencional de información</span></div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-content"><strong>Compromiso</strong><span>Mecanismos de promesas y amenazas creíbles</span></div></div>
+          <div class="step-item"><div class="step-num">4</div><div class="step-content"><strong>Instituciones</strong><span>Estructuras sociales que facilitan la interacción</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card green" style="margin-bottom:14px;">
+        <h3>LLMs como base de agentes sociales</h3>
+        <p style="margin-bottom:12px;">Los LLMs potencian a los agentes autónomos con razonamiento de sentido común, pero su capacidad cooperativa en entornos <em>adversariales</em> era desconocida.</p>
+        <div class="highlight green">
+          <p style="font-size:13px;"><strong style="color:var(--accent3);">Gap:</strong> Mucho trabajo en inteligencia individual de agentes. Muy poco en inteligencia <em>social</em> colectiva.</p>
+        </div>
+      </div>
+      <div class="card purple">
+        <h3 style="color:#a78bfa;">Pregunta de investigación</h3>
+        <p style="font-size:15px;font-style:italic;color:var(--text);">"¿Pueden las arquitecturas LAA avanzadas cooperar efectivamente en entornos multi-agente con dilemas sociales?"</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE AC-3: TRABAJO RELACIONADO -->
+<div class="slide-removed" id="scoop3">
+  <div class="tag">Trabajo Relacionado</div>
+  <h2>Evolución de las arquitecturas de agentes</h2>
+  <div class="three-col" style="margin-top:16px;">
+    <div>
+      <div class="card" style="margin-bottom:12px;">
+        <h3 style="font-size:14px;">Toolformer</h3>
+        <p style="font-size:13px;">LLMs que invocan APIs externas — pero sin razonamiento contextual.</p>
+        <span class="pill pill-cyan" style="font-size:10px;margin-top:8px;">Schick et al.</span>
+      </div>
+      <div class="card" style="margin-bottom:12px;">
+        <h3 style="font-size:14px;">ReAct</h3>
+        <p style="font-size:13px;">Combina razonamiento + acción mediante prompts interleaved.</p>
+        <span class="pill pill-cyan" style="font-size:10px;margin-top:8px;">Yao et al.</span>
+      </div>
+      <div class="card">
+        <h3 style="font-size:14px;">Reflexion</h3>
+        <p style="font-size:13px;">Auto-reflexión sobre intentos fallidos para mejorar iterativamente.</p>
+        <span class="pill pill-cyan" style="font-size:10px;margin-top:8px;">Shinn et al.</span>
+      </div>
+    </div>
+    <div>
+      <div class="card green" style="margin-bottom:12px;border-width:2px;">
+        <h3 style="color:var(--accent3);font-size:14px;">★ Generative Agents</h3>
+        <p style="font-size:13px;">Arquitectura cognitiva completa: memoria de corto/largo plazo, planificación y reflexión. <strong style="color:var(--text);">Base de este trabajo.</strong></p>
+        <span class="pill pill-green" style="font-size:10px;margin-top:8px;">Park et al. 2023</span>
+      </div>
+      <div class="card purple">
+        <h3 style="color:#a78bfa;font-size:14px;">Voyager</h3>
+        <p style="font-size:13px;">Agente autónomo en Minecraft con exploración continua y skill library.</p>
+        <span class="pill pill-purple" style="font-size:10px;margin-top:8px;">Wang et al.</span>
+      </div>
+    </div>
+    <div>
+      <div class="card amber" style="margin-bottom:12px;">
+        <h3 style="color:var(--accent4);font-size:14px;">MetaGPT</h3>
+        <p style="font-size:13px;">Roles y tareas estructuradas entre múltiples agentes LLM especializados.</p>
+        <span class="pill pill-amber" style="font-size:10px;margin-top:8px;">Hong et al.</span>
+      </div>
+      <div class="highlight" style="margin-top:8px;">
+        <p style="font-size:13px;"><strong style="color:var(--accent);">Este trabajo</strong> aplica Generative Agents en entornos con dilemas sociales (Melting Pot), evaluando cooperación frente a bots con políticas fijas.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE AC-4: MELTING POT PLATAFORMA -->
+<div class="slide slide-content" id="scoop4">
+  <div class="tag">Melting Pot · DeepMind</div>
+  <h2>La plataforma de evaluación: Melting Pot</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="highlight" style="margin-bottom:16px;">
+        <p>Herramienta de DeepMind para evaluar IA multi-agente en situaciones de <strong style="color:var(--accent);">dilemas sociales</strong> y alta interdependencia.</p>
+      </div>
+      <div class="card" style="margin-bottom:14px;">
+        <h3>Componentes</h3>
+        <div class="step-list">
+          <div class="step-item"><div class="step-num" style="background:rgba(2,132,199,0.1);">S</div><div class="step-content"><strong>Substrate</strong><span>Entorno físico 2D con objetos e interacciones</span></div></div>
+          <div class="step-item"><div class="step-num" style="background:rgba(109,40,217,0.1);border-color:rgba(109,40,217,0.3);color:var(--accent2);">B</div><div class="step-content"><strong>Background population</strong><span>Bots entrenados con políticas fijas — pueden ser disruptivos</span></div></div>
+          <div class="step-item"><div class="step-num" style="background:rgba(5,150,105,0.1);border-color:rgba(5,150,105,0.3);color:var(--accent3);">F</div><div class="step-content"><strong>Focal agents</strong><span>Nuestros LAAs — evaluados por reward per cápita</span></div></div>
+        </div>
+      </div>
+      <div class="card amber">
+        <h3 style="color:var(--accent4);">Métrica principal</h3>
+        <p style="font-size:13px;"><strong>Focal Per Capita Average Reward</strong> — recompensa promedio per cápita de los LAAs, excluyendo los bots. 10 repeticiones por experimento.</p>
+      </div>
+    </div>
+    <div>
+      <div class="card purple" style="margin-bottom:14px;">
+        <h3 style="color:#a78bfa;">Baselines comparados</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="pill pill-purple" style="font-size:10px;">RL Baseline</span>
+            <p style="font-size:13px;margin:0;">Algoritmos RL del paper original de Melting Pot, entrenados por <strong style="color:var(--text);">10⁹ pasos</strong>.</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="pill pill-cyan" style="font-size:10px;">CoT Baseline</span>
+            <p style="font-size:13px;margin:0;">LAA simplificado: observaciones → LLM → acción. Sin memoria ni reflexión.</p>
+          </div>
+        </div>
+      </div>
+      <div class="card green">
+        <h3 style="color:var(--accent3);">3 escenarios evaluados</h3>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+          <div style="display:flex;align-items:center;gap:8px;"><span class="pill pill-green" style="font-size:10px;">Commons Harvest</span><p style="font-size:12px;margin:0;">Recursos compartidos y regenerativos</p></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span class="pill pill-amber" style="font-size:10px;">Ext. Mushrooms</span><p style="font-size:12px;margin:0;">Externalidades positivas y negativas</p></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span class="pill pill-purple" style="font-size:10px;">Coins</span><p style="font-size:12px;margin:0;">Competencia directa y reciprocidad</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE AC-5: ESCENARIO 1 - COMMONS HARVEST -->
+<div class="slide slide-content" id="scoop5">
+  <div class="tag">Melting Pot · Escenario 1/3</div>
+  <h2>Commons Harvest Open</h2>
+  <div class="two-col" style="align-items:start;gap:20px;">
+    <div>
+      <div class="card green" style="margin-bottom:12px;">
+        <h3 style="color:var(--accent3);">🍎 Bien público y sostenibilidad</h3>
+        <p style="font-size:13px;">Manzanas en un mundo 2D que <strong style="color:var(--text);">se regeneran</strong> si hay manzanas vecinas. Si se agotan los parches, no hay regeneración.</p>
+      </div>
+      <div class="highlight green">
+        <p style="font-size:12px;"><strong style="color:var(--accent3);">Dilema:</strong> cosechar ahora vs. sostenibilidad colectiva. Los bots sobrexplotan, así que el agente debe proteger los parches verdes.</p>
+      </div>
+      <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--accent3);margin-top:10px;">Tragedia de los comunes</div>
+    </div>
+    <div class="card" style="padding:10px;">
+      <img src="../images/cooperacion/environment.png" alt="Commons Harvest environment" style="width:100%;height:290px;object-fit:contain;border-radius:8px;background:#fff;">
+      <p style="font-size:11px;color:var(--text-muted);margin-top:8px;">Entorno Commons Harvest usado en la evaluación.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE AC-5B: ESCENARIO 2 - MUSHROOMS -->
+<div class="slide slide-content" id="scoop5b">
+  <div class="tag">Melting Pot · Escenario 2/3</div>
+  <h2>Externality Mushrooms</h2>
+  <div class="two-col" style="align-items:start;gap:20px;">
+    <div>
+      <div class="card amber" style="margin-bottom:12px;">
+        <h3 style="color:var(--accent4);">🍄 Externalidades positivas y negativas</h3>
+        <p style="font-size:13px;">Hongos con efectos distintos: rojo (solo recolector), verde (todos), azul (todos menos recolector), naranja (penalización).</p>
+      </div>
+      <div class="highlight amber">
+        <p style="font-size:12px;"><strong style="color:var(--accent4);">Dilema:</strong> priorizar hongos verdes (bien colectivo) vs. rojos (beneficio propio). Los bots prefieren rojos.</p>
+      </div>
+      <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--accent4);margin-top:10px;">Altruismo vs. egoísmo</div>
+    </div>
+    <div class="card" style="padding:10px;">
+      <img src="../images/cooperacion/environment_mushrooms.png" alt="Externality Mushrooms environment" style="width:100%;height:290px;object-fit:contain;border-radius:8px;background:#fff;">
+      <p style="font-size:11px;color:var(--text-muted);margin-top:8px;">Entorno Externality Mushrooms y sus objetos interactivos.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE AC-5C: ESCENARIO 3 - COINS -->
+<div class="slide slide-content" id="scoop5c">
+  <div class="tag">Melting Pot · Escenario 3/3</div>
+  <h2>Coins</h2>
+  <div class="two-col" style="align-items:start;gap:20px;">
+    <div>
+      <div class="card purple" style="margin-bottom:12px;">
+        <h3 style="color:#a78bfa;">🪙 Reciprocidad estratégica</h3>
+        <p style="font-size:13px;">Dos agentes y monedas de colores. Recoger tu moneda suma +1. Si el otro recoge las tuyas, recibes -2.</p>
+      </div>
+      <div class="highlight purple">
+        <p style="font-size:12px;"><strong style="color:#a78bfa;">Dilema:</strong> el bot usa reciprocidad. El agente debe evitar represalias respetando monedas del bot cuando conviene cooperar.</p>
+      </div>
+      <div style="font-family:'Space Mono',monospace;font-size:11px;color:#a78bfa;margin-top:10px;">Tit-for-tat y coordinación</div>
+    </div>
+    <div class="card" style="padding:10px;">
+      <img src="../images/cooperacion/environment_coins.png" alt="Coins environment" style="width:100%;height:290px;object-fit:contain;border-radius:8px;background:#fff;">
+      <p style="font-size:11px;color:var(--text-muted);margin-top:8px;">Entorno Coins usado para evaluar reciprocidad y castigo.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE AC-6: ARQUITECTURA LAA -->
+<div class="slide slide-content" id="scoop6">
+  <div class="tag">Arquitectura · Generative Agents (Park et al. 2023)</div>
+  <h2>Arquitectura LAA: memorias y módulos cognitivos</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="card" style="padding:10px;">
+        <img src="../images/cooperacion/Cooperative%20architecture.png" alt="Cooperative architecture" style="width:100%;height:360px;object-fit:contain;border-radius:8px;background:#fff;">
+        <p style="font-size:11px;color:var(--text-muted);margin-top:8px;">Arquitectura cooperativa de los agentes (visión general).</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
+          <span class="pill pill-cyan" style="font-size:10px;">CP: Corto plazo</span>
+          <span class="pill pill-purple" style="font-size:10px;">LP: Largo plazo</span>
+          <span class="pill pill-green" style="font-size:10px;">ES: Memoria espacial</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:rgba(2,132,199,0.5);">01</span>
+            <div><h3 style="margin:0;font-size:14px;">Percepción</h3><p style="font-size:12px;margin:0;">Filtra y prioriza observaciones por cercanía. Decide si replantear el plan.</p></div>
+          </div>
+        </div>
+        <div class="card purple">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:rgba(109,40,217,0.5);">02</span>
+            <div><h3 style="margin:0;font-size:14px;color:#a78bfa;">Planificación</h3><p style="font-size:12px;margin:0;">Genera plan de alto nivel con contexto, reflexiones y observaciones.</p></div>
+          </div>
+        </div>
+        <div class="card green">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:rgba(5,150,105,0.5);">03</span>
+            <div><h3 style="margin:0;font-size:14px;color:var(--accent3);">Reflexión</h3><p style="font-size:12px;margin:0;">Genera insights de alto nivel sobre experiencias pasadas → memoria larga.</p></div>
+          </div>
+        </div>
+        <div class="card amber">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:rgba(217,119,6,0.5);">04</span>
+            <div><h3 style="margin:0;font-size:14px;color:var(--accent4);">Acción SWOT</h3><p style="font-size:12px;margin:0;">Oportunidades · Amenazas · Opciones · Consecuencias → decisión final.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE AC-7: ADAPTACION ENTORNO -->
+<div class="slide slide-content" id="scoop7">
+  <div class="tag">Ingeniería · Interfaz LLM ↔ Melting Pot</div>
+  <h2>Adaptando el entorno visual a texto</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="highlight amber" style="margin-bottom:16px;">
+        <p><strong style="color:var(--accent4);">Problema:</strong> Melting Pot usa grids 2D con símbolos — difíciles de interpretar por LLMs directamente.</p>
+      </div>
+      <div class="card" style="margin-bottom:14px;">
+        <h3>Generador de observaciones en lenguaje natural</h3>
+        <p style="font-size:13px;margin-bottom:12px;">Cada objeto del grid se traduce a una descripción con coordenadas [x, y]:</p>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px;font-family:'Space Mono',monospace;font-size:11px;color:var(--accent);line-height:1.7;">
+          "Observed an apple at position [3, 7].<br>
+          This apple belongs to tree_2."<br><br>
+          "Observed a green mushroom at [5, 4].<br>
+          If collected, all players receive +1."
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card purple" style="margin-bottom:14px;">
+        <h3 style="color:#a78bfa;">Acciones de alto nivel</h3>
+        <p style="font-size:13px;margin-bottom:10px;">En lugar de movimientos primitivos (↑ ↓ ← →), el agente usa acciones semánticas:</p>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:8px;"><span class="pill pill-purple" style="font-size:10px;">go_to (x, y)</span><p style="font-size:12px;margin:0;">Navegar a una posición del grid</p></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span class="pill pill-cyan" style="font-size:10px;">explore</span><p style="font-size:12px;margin:0;">Explorar el entorno al azar</p></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span class="pill pill-green" style="font-size:10px;">stay_put</span><p style="font-size:12px;margin:0;">Mantenerse en posición actual</p></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span class="pill pill-amber" style="font-size:10px;">immobilize_player</span><p style="font-size:12px;margin:0;">Inmovilizar temporalmente a otro agente</p></div>
+        </div>
+      </div>
+      <div class="highlight green">
+        <p style="font-size:13px;"><strong style="color:var(--accent3);">Resultado:</strong> El agente "ve" el mundo como texto semántico y actúa con intencionalidad, no con movimientos primitivos.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE AC-7B: FIGURE_COOP_AI FULL -->
+<div class="slide slide-content" id="scoop7b" style="padding:0;">
+  <object
+    data="../images/cooperacion/Figure_Coop_AI.pdf"
+    type="application/pdf"
+    style="width:100%;height:100%;border:0;display:block;"
+    aria-label="Figure Coop AI full slide">
+  </object>
+</div>
+
+<!-- SLIDE AC-8: DISEÑO EXPERIMENTAL -->
+<div class="slide slide-content" id="scoop8">
+  <div class="tag">Diseño Experimental</div>
+  <h2>Configuración del experimento</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="card" style="margin-bottom:14px;">
+        <h3>Set 1 — Evaluación principal</h3>
+        <p style="font-size:13px;margin-bottom:12px;">Comparación en los 3 escenarios de Melting Pot:</p>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:8px;"><span class="pill pill-cyan" style="font-size:10px;">GPT-4o</span><span class="pill pill-cyan" style="font-size:10px;">GPT-4o mini</span><span style="font-size:12px;color:var(--text-muted);">Generative Agents</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span class="pill pill-purple" style="font-size:10px;">RL Baseline</span><span style="font-size:12px;color:var(--text-muted);">10⁹ pasos de entrenamiento</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span class="pill pill-green" style="font-size:10px;">CoT Baseline</span><span style="font-size:12px;color:var(--text-muted);">Obs → LLM → Acción (sin memoria)</span></div>
+        </div>
+      </div>
+      <div class="card purple">
+        <h3 style="color:#a78bfa;">Set 2 — Impacto de personalidad</h3>
+        <p style="font-size:13px;margin-bottom:10px;">En Commons Harvest con GPT-4 y GPT-3.5:</p>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:8px;"><span class="pill pill-green" style="font-size:10px;">🤝 Cooperativo</span><p style="font-size:12px;margin:0;">Instrucción explícita de cooperar</p></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span class="pill pill-amber" style="font-size:10px;">😈 Egoísta</span><p style="font-size:12px;margin:0;">Instrucción de maximizar beneficio propio</p></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span class="pill pill-cyan" style="font-size:10px;">◼ Sin personalidad</span><p style="font-size:12px;margin:0;">Sin instrucción de personalidad</p></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card green" style="margin-bottom:14px;">
+        <h3 style="color:var(--accent3);">Detalles metodológicos</h3>
+        <div class="step-list">
+          <div class="step-item"><div class="step-num" style="font-size:10px;">✓</div><div class="step-content"><strong>10 repeticiones</strong><span>Por experimento para garantizar significancia estadística</span></div></div>
+          <div class="step-item"><div class="step-num" style="font-size:10px;">✓</div><div class="step-content"><strong>Métricas adicionales</strong><span>Tipo de hongos recogidos, monedas tomadas, ataques ejecutados</span></div></div>
+          <div class="step-item"><div class="step-num" style="font-size:10px;">✓</div><div class="step-content"><strong>Código público</strong><span>github.com/Cooperative-IA/CooperativeGPT</span></div></div>
+        </div>
+      </div>
+      <div class="highlight amber">
+        <p style="font-size:13px;"><strong style="color:var(--accent4);">Importante:</strong> Los LAAs no reciben entrenamiento específico en Melting Pot. Solo información general del entorno vía prompts.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE AC-9: RESULTADOS PRINCIPALES -->
+<div class="slide slide-content" id="scoop9">
+  <div class="tag">Resultados · Set 1</div>
+  <h2>Resultados principales: Focal Per Capita Reward</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="highlight green" style="margin-bottom:14px;">
+        <p><strong style="color:var(--accent3);">★ Generative Agents supera a CoT</strong> en los 3 escenarios — la arquitectura con memoria y reflexión es determinante.</p>
+      </div>
+      <div class="highlight" style="margin-bottom:14px;">
+        <p><strong style="color:var(--accent);">Gen. Agents vs. RL (10⁹ pasos):</strong><br>
+        <span style="color:var(--accent3);">✅ Coins</span> — Generative Agents supera al RL baseline<br>
+        <span style="color:var(--accent3);">✅ Externality Mushrooms</span> — supera al RL baseline<br>
+        <span style="color:#ef4444;">❌ Commons Harvest</span> — RL gana (caso límite no visto)</p>
+      </div>
+      <div class="highlight amber">
+        <p style="font-size:13px;"><strong style="color:var(--accent4);">Hallazgo clave:</strong> Los LAAs nunca fueron entrenados en Melting Pot. El "sentido común" de los LLMs compensa la falta de entrenamiento explícito en 2 de 3 escenarios.</p>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px;">
+        <h3>Comparativa de rendimiento</h3>
+        <table class="compare-table" style="width:100%;">
+          <tr>
+            <th>Escenario</th>
+            <th>Gen. vs CoT</th>
+            <th>Gen. vs RL</th>
+          </tr>
+          <tr>
+            <td>🍄 Mushrooms</td>
+            <td style="color:var(--accent3);">Gen. ↑↑</td>
+            <td style="color:var(--accent3);">Gen. ↑ ✅</td>
+          </tr>
+          <tr>
+            <td>🪙 Coins</td>
+            <td style="color:var(--accent3);">Gen. ↑↑</td>
+            <td style="color:var(--accent3);">Gen. ↑ ✅</td>
+          </tr>
+          <tr>
+            <td>🍎 Commons</td>
+            <td style="color:var(--accent3);">Gen. ↑</td>
+            <td style="color:#ef4444;">RL ↑ ❌</td>
+          </tr>
+        </table>
+      </div>
+      <div class="card purple">
+        <p style="font-size:13px;font-style:italic;color:var(--text);">"GPT-4o y GPT-4o mini muestran tendencias similares — el beneficio viene de la <strong>arquitectura</strong>, no del tamaño del modelo."</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE AC-10: ANALISIS POR ESCENARIO -->
+<div class="slide slide-content" id="scoop10">
+  <div class="tag">Resultados · Análisis detallado</div>
+  <h2>Análisis por escenario</h2>
+  <div class="three-col" style="margin-top:16px;">
+    <div class="card green" style="display:flex;flex-direction:column;gap:8px;">
+      <h3 style="color:var(--accent3);">🍄 Mushrooms</h3>
+      <div class="step-list">
+        <div class="step-item"><div class="step-num" style="font-size:10px;">✓</div><div class="step-content"><strong>Más hongos verdes</strong><span>Gen. Agents eligen cooperativos sobre egoístas</span></div></div>
+        <div class="step-item"><div class="step-num" style="font-size:10px;">✓</div><div class="step-content"><strong>Exploración activa</strong><span>Buscan hongos buenos aunque no estén visibles</span></div></div>
+        <div class="step-item"><div class="step-num" style="font-size:10px;">✓</div><div class="step-content"><strong>Evitan perjudiciales</strong><span>Raramente consumen hongos azules u naranjas</span></div></div>
+      </div>
+      <div class="highlight green" style="margin-top:auto;">
+        <p style="font-size:11px;">p-value &lt; 0.1 vs. RL baseline ✅</p>
+      </div>
+    </div>
+    <div class="card purple" style="display:flex;flex-direction:column;gap:8px;">
+      <h3 style="color:#a78bfa;">🪙 Coins</h3>
+      <div class="step-list">
+        <div class="step-item"><div class="step-num" style="font-size:10px;">✓</div><div class="step-content"><strong>Menos represalias</strong><span>Activan menos la política de reciprocidad del bot</span></div></div>
+        <div class="step-item"><div class="step-num" style="font-size:10px;">✓</div><div class="step-content"><strong>Respeto de monedas</strong><span>Toman menos monedas del color incorrecto</span></div></div>
+        <div class="step-item"><div class="step-num" style="font-size:10px;">★</div><div class="step-content"><strong>GPT-4o mini</strong><span>Sorpresivamente mejor que GPT-4o en algunos indicadores</span></div></div>
+      </div>
+      <div class="highlight purple" style="margin-top:auto;">
+        <p style="font-size:11px;">El razonamiento estratégico compensa el tamaño del modelo.</p>
+      </div>
+    </div>
+    <div class="card amber" style="display:flex;flex-direction:column;gap:8px;">
+      <h3 style="color:var(--accent4);">🍎 Commons Harvest</h3>
+      <div class="step-list">
+        <div class="step-item"><div class="step-num" style="font-size:10px;">✓</div><div class="step-content"><strong>Más sostenibles</strong><span>Evitan árboles con pocas manzanas</span></div></div>
+        <div class="step-item"><div class="step-num" style="font-size:10px;">⚠</div><div class="step-content"><strong>Caso límite fallido</strong><span>Consumen la <em>última manzana</em> más que CoT</span></div></div>
+        <div class="step-item"><div class="step-num" style="font-size:10px;">→</div><div class="step-content"><strong>RL gana aquí</strong><span>Vio este caso límite 10⁹ veces — los LAAs no</span></div></div>
+      </div>
+      <div class="highlight amber" style="margin-top:auto;">
+        <p style="font-size:11px;">Punto ciego: sostenibles en general, pero fallan al límite crítico.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE AC-11: IMPACTO PERSONALIDAD -->
+<div class="slide slide-content" id="scoop11">
+  <div class="tag">Resultados · Set 2</div>
+  <h2>Impacto de la personalidad y el conocimiento social</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="card amber" style="margin-bottom:14px;">
+        <h3 style="color:var(--accent4);">⚠️ Paradoja del agente cooperativo</h3>
+        <p style="font-size:13px;margin-bottom:10px;">Cuando los agentes reciben instrucción de ser <strong style="color:var(--text);">cooperativos</strong>, su rendimiento fue el <strong style="color:#ef4444;">peor de los tres</strong>.</p>
+        <div class="highlight amber">
+          <p style="font-size:12px;"><strong>¿Por qué?</strong> Los LLMs equiparan "cooperar" con "no atacar". En Commons Harvest, <em>atacar a los bots destructivos</em> es la única forma de proteger los recursos. La instrucción de cooperación inhibe la defensa.</p>
+        </div>
+      </div>
+      <div class="card green">
+        <h3 style="color:var(--accent3);">Los LLMs cooperan de base</h3>
+        <p style="font-size:13px;">Agentes egoístas ≈ agentes sin personalidad. Los LLMs tienen una inclinación cooperativa implícita que no se puede simplemente "desactivar" con una instrucción de egoísmo.</p>
+      </div>
+    </div>
+    <div>
+      <div class="card purple" style="margin-bottom:14px;">
+        <h3 style="color:#a78bfa;">★ Experimento: Pedro el egoísta</h3>
+        <div class="highlight purple" style="margin-bottom:10px;">
+          <p style="font-size:13px;">Cuando los agentes recibieron información social de que "<strong>Pedro</strong>" es un agente egoísta, el <strong style="color:var(--text);font-size:16px;">86%</strong> de los ataques fueron dirigidos específicamente a él.</p>
+        </div>
+        <p style="font-size:13px;">Los agentes usaron conocimiento social para <strong style="color:#a78bfa;">coordinar una respuesta colectiva</strong> — comportamiento emergente fascinante sin programación explícita.</p>
+      </div>
+      <div class="highlight">
+        <p style="font-size:13px;"><strong style="color:var(--accent);">Implicación:</strong> El conocimiento social compartido puede guiar la cooperación y coordinación emergente en arquitecturas LAA.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE AC-12: CAPACIDADES COOPERATIVAS -->
+<div class="slide slide-content" id="scoop12">
+  <div class="tag">Análisis · Marco de Dafoe et al.</div>
+  <h2>Capacidades cooperativas: brechas y avances</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="card" style="margin-bottom:14px;">
+        <h3>¿Qué lograron los LAAs?</h3>
+        <div class="step-list">
+          <div class="step-item">
+            <div class="step-num" style="background:rgba(5,150,105,0.15);border-color:rgba(5,150,105,0.4);color:var(--accent3);">✓</div>
+            <div class="step-content"><strong>Comprensión (parcial)</strong><span>Anticipan consecuencias y responden al contexto social</span></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num" style="background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.4);color:#ef4444;">✗</div>
+            <div class="step-content"><strong>Comunicación directa</strong><span>No hay intercambio intencional entre agentes LAA</span></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num" style="background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.4);color:#ef4444;">✗</div>
+            <div class="step-content"><strong>Compromiso</strong><span>Sin mecanismos creíbles de promesas o amenazas</span></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num" style="background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.4);color:#ef4444;">✗</div>
+            <div class="step-content"><strong>Instituciones</strong><span>Sin estructuras sociales emergentes entre agentes</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card amber" style="margin-bottom:14px;">
+        <h3 style="color:var(--accent4);">Limitaciones identificadas</h3>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+          <div style="display:flex;align-items:flex-start;gap:8px;">
+            <span style="color:#ef4444;font-size:16px;line-height:1.4;">⚠</span>
+            <p style="font-size:13px;margin:0;">No distinguen si otro es LLM o bot con política fija</p>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;">
+            <span style="color:#ef4444;font-size:16px;line-height:1.4;">⚠</span>
+            <p style="font-size:13px;margin:0;">No priorizan consistentemente el bienestar colectivo</p>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;">
+            <span style="color:#ef4444;font-size:16px;line-height:1.4;">⚠</span>
+            <p style="font-size:13px;margin:0;">Alto costo computacional por ciclo de razonamiento completo</p>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;">
+            <span style="color:#ef4444;font-size:16px;line-height:1.4;">⚠</span>
+            <p style="font-size:13px;margin:0;">Fallan en casos límite no representados en el contexto</p>
+          </div>
+        </div>
+      </div>
+      <div class="highlight purple">
+        <p style="font-size:13px;"><strong style="color:var(--accent2);">Conclusión:</strong> Los LAAs <em>quieren</em> cooperar, pero no siempre <em>saben cómo</em> en entornos con alta complejidad social.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE AC-13: CONCLUSIONES -->
+<div class="slide slide-content" id="scoop13">
+  <div class="tag">Conclusiones y Trabajo Futuro</div>
+  <h2>Conclusiones y camino por recorrer</h2>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="card green" style="margin-bottom:14px;">
+        <h3 style="color:var(--accent3);">Logros demostrados</h3>
+        <div class="step-list">
+          <div class="step-item"><div class="step-num" style="font-size:10px;">✅</div><div class="step-content"><strong>Generative Agents &gt; CoT</strong><span>Memoria + reflexión mejoran significativamente la cooperación</span></div></div>
+          <div class="step-item"><div class="step-num" style="font-size:10px;">✅</div><div class="step-content"><strong>Superan RL sin entrenamiento</strong><span>2 de 3 escenarios — el sentido común LLM es poderoso</span></div></div>
+          <div class="step-item"><div class="step-num" style="font-size:10px;">✅</div><div class="step-content"><strong>Conocimiento social guía la conducta</strong><span>Coordinación emergente real (experimento Pedro)</span></div></div>
+        </div>
+      </div>
+      <div class="card amber">
+        <h3 style="color:var(--accent4);">Brechas identificadas</h3>
+        <div class="step-list">
+          <div class="step-item"><div class="step-num" style="font-size:10px;">⚠</div><div class="step-content"><strong>Gap cooperativo</strong><span>Comprensión parcial; sin comunicación, compromiso ni instituciones</span></div></div>
+          <div class="step-item"><div class="step-num" style="font-size:10px;">⚠</div><div class="step-content"><strong>Casos límite</strong><span>Fallan ante situaciones extremas no presentes en el contexto</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card purple" style="margin-bottom:14px;">
+        <h3 style="color:#a78bfa;">Trabajo futuro</h3>
+        <div class="step-list">
+          <div class="step-item"><div class="step-num" style="background:rgba(109,40,217,0.1);border-color:rgba(109,40,217,0.3);color:var(--accent2);">→</div><div class="step-content"><strong>Comunicación explícita</strong><span>Arquitecturas que permitan diálogo directo entre agentes</span></div></div>
+          <div class="step-item"><div class="step-num" style="background:rgba(109,40,217,0.1);border-color:rgba(109,40,217,0.3);color:var(--accent2);">→</div><div class="step-content"><strong>Mecanismos de compromiso</strong><span>Promesas vinculantes y amenazas verificables</span></div></div>
+          <div class="step-item"><div class="step-num" style="background:rgba(109,40,217,0.1);border-color:rgba(109,40,217,0.3);color:var(--accent2);">→</div><div class="step-content"><strong>Benchmarks más ricos</strong><span>Más escenarios Melting Pot con mayor diversidad social</span></div></div>
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;">
+        <p style="font-size:11px;font-family:'Space Mono',monospace;color:var(--text-muted);margin-bottom:6px;">CÓDIGO DISPONIBLE</p>
+        <p style="font-family:'Space Mono',monospace;font-size:12px;color:var(--accent);">github.com/Cooperative-IA/<br>CooperativeGPT</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 32: COVER FINAL -->
+<div class="slide slide-section" id="s30">
+  <div style="position:relative;z-index:1;padding-top:40px;max-width:800px;">
+    <div class="tag">Resumen</div>
+    <h1 style="font-size:clamp(36px,4.5vw,60px);">El Stack Completo<br>de la <span class="accent">IA Agéntica</span></h1>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:28px;">
+      <div style="background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.15);border-radius:8px;padding:14px;">
+        <div style="font-size:11px;font-family:Space Mono,monospace;color:var(--accent);margin-bottom:6px;">FUNDAMENTOS</div>
+        <ul style="font-size:12px;list-style:none;color:var(--text-dim);line-height:1.9;">
+          <li>✦ Modelos Generativos</li>
+          <li>✦ LLMs & Transformers</li>
+          <li>✦ In-context learning</li>
+          <li>✦ Chain of Thought</li>
+          <li>✦ RAG</li>
+        </ul>
+      </div>
+      <div style="background:rgba(124,58,237,0.05);border:1px solid rgba(124,58,237,0.15);border-radius:8px;padding:14px;">
+        <div style="font-size:11px;font-family:Space Mono,monospace;color:#a78bfa;margin-bottom:6px;">ARQUITECTURA</div>
+        <ul style="font-size:12px;list-style:none;color:var(--text-dim);line-height:1.9;">
+          <li>✦ ReAct & herramientas</li>
+          <li>✦ MCP Protocol</li>
+          <li>✦ Memoria agéntica</li>
+          <li>✦ Multi-agente</li>
+          <li>✦ LangGraph / CrewAI</li>
+        </ul>
+      </div>
+      <div style="background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.15);border-radius:8px;padding:14px;">
+        <div style="font-size:11px;font-family:Space Mono,monospace;color:var(--accent3);margin-bottom:6px;">OPTIMIZACIÓN</div>
+        <ul style="font-size:12px;list-style:none;color:var(--text-dim);line-height:1.9;">
+          <li>✦ SLMs especializados</li>
+          <li>✦ LoRA / QLoRA</li>
+          <li>✦ Pipeline SFT</li>
+          <li>✦ Evaluación agéntica</li>
+          <li>✦ Deploy eficiente</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:28px;padding:16px;border-top:1px solid rgba(0,212,255,0.1);">
+      <p style="font-size:14px;color:var(--text-muted);">Taller IIA · Módulo 3 · 2026 &nbsp;—&nbsp; <span style="color:var(--accent);">¡Gracias!</span> &nbsp;🚀</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- end deck -->
+
+<!-- Progress bar -->
+<div id="progress-bar"></div>
+
+<!-- Nav controls -->
+<div id="nav">
+  <span id="section-label" style="font-family:Space Mono,monospace;font-size:10px;color:var(--accent);letter-spacing:0.1em;"></span><span id="slide-counter">01 / 37</span>
+  <button class="nav-btn" id="btn-prev" title="Anterior (←)">&#8592;</button>
+  <button class="nav-btn" id="btn-next" title="Siguiente (→)">&#8594;</button>
+</div>
+
+<!-- Keyboard hint -->
+<div id="hint">
+  <div class="key-hint"><span>←</span><span>→</span> Navegar</div>
+  <div class="key-hint"><span>F</span> Pantalla completa</div>
+  <div class="key-hint"><span>0-9</span> Ir a sección</div>
+</div>
+
+<!-- Section dots -->
+<div id="section-nav">
+  <div class="section-dot active" data-slide="0" title="Portada"></div>
+  <div class="section-dot" data-slide="2" title="LLMs & Prompting"></div>
+  <div class="section-dot" data-slide="6" title="Chain of Thought"></div>
+  <div class="section-dot" data-slide="9" title="RAG"></div>
+  <div class="section-dot" data-slide="11" title="Agentes IA"></div>
+  <div class="section-dot" data-slide="14" title="MCP Protocol"></div>
+  <div class="section-dot" data-slide="17" title="Multi-Agente"></div>
+  <div class="section-dot" data-slide="20" title="Agentes Cooperativos"></div>
+  <div class="section-dot" data-slide="36" title="Resumen"></div>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const counter = document.getElementById('slide-counter');
+const progressBar = document.getElementById('progress-bar');
+const dots = document.querySelectorAll('.section-dot');
+let current = 0;
+let transitioning = false;
+
+const sectionSlides = [0, 2, 6, 9, 11, 14, 17, 20, 36];
+
+function goTo(n) {
+  if (transitioning) return;
+  n = Math.max(0, Math.min(slides.length - 1, n));
+  if (n === current) return;
+  
+  transitioning = true;
+  const prev = current;
+  
+  slides[prev].classList.remove('active');
+  slides[prev].classList.add('exit');
+  
+  setTimeout(() => {
+    slides[prev].classList.remove('exit');
+  }, 400);
+  
+  current = n;
+  slides[current].classList.add('active');
+  
+  // Update counter
+  counter.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
+  
+  // Update progress
+  const pct = (current / (slides.length - 1)) * 100;
+  progressBar.style.width = pct + '%';
+  
+  // Update dots
+  dots.forEach((dot, i) => {
+    const slideIdx = parseInt(dot.dataset.slide);
+    const nextSlide = sectionSlides[i + 1] || slides.length;
+    dot.classList.toggle('active', current >= slideIdx && current < nextSlide);
+  });
+  
+  // Update section label
+  const sectionNames = ['Portada', 'LLMs', 'CoT', 'RAG', 'Agentes', 'MCP', 'Multi-Agente', 'Agentes Coop.', 'Resumen'];
+  let sectionIdx = 0;
+  for (let i = 0; i < sectionSlides.length; i++) {
+    if (current >= sectionSlides[i]) sectionIdx = i;
+  }
+  const lbl = document.getElementById('section-label');
+  if (lbl) lbl.textContent = sectionNames[sectionIdx];
+  
+  setTimeout(() => { transitioning = false; }, 420);
+}
+
+function next() { goTo(current + 1); }
+function prev() { goTo(current - 1); }
+
+document.getElementById('btn-next').addEventListener('click', next);
+document.getElementById('btn-prev').addEventListener('click', prev);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  else if (e.key === 'f' || e.key === 'F') { 
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+    else document.exitFullscreen?.();
+  }
+  // Section shortcuts 1-9
+  else if (e.key >= '1' && e.key <= '9') {
+    const idx = parseInt(e.key) - 1;
+    if (idx < sectionSlides.length) goTo(sectionSlides[idx]);
+  }
+  else if (e.key === '0') goTo(0);
+});
+
+// Touch swipe
+let touchX = 0;
+document.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; });
+document.addEventListener('touchend', (e) => {
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) { dx < 0 ? next() : prev(); }
+});
+
+// Dot navigation
+dots.forEach((dot, i) => {
+  dot.addEventListener('click', () => goTo(sectionSlides[i]));
+});
+
+// Init
+goTo(0);
+</script>
+</body>
+</html>

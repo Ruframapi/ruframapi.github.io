@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Can LLM-Augmented Autonomous Agents Cooperate?</title>
+
+  <!-- Reveal.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/white.min.css" />
+  <!-- Highlight -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/monokai.min.css" />
+
+  <style>
+    /* ── Palette ───────────────────────────────────────────── */
+    :root {
+      --blue-dark:  #0a2d5c;
+      --blue-mid:   #1a4fa0;
+      --blue-light: #4a90d9;
+      --accent:     #e84040;
+      --accent2:    #f5a623;
+      --green:      #27ae60;
+      --gray-bg:    #f4f6fb;
+      --text:       #1a1a2e;
+    }
+
+    /* ── Global ────────────────────────────────────────────── */
+    .reveal {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: var(--text);
+    }
+    .reveal h1, .reveal h2, .reveal h3 { font-weight: 700; letter-spacing: -0.02em; }
+    .reveal h2 { color: var(--blue-dark); font-size: 1.5em; margin-bottom: 0.5em; }
+    .reveal h3 { color: var(--blue-mid); font-size: 1.1em; margin-bottom: 0.3em; }
+    .reveal ul { list-style: none; padding: 0; }
+    .reveal ul li::before { content: "▸ "; color: var(--blue-light); font-weight: bold; }
+    .reveal ul li { margin-bottom: 0.4em; font-size: 0.82em; line-height: 1.45; }
+    .reveal p { font-size: 0.82em; line-height: 1.5; }
+    .reveal section { text-align: left; }
+
+    /* ── Slide header bar ──────────────────────────────────── */
+    .slide-header {
+      background: linear-gradient(90deg, var(--blue-dark) 0%, var(--blue-mid) 100%);
+      color: #fff;
+      border-radius: 8px 8px 0 0;
+      padding: 10px 22px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .slide-header .icon { font-size: 1.4em; }
+    .slide-header h2 { color: #fff !important; margin: 0; font-size: 1.15em; }
+
+    /* ── Cover slide ───────────────────────────────────────── */
+    #cover {
+      background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 60%, var(--blue-light) 100%);
+      color: #fff !important;
+      border-radius: 14px;
+      padding: 40px 50px;
+      text-align: center;
+    }
+    #cover h1 {
+      color: #fff !important;
+      font-size: 1.18em;
+      line-height: 1.4;
+      margin-bottom: 18px;
+    }
+    #cover .subtitle { font-size: 0.8em; color: #c8dcf4; margin-bottom: 22px; }
+    #cover .authors { font-size: 0.68em; color: #dce8f8; margin-bottom: 14px; line-height: 1.7; }
+    #cover .institution { font-size: 0.65em; color: #a8c4e8; }
+    #cover .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.62em;
+      margin: 4px;
+      color: #e0eeff;
+    }
+    #cover .venue-line { margin-top: 20px; font-size: 0.65em; color: #8ab4d8; }
+
+    /* ── Two-column layout ─────────────────────────────────── */
+    .cols { display: flex; gap: 18px; align-items: flex-start; }
+    .col { flex: 1; }
+    .col-40 { flex: 0 0 38%; }
+    .col-60 { flex: 0 0 60%; }
+
+    /* ── Cards ─────────────────────────────────────────────── */
+    .card {
+      background: var(--gray-bg);
+      border-left: 4px solid var(--blue-light);
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+      font-size: 0.78em;
+    }
+    .card.green { border-color: var(--green); }
+    .card.red   { border-color: var(--accent); }
+    .card.yellow{ border-color: var(--accent2); }
+    .card strong { color: var(--blue-dark); }
+
+    /* ── Numbered steps ─────────────────────────────────────── */
+    .steps { counter-reset: step; }
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 0.78em;
+    }
+    .step-num {
+      background: var(--blue-mid);
+      color: #fff;
+      border-radius: 50%;
+      width: 26px; height: 26px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+      font-size: 0.9em;
+    }
+
+    /* ── Tag / pill ─────────────────────────────────────────── */
+    .tag {
+      display: inline-block;
+      border-radius: 12px;
+      padding: 2px 10px;
+      font-size: 0.62em;
+      font-weight: bold;
+      margin: 2px;
+    }
+    .tag.blue  { background: #dbeafe; color: var(--blue-dark); }
+    .tag.green { background: #d1fae5; color: #065f46; }
+    .tag.red   { background: #fee2e2; color: #7f1d1d; }
+    .tag.yellow{ background: #fef3c7; color: #78350f; }
+
+    /* ── Scenario grid ──────────────────────────────────────── */
+    .scenario-grid { display: flex; gap: 12px; }
+    .scenario-card {
+      flex: 1;
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+      border: 2px solid;
+    }
+    .scenario-card.harvest { background: #e8f5e9; border-color: var(--green); }
+    .scenario-card.mushrooms { background: #ede7f6; border-color: #7e57c2; }
+    .scenario-card.coins { background: #fff8e1; border-color: var(--accent2); }
+    .scenario-card img { width: 100%; border-radius: 6px; margin-bottom: 8px; object-fit: cover; height: 90px; }
+    .scenario-card h3 { font-size: 0.78em; margin: 6px 0; }
+    .scenario-card p { font-size: 0.68em; line-height: 1.4; text-align: left; }
+
+    /* ── Architecture diagram replacement ───────────────────── */
+    .arch-box {
+      background: #fff;
+      border: 2px solid var(--blue-light);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.72em;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .arch-box .icon { font-size: 1.3em; width: 28px; text-align: center; }
+    .arch-arrow { text-align: center; color: var(--blue-mid); font-size: 1.1em; margin: 2px 0; }
+
+    /* ── Result badges ──────────────────────────────────────── */
+    .result-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+    .result-badge {
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.72em;
+      font-weight: bold;
+      text-align: center;
+      min-width: 100px;
+    }
+    .result-badge.win { background: #d1fae5; color: #065f46; border: 1.5px solid var(--green); }
+    .result-badge.lose { background: #fee2e2; color: #7f1d1d; border: 1.5px solid var(--accent); }
+    .result-badge.neutral { background: #e0e7ff; color: #3730a3; border: 1.5px solid #818cf8; }
+
+    /* ── Highlight box ──────────────────────────────────────── */
+    .highlight-box {
+      background: linear-gradient(135deg, #dbeafe, #e0e7ff);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin: 12px 0;
+      border-left: 5px solid var(--blue-mid);
+    }
+    .highlight-box p { margin: 0; font-size: 0.8em; }
+
+    /* ── Conclusion checklist ───────────────────────────────── */
+    .check-item { display: flex; gap: 10px; margin-bottom: 8px; font-size: 0.78em; align-items: flex-start; }
+    .check-icon { font-size: 1.1em; margin-top: 1px; }
+
+    /* ── Speaker notes ──────────────────────────────────────── */
+    .speak-note {
+      background: #fffbeb;
+      border: 1px dashed #d97706;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-top: 14px;
+      font-size: 0.68em;
+      color: #78350f;
+      line-height: 1.5;
+    }
+    .speak-note strong { color: #92400e; }
+
+    /* ── Quote ──────────────────────────────────────────────── */
+    .quote {
+      border-left: 4px solid var(--blue-light);
+      padding: 8px 16px;
+      font-style: italic;
+      color: #334155;
+      font-size: 0.78em;
+      background: #f0f7ff;
+      border-radius: 0 8px 8px 0;
+      margin: 10px 0;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    .reveal .footer-bar {
+      position: fixed;
+      bottom: 6px;
+      left: 0; right: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 30px;
+      font-size: 0.5em;
+      color: #94a3b8;
+      z-index: 100;
+    }
+    .reveal .progress { height: 4px; }
+
+    /* ── Override reveal defaults ───────────────────────────── */
+    .reveal .slides section { padding: 0 10px; }
+    .reveal .slide-number { display: none; }
+
+    /* mushroom colors legend */
+    .mush { display: inline-block; border-radius: 4px; padding: 2px 8px; font-size: 0.7em; font-weight: bold; margin: 2px; }
+    .mush.red    { background: #fee2e2; color: #7f1d1d; }
+    .mush.green  { background: #d1fae5; color: #065f46; }
+    .mush.blue   { background: #dbeafe; color: #1e40af; }
+    .mush.orange { background: #ffedd5; color: #9a3412; }
+  </style>
+</head>
+<body>
+
+<div class="reveal">
+  <div class="slides">
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 1 — COVER
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div id="cover">
+        <div style="font-size:2.5em; margin-bottom:10px;">🤝🤖</div>
+        <h1>Can LLM-Augmented Autonomous Agents Cooperate?</h1>
+        <p class="subtitle">An Evaluation of Their Cooperative Capabilities Through <strong style="color:#fff">Melting Pot</strong></p>
+
+        <p class="authors">
+          M. Mosquera · J. S. Pinzón · Y. Fonseca · M. Ríos<br/>
+          N. Quijano · L. F. Giraldo · <strong style="color:#fff">R. Manrique</strong>
+        </p>
+
+        <p class="institution">Universidad de los Andes, Colombia</p>
+
+        <div style="margin: 14px 0;">
+          <span class="badge">🏛 IEEE Transactions on Artificial Intelligence</span>
+          <span class="badge">🔬 Google Research Scholar Program</span>
+        </div>
+
+        <div style="margin-top:16px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+          <span class="tag green">Cooperative AI</span>
+          <span class="tag blue">LLMs</span>
+          <span class="tag yellow">Multi-Agent Systems</span>
+          <span class="tag red">Social Intelligence</span>
+        </div>
+
+        <p class="venue-line">📎 github.com/Cooperative-IA/CooperativeGPT</p>
+      </div>
+
+      <aside class="notes">
+        Buenas [tardes/días]. Hoy les voy a presentar un trabajo que surge de una pregunta fundamental en IA moderna: ¿pueden los agentes autónomos potenciados por grandes modelos de lenguaje cooperar entre sí? Esto es más difícil de lo que parece, y para responderlo utilizamos Melting Pot, una plataforma de DeepMind diseñada específicamente para evaluar cooperación en sistemas multi-agente.
+      </aside>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 2 — MOTIVACIÓN
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="slide-header">
+        <span class="icon">💡</span>
+        <h2>Motivación y Pregunta de Investigación</h2>
+      </div>
+
+      <div class="cols">
+        <div class="col">
+          <h3>Contexto</h3>
+          <ul>
+            <li>Los agentes de IA están en todas partes: vehículos autónomos, servicio al cliente, asistentes</li>
+            <li>Énfasis histórico en <strong>inteligencia individual</strong> — pero la realidad exige <strong>inteligencia social</strong></li>
+            <li>Los LLMs permiten agentes más complejos (<em>LAAs: LLM-Augmented Autonomous Agents</em>)</li>
+            <li>La cooperación ha sido <em>subestimada</em> en la investigación de LAAs</li>
+          </ul>
+
+          <div class="highlight-box" style="margin-top:14px;">
+            <p><strong>Pregunta central:</strong><br/>
+            ¿Pueden los LAAs cooperar de forma efectiva en entornos sociales complejos con dilemas reales?</p>
+          </div>
+        </div>
+        <div class="col">
+          <h3>Las 4 Capacidades Cooperativas <small>(Dafoe et al.)</small></h3>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div><strong>Comprensión:</strong> anticipar consecuencias y entender las preferencias de otros agentes</div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div><strong>Comunicación:</strong> intercambio intencional de información para coordinar</div>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <div><strong>Compromiso:</strong> mecanismos de promesas y amenazas creíbles</div>
+            </div>
+            <div class="step">
+              <div class="step-num">4</div>
+              <div><strong>Instituciones:</strong> estructuras sociales que simplifican la interacción</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="notes">
+        El contexto: la IA está cada vez más presente en entornos donde múltiples agentes deben coexistir. Sin embargo, mientras hay mucho trabajo en inteligencia individual, la inteligencia social —la capacidad de colaborar— ha sido relativamente poco estudiada. Los LLMs parecen prometedores como base para agentes más sociales. Pero, ¿realmente cooperan? Esa es la pregunta que este paper intenta responder.
+      </aside>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 3 — TRABAJO RELACIONADO
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="slide-header">
+        <span class="icon">📚</span>
+        <h2>Trabajo Relacionado: Evolución de Agentes LLM</h2>
+      </div>
+
+      <div class="cols">
+        <div class="col">
+          <div class="card">
+            <strong>Toolformer</strong> (Schick et al.) — LLMs que invocan APIs de forma autosupervisada. <em>Limitación: sin retroalimentación ambiental ni razonamiento contextual.</em>
+          </div>
+          <div class="card">
+            <strong>ReAct</strong> (Yao et al.) — Integra razonamiento con acción (Reasoning + Acting). Mejor desempeño que enfoques individuales.
+          </div>
+          <div class="card">
+            <strong>Reflexion</strong> (Shinn et al.) — Añade auto-reflexión verbal sobre intentos fallidos sobre ReAct.
+          </div>
+        </div>
+        <div class="col">
+          <div class="card green">
+            <strong>Generative Agents</strong> (Park et al.) ⭐ — Arquitectura cognitiva completa: memoria, planificación, reflexión. <em>Base de este trabajo.</em>
+          </div>
+          <div class="card">
+            <strong>Voyager</strong> (Wang et al.) — Agente autónomo en Minecraft, crea sus propias herramientas.
+          </div>
+          <div class="card">
+            <strong>MetaGPT</strong> (Hong et al.) — Múltiples agentes con roles estructurados para generar software completo.
+          </div>
+          <div class="quote">
+            "A comprehensive LAA architecture is needed: memory, reflection, and planning working in concert."
+          </div>
+        </div>
+      </div>
+
+      <aside class="notes">
+        Para contextualizar, hubo una evolución de arquitecturas de agentes. Se pasó de simples invocaciones de herramientas, a razonamiento más elaborado, y finalmente a arquitecturas cognitivas completas. La más relevante para nosotros es la de Generative Agents de Park et al., que incluye memoria de corto y largo plazo, planificación y reflexión. Esta sirvió de base para nuestros agentes.
+      </aside>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 4 — MELTING POT
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="slide-header">
+        <span class="icon">🧪</span>
+        <h2>Plataforma de Evaluación: Melting Pot (DeepMind)</h2>
+      </div>
+
+      <div class="cols">
+        <div class="col-60">
+          <ul>
+            <li>Herramienta de investigación de DeepMind para evaluar IA multi-agente</li>
+            <li>Combina un <strong>substrate</strong> (entorno físico 2D en grid) con una <strong>background population</strong> (bots con políticas fijas)</li>
+            <li>Diseñado para situaciones de <strong>dilemas sociales</strong> con alta interdependencia entre agentes</li>
+            <li>Evaluación: agentes focales son probados en situaciones <em>no vistas</em> durante entrenamiento</li>
+            <li>Métrica: <strong>Focal Per Capita Average Reward</strong></li>
+          </ul>
+
+          <div class="highlight-box">
+            <p>¿Por qué Melting Pot? → Es el <em>benchmark</em> más riguroso disponible para medir cooperación emergente en sistemas multi-agente, con comparables de RL bien establecidos.</p>
+          </div>
+        </div>
+        <div class="col-40" style="text-align:center;">
+          <div style="background:#e8f0fe; border-radius:10px; padding:16px; font-size:0.75em; border:2px solid var(--blue-light);">
+            <div style="font-size:2em; margin-bottom:8px;">🗺️</div>
+            <strong>Entorno 2D Grid</strong><br/>
+            <span style="color:#555">Substrate</span><br/>
+            <div style="margin:10px 0; font-size:1.5em;">⬇️</div>
+            <strong>Background Population</strong><br/>
+            <span style="color:#555">Bots con políticas RL</span><br/>
+            <div style="margin:10px 0; font-size:1.5em;">⬇️</div>
+            <strong style="color:var(--blue-mid)">Focal Agents (LAAs)</strong><br/>
+            <span style="color:#555">Evaluados sin entrenamiento</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="notes">
+        Melting Pot es la plataforma que usamos para evaluar a nuestros agentes. Es un entorno diseñado por DeepMind específicamente para poner a prueba la cooperación: los agentes conviven con bots entrenados con políticas que a veces son disruptivas. Los tres escenarios que seleccionamos representan distintos tipos de dilemas sociales: recursos compartidos, externalidades y competencia directa.
+      </aside>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 5 — LOS TRES ESCENARIOS
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="slide-header">
+        <span class="icon">🎮</span>
+        <h2>Los Tres Escenarios de Evaluación</h2>
+      </div>
+
+      <div class="scenario-grid">
+        <div class="scenario-card harvest">
+          <img src="images/cooperacion/environment_commons_harvest.png" alt="Commons Harvest" onerror="this.style.display='none'"/>
+          <h3>🌳 Commons Harvest Open</h3>
+          <p>5 LAAs + 2 bots depredadores. Las manzanas se regeneran según vecinos. Si se agotan los parches verdes → <strong>regeneración imposible</strong>.<br/><br/>
+          Dilema: cosechar ahora vs. sostenibilidad colectiva. Bots atacan y cosechan sin control.</p>
+          <span class="tag green">Tragedia de los comunes</span>
+        </div>
+        <div class="scenario-card mushrooms">
+          <img src="images/cooperacion/environment_mushrooms.png" alt="Mushrooms" onerror="this.style.display='none'"/>
+          <h3>🍄 Externality Mushrooms</h3>
+          <p>1 LAA + 4 bots. Hongos con distintos efectos:<br/>
+          <span class="mush red">🔴 Solo yo</span> <span class="mush green">🟢 Todos</span> <span class="mush blue">🔵 Todos menos yo</span> <span class="mush orange">🟠 Penalización</span><br/><br/>
+          Bots prefieren rojo. Optimal: priorizar verde.</p>
+          <span class="tag" style="background:#ede7f6;color:#4527a0;">Externalidades</span>
+        </div>
+        <div class="scenario-card coins">
+          <img src="images/cooperacion/environment_coins.png" alt="Coins" onerror="this.style.display='none'"/>
+          <h3>🪙 Coins</h3>
+          <p>1 LAA + 1 bot. Cada moneda = +1 punto. Si el otro recoge una moneda de tu color → <strong>−2 puntos para ti</strong>.<br/><br/>
+          Bot usa política de <em>reciprocidad</em>: si el LAA toma 3 monedas incorrectas, recoge todo indiscriminadamente por 150 pasos.</p>
+          <span class="tag yellow">Dilema de defección</span>
+        </div>
+      </div>
+
+      <aside class="notes">
+        Vamos a ver cada escenario brevemente. En Commons Harvest, el reto es la sobrexplotación: si los agentes cosechan sin control, los árboles desaparecen para siempre. En Mushrooms, el agente debe aprender a priorizar hongos verdes que benefician a todos, en lugar de los rojos que solo le dan a él. Y en Coins, hay un dilema directo: ¿recoges todas las monedas o respetas las del otro para evitar represalias?
+      </aside>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 6 — ARQUITECTURA LAA
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="slide-header">
+        <span class="icon">🧠</span>
+        <h2>Arquitectura LAA: Generative Agents Adaptados</h2>
+      </div>
+
+      <div class="cols">
+        <div class="col-40">
+          <h3>Tres Memorias</h3>
+          <div class="card blue" style="border-color:#3b82f6;">
+            <strong>⚡ Corto plazo:</strong> estado actual del mundo, información básica del agente
+          </div>
+          <div class="card blue" style="border-color:#6366f1;">
+            <strong>🗄 Largo plazo:</strong> observaciones e insights (ChromaDB + OpenAI embeddings)
+          </div>
+          <div class="card blue" style="border-color:#8b5cf6;">
+            <strong>🗺 Espacial:</strong> posición, orientación y mapa del grid explorado
+          </div>
+          <br/>
+          <div style="font-size:0.72em; color:#555;">
+            Acciones de alto nivel:<br/>
+            <code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.9em;">go to (x,y)</code>
+            <code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.9em;">explore</code>
+            <code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.9em;">stay put</code>
+            <code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.9em;">immobilize</code>
+          </div>
+        </div>
+
+        <div class="col-60">
+          <h3>Secuencia Cognitiva</h3>
+          <img src="images/cooperacion/Figure_Coop_AI.pdf" alt="Flow diagram" style="width:100%;border-radius:8px;border:1px solid #ddd;" onerror="this.style.display='none'"/>
+
+          <div class="arch-box">
+            <span class="icon">👁</span>
+            <div><strong>1. Percepción</strong> — Filtra observaciones por cercanía; decide si replantear el plan</div>
+          </div>
+          <div class="arch-arrow">↓</div>
+          <div class="arch-box">
+            <span class="icon">📋</span>
+            <div><strong>2. Planificación</strong> — Genera plan de alto nivel con contexto, reflexiones y observaciones</div>
+          </div>
+          <div class="arch-arrow">↓</div>
+          <div class="arch-box">
+            <span class="icon">💭</span>
+            <div><strong>3. Reflexión</strong> — Insights de alto nivel sobre experiencias; almacena en memoria larga</div>
+          </div>
+          <div class="arch-arrow">↓</div>
+          <div class="arch-box" style="border-color:var(--green);">
+            <span class="icon">⚡</span>
+            <div><strong>4. Acción</strong> — Razonamiento SWOT: Oportunidades, Amenazas, Opciones, Consecuencias → acción</div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="notes">
+        Aquí está el corazón del trabajo: la arquitectura de nuestros agentes. Tiene tres niveles de memoria y cuatro módulos cognitivos que se ejecutan secuencialmente. Lo más interesante es que el módulo de acción no simplemente elige una acción: razona explícitamente sobre oportunidades, amenazas, opciones y consecuencias —algo similar al análisis FODA— antes de decidir. Esto le da al agente una capa de razonamiento estratégico.
+      </aside>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 7 — ADAPTACIÓN DEL ENTORNO
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="slide-header">
+        <span class="icon">🔤</span>
+        <h2>Adaptando el Entorno Visual a LLMs</h2>
+      </div>
+
+      <div class="cols">
+        <div class="col">
+          <h3>Problema</h3>
+          <ul>
+            <li>Melting Pot usa grids 2D con símbolos → difícil de interpretar por LLMs</li>
+            <li>Matrices de caracteres no preservan bien las relaciones espaciales para los modelos</li>
+          </ul>
+
+          <h3 style="margin-top:14px;">Solución: Generador de Observaciones en Lenguaje Natural</h3>
+          <ul>
+            <li>Cada objeto recibe una descripción en lenguaje natural + coordenadas [x, y]</li>
+            <li>Eventos relevantes capturados como texto</li>
+            <li>Observaciones ordenadas por <strong>cercanía</strong> al agente</li>
+          </ul>
+
+          <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:10px 14px; margin-top:12px; font-size:0.72em; font-family:monospace;">
+            <span style="color:#16a34a;">// Ejemplos de descripciones generadas</span><br/>
+            "Observed an apple at position [3, 7]. This apple belongs to <strong>tree_2</strong>."<br/>
+            "Observed that agent <strong>Laura</strong> took an apple from position [5, 2]."<br/>
+            "Observed that the grass at position [8, 14] <strong>disappeared</strong>."
+          </div>
+        </div>
+
+        <div class="col">
+          <h3>Tabla de Objetos — Commons Harvest</h3>
+          <table style="font-size:0.65em; border-collapse:collapse; width:100%;">
+            <thead>
+              <tr style="background:var(--blue-dark); color:#fff;">
+                <th style="padding:6px 8px; text-align:left; border-radius:4px 0 0 0;">Objeto/Evento</th>
+                <th style="padding:6px 8px; text-align:left; border-radius:0 4px 0 0;">Descripción generada</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background:#f8fafc;">
+                <td style="padding:5px 8px; border-bottom:1px solid #e2e8f0;">Otro agente</td>
+                <td style="padding:5px 8px; border-bottom:1px solid #e2e8f0;">Observed agent &lt;name&gt; at position [x, y]</td>
+              </tr>
+              <tr>
+                <td style="padding:5px 8px; border-bottom:1px solid #e2e8f0;">Manzana</td>
+                <td style="padding:5px 8px; border-bottom:1px solid #e2e8f0;">Observed an apple at [x, y]. Belongs to tree &lt;id&gt;</td>
+              </tr>
+              <tr style="background:#f8fafc;">
+                <td style="padding:5px 8px; border-bottom:1px solid #e2e8f0;">Árbol</td>
+                <td style="padding:5px 8px; border-bottom:1px solid #e2e8f0;">Tree &lt;id&gt; has N apples and M grass remaining</td>
+              </tr>
+              <tr>
+                <td style="padding:5px 8px; border-bottom:1px solid #e2e8f0;">Ataque</td>
+                <td style="padding:5px 8px; border-bottom:1px solid #e2e8f0;">Someone was attacked at position [x, y]</td>
+              </tr>
+              <tr style="background:#f8fafc;">
+                <td style="padding:5px 8px;">Hierba desaparece</td>
+                <td style="padding:5px 8px;">Observed that the grass at [x, y] disappeared</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="highlight-box" style="margin-top:12px;">
+            <p>Grid: 18 × 24 celdas · Origen [0,0] en esquina superior izquierda · Agentes con ventana de observación limitada</p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="notes">
+        Un desafío clave fue cómo comunicarle el estado del mundo a un LLM. Una matriz de símbolos como la que usa Melting Pot no es interpretable fácilmente por los modelos. La solución fue construir un generador que traduce cada objeto del grid a una descripción en lenguaje natural con coordenadas. Así el agente 've' el mundo como texto, y ejecuta acciones de alto nivel como 'ir a posición X,Y' en lugar de 'mover arriba'.
+      </aside>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 8 — DISEÑO EXPERIMENTAL
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="slide-header">
+        <span class="icon">⚗️</span>
+        <h2>Diseño Experimental</h2>
+      </div>
+
+      <div class="cols">
+        <div class="col">
+          <h3>Baselines</h3>
+          <div class="card red">
+            <strong>🤖 RL Melting Pot</strong><br/>
+            Agentes de RL entrenados por <strong>10⁹ pasos</strong> en condiciones similares. Referencia de desempeño máximo con entrenamiento extenso.
+          </div>
+          <div class="card yellow">
+            <strong>⛓ Chain-of-Thought (CoT)</strong><br/>
+            Observaciones crudas → LLM → acción. Sin memoria, sin reflexión, sin planificación. Arquitectura LAA simplificada.
+          </div>
+
+          <h3 style="margin-top:14px;">Modelos LLM</h3>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span class="tag green">GPT-4o (Set 1)</span>
+            <span class="tag green">GPT-4o mini (Set 1)</span>
+            <span class="tag blue">GPT-4 (Set 2)</span>
+            <span class="tag blue">GPT-3.5 (Set 2)</span>
+          </div>
+        </div>
+
+        <div class="col">
+          <h3>Métrica Principal</h3>
+          <div class="highlight-box">
+            <p><strong>Focal Per Capita Average Reward</strong><br/>
+            Recompensa promedio por agente LAA (excluyendo bots). Alineada con el framework de Melting Pot.</p>
+          </div>
+
+          <h3 style="margin-top:14px;">Dos Sets de Experimentos</h3>
+          <div class="card green">
+            <strong>Set 1:</strong> Generative Agents vs. RL Baseline vs. CoT en los 3 escenarios. 10 repeticiones por experimento.
+          </div>
+          <div class="card">
+            <strong>Set 2:</strong> Impacto de personalidad (cooperativo / egoísta / sin personalidad) en Commons Harvest usando GPT-3.5 y GPT-4.
+          </div>
+
+          <p style="font-size:0.68em; color:#666; margin-top:10px;">✦ Todos los experimentos repetidos 10 veces para garantizar significancia estadística.</p>
+        </div>
+      </div>
+
+      <aside class="notes">
+        Para evaluar nuestros agentes usamos dos líneas de comparación: primero, los algoritmos de RL del paper original de Melting Pot, que fueron entrenados por miles de millones de pasos. Segundo, una versión simplificada de agente LAA que solo usa Chain-of-Thought. La métrica es la recompensa promedio per cápita de los agentes focales. Todo se repitió 10 veces para garantizar significancia estadística.
+      </aside>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 9 — RESULTADOS PRINCIPALES
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="slide-header">
+        <span class="icon">📊</span>
+        <h2>Resultados Principales — Set 1</h2>
+      </div>
+
+      <div class="cols">
+        <div class="col-60">
+          <img src="images/cooperacion/all_focalRewPerCapita_v2.png" alt="Main results"
+               style="width:100%; border-radius:8px; border:1px solid #ddd;"
+               onerror="this.style.background:'#f0f4ff';this.alt='[Figura: Focal Per Capita Reward por escenario]'"/>
+          <p style="font-size:0.62em; color:#666; margin-top:4px; text-align:center;">Focal Per Capita Average Reward por escenario y arquitectura</p>
+        </div>
+
+        <div class="col-40">
+          <h3>Resumen de Resultados</h3>
+
+          <p style="font-size:0.75em; font-weight:bold; margin-bottom:6px;">Gen. Agents vs. CoT</p>
+          <div class="result-row">
+            <div class="result-badge win">Mushrooms ✅</div>
+            <div class="result-badge win">Coins ✅</div>
+            <div class="result-badge win">Harvest ✅</div>
+          </div>
+
+          <p style="font-size:0.75em; font-weight:bold; margin: 12px 0 6px;">Gen. Agents vs. RL Baseline</p>
+          <div class="result-row">
+            <div class="result-badge win">Mushrooms ✅</div>
+            <div class="result-badge win">Coins ✅</div>
+            <div class="result-badge lose">Harvest ❌</div>
+          </div>
+
+          <div class="highlight-box" style="margin-top:16px;">
+            <p>🎯 <strong>Clave:</strong> Los LAAs <em>nunca fueron entrenados</em>. Aprovechan el "sentido común" del LLM para superar agentes RL en 2 de 3 escenarios.</p>
+          </div>
+
+          <div style="font-size:0.68em; color:#555; margin-top:10px;">
+            GPT-4o y GPT-4o mini muestran tendencias similares entre sí en todos los escenarios.
+          </div>
+        </div>
+      </div>
+
+      <aside class="notes">
+        Este es el resultado más importante. Generative Agents supera consistentemente al agente CoT en los tres escenarios. Y frente al baseline de RL —que recuérdense fue entrenado por billones de pasos— los Generative Agents ganan en Coins y Mushrooms, y pierden solo en Commons Harvest. Lo llamativo es que nuestros agentes nunca fueron 'entrenados': solo tenían información general del entorno. Eso habla del poder del 'sentido común' que ya tienen los LLMs.
+      </aside>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 10 — ANÁLISIS POR ESCENARIO
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="slide-header">
+        <span class="icon">🔍</span>
+        <h2>Análisis por Escenario — Indicadores de Comportamiento</h2>
+      </div>
+
+      <div class="cols">
+        <!-- Mushrooms -->
+        <div class="col" style="border-right:1px solid #e2e8f0; padding-right:12px;">
+          <h3>🍄 Externality Mushrooms</h3>
+          <img src="images/cooperacion/set1_mushrooms_indicators.png" alt="Mushrooms indicators"
+               style="width:100%; border-radius:6px; margin-bottom:6px;"
+               onerror="this.style.display='none'"/>
+          <ul>
+            <li>GenAgents eligen hongos <span class="tag green">🟢 verdes</span> más frecuentemente que CoT</li>
+            <li>Exploran activamente cuando no hay hongos buenos visibles ✅</li>
+            <li>Raramente consumen hongos azules/naranjas ✅</li>
+            <li>p-value &lt; 0.1 vs. RL baseline (estadísticamente significativo)</li>
+          </ul>
+        </div>
+
+        <!-- Coins -->
+        <div class="col" style="border-right:1px solid #e2e8f0; padding-right:12px; padding-left:12px;">
+          <h3>🪙 Coins</h3>
+          <img src="images/cooperacion/set2_coins1_indicators_comparison_v3.png" alt="Coins indicators"
+               style="width:100%; border-radius:6px; margin-bottom:6px;"
+               onerror="this.style.display='none'"/>
+          <ul>
+            <li>GenAgents activan menos la política de reciprocidad del bot ✅</li>
+            <li>Toman menos monedas del color incorrecto ✅</li>
+            <li>Dato curioso: GPT-4o <em>mini</em> mejor que GPT-4o en algunos indicadores</li>
+          </ul>
+        </div>
+
+        <!-- Harvest -->
+        <div class="col" style="padding-left:12px;">
+          <h3>🌳 Commons Harvest</h3>
+          <img src="images/cooperacion/set2_commons_harvest_0_indicators_comparison.jpg" alt="Harvest indicators"
+               style="width:100%; border-radius:6px; margin-bottom:6px;"
+               onerror="this.style.display='none'"/>
+          <ul>
+            <li>GenAgents más sostenibles: evitan árboles con pocas manzanas ✅</li>
+            <li>Mejor comprensión del entorno: eligen comer cuando hay abundancia ✅</li>
+            <li>Pero: consumen la <strong>última manzana</strong> con más frecuencia que CoT ❌</li>
+            <li>RL gana por haber visto ese caso límite 10⁹ veces</li>
+          </ul>
+        </div>
+      </div>
+
+      <aside class="notes">
+        Yendo al detalle de cada escenario encontramos patrones interesantes. En Mushrooms, los agentes aprendieron a priorizar el bien colectivo. En Coins, mejoraron la cooperación estratégica evitando provocar al bot. Pero en Commons Harvest hay un punto ciego: aunque los agentes fueron más sostenibles en general, fallaron en el momento más crítico — cuando solo queda una manzana. El RL, entrenado por 10⁹ pasos, sí aprendió ese caso límite.
+      </aside>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 11 — PERSONALIDAD Y CONOCIMIENTO SOCIAL
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="slide-header">
+        <span class="icon">🎭</span>
+        <h2>Impacto de Personalidad y Conocimiento Social</h2>
+      </div>
+
+      <div class="cols">
+        <div class="col">
+          <h3>Set 2: Impacto de Personalidad</h3>
+          <img src="images/cooperacion/set_personality_rewards_and_attacks_v2.png" alt="Personality results"
+               style="width:100%; border-radius:8px; border:1px solid #ddd; margin-bottom:10px;"
+               onerror="this.style.display='none'"/>
+          <ul>
+            <li><span class="tag red">Cooperativo</span> → <strong>peor rendimiento</strong> — no atacan aunque deberían</li>
+            <li><span class="tag yellow">Egoísta</span> ≈ <span class="tag blue">Sin personalidad</span> — LLMs tienden a cooperar de base</li>
+          </ul>
+          <div class="card red" style="margin-top:10px;">
+            ⚠️ Los LLMs equiparan "cooperar" con "no atacar", incluso cuando atacar es la única estrategia óptima.
+          </div>
+        </div>
+
+        <div class="col">
+          <h3>Experimento: "Pedro es Egoísta"</h3>
+          <img src="images/cooperacion/set2_attacks_graph___pedro_is_selfish_v3.png" alt="Pedro experiment"
+               style="width:80%; border-radius:8px; border:1px solid #ddd; margin:0 auto; display:block; margin-bottom:10px;"
+               onerror="this.style.display='none'"/>
+
+          <div class="highlight-box">
+            <p><strong>86%</strong> de los ataques de agentes sin personalidad fueron dirigidos exclusivamente a "Pedro" (el agente informado como egoísta).</p>
+          </div>
+
+          <ul>
+            <li>Los agentes usaron <strong>información social implantada</strong> para coordinar una respuesta colectiva</li>
+            <li>Comportamiento emergente fascinante: ¿proto-institución?</li>
+            <li>Demuestra la importancia de que los agentes conozcan el comportamiento de sus pares</li>
+          </ul>
+        </div>
+      </div>
+
+      <aside class="notes">
+        Dos hallazgos curiosos del segundo set. Primero: cuando instruimos a los agentes a ser cooperativos, su rendimiento fue el peor. ¿Por qué? Porque los LLMs interpretan 'cooperar' como 'no atacar', y en Commons Harvest atacar a los bots destructivos es la única forma de proteger los recursos. Segundo: cuando informamos a los agentes que 'Pedro' es egoísta, el 86% de los ataques fueron dirigidos específicamente a él. Los agentes usaron esa información social para coordinar una respuesta colectiva — un comportamiento emergente fascinante.
+      </aside>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 12 — DISCUSIÓN: CAPACIDADES COOPERATIVAS
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="slide-header">
+        <span class="icon">💬</span>
+        <h2>Discusión: ¿Qué Capacidades Cooperativas Tienen los LAAs?</h2>
+      </div>
+
+      <div class="cols">
+        <div class="col">
+          <h3>Estado Actual</h3>
+          <div class="card green">
+            <strong>✅ Comprensión (parcial):</strong> Los agentes entienden el mundo y anticipan algunas consecuencias. El "sentido común" del LLM es poderoso.
+          </div>
+          <div class="card red">
+            <strong>❌ Comunicación:</strong> No hay intercambio directo entre agentes LAA. No pueden coordinar explícitamente.
+          </div>
+          <div class="card red">
+            <strong>❌ Compromiso:</strong> Sin mecanismos de promesas o amenazas creíbles entre agentes.
+          </div>
+          <div class="card yellow">
+            <strong>⚠️ Instituciones:</strong> Emergentes y débiles (experimento de Pedro), pero no estructuradas.
+          </div>
+        </div>
+
+        <div class="col">
+          <h3>Limitaciones Identificadas</h3>
+          <ul>
+            <li>No distinguen bots de agentes LAA — no modelan intenciones diferenciadas</li>
+            <li>No priorizan consistentemente el bienestar colectivo a largo plazo</li>
+            <li>Instrucciones de personalidad no son suficientemente fuertes para anular el alineamiento base del LLM</li>
+            <li>Costo computacional elevado (múltiples llamadas a la API por acción)</li>
+          </ul>
+
+          <div class="quote" style="margin-top:16px;">
+            "While the agents showed a propensity to cooperate, their actions did not demonstrate a clear understanding of effective collaboration within the given environment."
+          </div>
+
+          <p style="font-size:0.7em; color:#666; margin-top:8px;">→ Consistent with Zhang et al. (2023): LLM alignment resists persona overrides.</p>
+        </div>
+      </div>
+
+      <aside class="notes">
+        Aquí viene la reflexión más profunda del paper. ¿Qué se necesita para cooperar de verdad? Dafoe et al. identifican cuatro capacidades esenciales. Nuestros agentes muestran cierta comprensión del mundo, pero les falta comunicación directa entre agentes, mecanismos de compromiso creíbles e instituciones sociales. En otras palabras: son agentes que quieren cooperar, pero no siempre saben cómo hacerlo en entornos complejos.
+      </aside>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 13 — CONCLUSIONES Y TRABAJO FUTURO
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="slide-header">
+        <span class="icon">🏁</span>
+        <h2>Conclusiones y Trabajo Futuro</h2>
+      </div>
+
+      <div class="cols">
+        <div class="col">
+          <h3>Contribuciones Principales</h3>
+
+          <div class="check-item">
+            <span class="check-icon">✅</span>
+            <div>Adaptamos 3 escenarios de Melting Pot a representaciones textuales para LLMs</div>
+          </div>
+          <div class="check-item">
+            <span class="check-icon">✅</span>
+            <div>Arquitectura LAA reutilizable basada en Generative Agents (código open-source)</div>
+          </div>
+          <div class="check-item">
+            <span class="check-icon">✅</span>
+            <div>Replicamos condiciones de RL para comparación directa y justa</div>
+          </div>
+          <div class="check-item">
+            <span class="check-icon">✅</span>
+            <div>Gen. Agents > RL en 2/3 escenarios <em>sin entrenamiento previo</em></div>
+          </div>
+          <div class="check-item">
+            <span class="check-icon">✅</span>
+            <div>Conocimiento social facilita respuestas cooperativas emergentes (experimento Pedro)</div>
+          </div>
+          <div class="check-item">
+            <span class="check-icon">⚠️</span>
+            <div>Gap en capacidades cooperativas de orden superior: comunicación, compromiso, instituciones</div>
+          </div>
+        </div>
+
+        <div class="col">
+          <h3>Trabajo Futuro</h3>
+          <div class="card green">
+            🗣 <strong>Comunicación explícita</strong> entre agentes LAA para coordinar planes compartidos
+          </div>
+          <div class="card">
+            🤝 <strong>Mecanismos de compromiso</strong>: promesas verificables y amenazas creíbles
+          </div>
+          <div class="card">
+            🏛 <strong>Instituciones emergentes</strong>: estructuras sociales que guíen la interacción colectiva
+          </div>
+          <div class="card">
+            📐 <strong>Benchmarks más ricos</strong>: ampliar escenarios de Melting Pot para LAAs
+          </div>
+
+          <div style="text-align:center; margin-top:16px; background:var(--blue-dark); border-radius:8px; padding:12px;">
+            <p style="color:#fff; margin:0; font-size:0.72em;">📎 Código disponible en:</p>
+            <p style="color:#7dd3fc; margin:4px 0 0; font-size:0.7em; font-family:monospace;">github.com/Cooperative-IA/CooperativeGPT</p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="notes">
+        Para cerrar: demostramos que las arquitecturas LAA avanzadas son prometedoras para la cooperación, y que el 'sentido común' de los LLMs puede compensar la falta de entrenamiento en muchos casos. Pero también identificamos un gap importante: las capacidades cooperativas de orden superior — comunicar, comprometerse, construir instituciones — aún no están bien representadas en las arquitecturas actuales. Ese es el camino por explorar. El código está disponible en GitHub para quien quiera explorar o construir sobre este trabajo. Gracias.
+      </aside>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE FINAL — GRACIAS / Q&A
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div style="text-align:center; padding:30px 20px;">
+        <div style="font-size:3em; margin-bottom:16px;">🤝</div>
+        <h2 style="color:var(--blue-dark); font-size:1.6em; margin-bottom:8px;">¡Gracias!</h2>
+        <p style="color:#555; font-size:0.85em; margin-bottom:24px;">Preguntas y discusión</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; max-width:600px; margin:0 auto; text-align:left;">
+          <div class="card green">
+            <strong>📧 Contacto</strong><br/>
+            <span style="font-size:0.85em;">rf.manrique@uniandes.edu.co</span>
+          </div>
+          <div class="card">
+            <strong>💻 Código</strong><br/>
+            <span style="font-size:0.85em; font-family:monospace;">CooperativeGPT</span>
+          </div>
+          <div class="card" style="grid-column:1/-1;">
+            <strong>📄 Paper:</strong> IEEE Transactions on Artificial Intelligence<br/>
+            <em style="font-size:0.85em;">"Can LLM-Augmented Autonomous Agents Cooperate? An Evaluation of Their Cooperative Capabilities Through Melting Pot"</em>
+          </div>
+        </div>
+
+        <div style="margin-top:24px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+          <span class="tag green">Cooperative AI</span>
+          <span class="tag blue">LLMs</span>
+          <span class="tag yellow">Melting Pot</span>
+          <span class="tag red">Multi-Agent Systems</span>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /slides -->
+
+  <!-- Footer -->
+  <div class="footer-bar">
+    <span>Mosquera et al. · IEEE TAI · Universidad de los Andes</span>
+    <span>Can LLM-Augmented Autonomous Agents Cooperate?</span>
+  </div>
+</div><!-- /reveal -->
+
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    progress: true,
+    transition: 'slide',
+    transitionSpeed: 'fast',
+    backgroundTransition: 'fade',
+    width: 1100,
+    height: 680,
+    margin: 0.04,
+    minScale: 0.2,
+    maxScale: 2.0,
+    plugins: [ RevealNotes, RevealHighlight ]
+  });
+</script>
+</body>
+</html>
