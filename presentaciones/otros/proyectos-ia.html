@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qué implica realmente construir un proyecto de IA</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css">
+  <link rel="stylesheet" href="custom.css">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ============================================================
+     SLIDE 0 — PORTADA
+     ============================================================ -->
+<section>
+  <p class="phase-tag">Rubén Manrique (rf.manrique@uniandes.edu.co)</p>
+  <h1>Proyectos de Inteligencia Artificial </br> Perspectiva practicionaria</h1>
+  <span class="title-accent">---</span>
+  <p class="small gray" style="margin-top:1.2em;">Marzo 2026</p>
+</section>
+
+<!-- ============================================================
+     FASE 1 — INTRODUCCIÓN
+     ============================================================ -->
+
+<!-- SLIDE 1 — El mito de hacer IA con prompts -->
+<section>
+  <p class="phase-tag">Fase 1 — Introducción</p>
+  <h2 class="ruled">Hoy 2026: "hacer IA con prompts"</h2>
+  <div class="two-col" style="align-items:center;">
+    <div>
+      <ul>
+        <li>Existe una tendencia a asumir que cualquier problema se resuelve con IA generativa.</li>
+        <li>Muchas organizaciones creen que basta con <em>"mandar datos a una API"</em>.</li>
+        <li>En realidad:
+          <ul>
+            <li>algunos problemas no son problemas de IA;</li>
+            <li>algunos requieren IA clásica, no generativa;</li>
+            <li>algunos son inviables por costo;</li>
+            <li>otros son ilegales por privacidad o soberanía de datos.</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <!-- SVG 1: Iceberg -->
+    <div class="svg-wrap">
+      <svg width="260" height="340" viewBox="0 0 260 340" xmlns="http://www.w3.org/2000/svg" aria-label="Iceberg de IA">
+        <!-- Océano: línea de agua -->
+        <rect x="0" y="130" width="260" height="210" fill="#dbeafe" rx="0"/>
+        <!-- Agua sobre el fondo -->
+        <line x1="0" y1="130" x2="260" y2="130" stroke="#2e5f9e" stroke-width="2" stroke-dasharray="6,3"/>
+        <!-- Punta del iceberg (visible) -->
+        <polygon points="130,10 80,130 180,130" fill="#1a3558"/>
+        <!-- Etiqueta punta -->
+        <text x="130" y="80" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#ffffff" font-weight="600">Prompts</text>
+        <text x="130" y="96" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#bfdbfe">ChatGPT / API</text>
+        <!-- Cuerpo sumergido -->
+        <polygon points="70,138 35,330 225,330 190,138" fill="#2e5f9e" opacity="0.85"/>
+        <!-- Capas sumergidas -->
+        <text x="130" y="162" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#ffffff">Datos</text>
+        <line x1="60" y1="170" x2="200" y2="170" stroke="#bfdbfe" stroke-width="0.7" opacity="0.5"/>
+        <text x="130" y="190" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#ffffff">Integración de sistemas</text>
+        <line x1="55" y1="198" x2="205" y2="198" stroke="#bfdbfe" stroke-width="0.7" opacity="0.5"/>
+        <text x="130" y="217" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#ffffff">Entrenamiento</text>
+        <line x1="50" y1="225" x2="210" y2="225" stroke="#bfdbfe" stroke-width="0.7" opacity="0.5"/>
+        <text x="130" y="244" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#ffffff">Gobierno</text>
+        <line x1="46" y1="252" x2="214" y2="252" stroke="#bfdbfe" stroke-width="0.7" opacity="0.5"/>
+        <text x="130" y="271" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#ffffff">Seguridad</text>
+        <line x1="42" y1="279" x2="218" y2="279" stroke="#bfdbfe" stroke-width="0.7" opacity="0.5"/>
+        <text x="130" y="298" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#ffffff">Legal / Compliance</text>
+        <line x1="38" y1="306" x2="222" y2="306" stroke="#bfdbfe" stroke-width="0.7" opacity="0.5"/>
+        <text x="130" y="322" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#ffffff">Mantenimiento</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 2 — Dimensiones reales -->
+<section>
+  <p class="phase-tag">Fase 1 — Introducción</p>
+  <h2 class="ruled">Un proyecto de IA tiene múltiples dimensiones</h2>
+  <div class="two-col">
+    <div>
+      <h3 class="mid-blue">Técnicas</h3>
+      <ul>
+        <li>Tipo de modelo adecuado</li>
+        <li>Calidad y volumen de datos</li>
+        <li>Infraestructura de cómputo</li>
+        <li>Integración con sistemas existentes</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="mid-blue">Jurídicas y operativas</h3>
+      <ul>
+        <li>Privacidad y soberanía de datos</li>
+        <li>Transferencias internacionales</li>
+        <li>Discriminación algorítmica</li>
+        <li>Trazabilidad y explicabilidad</li>
+        <li>Gobierno y auditoría continua</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:1em;">
+    <strong> Antes de evaluar cualquier modelo, hay que entender si el problema requiere IA en absoluto.</strong>
+  </div>
+</section>
+
+<!-- ============================================================
+     FASE 2 — ¿ES UN PROBLEMA DE IA?
+     ============================================================ -->
+
+<!-- SLIDE 3 — Tabla de ejemplos -->
+<section>
+  <p class="phase-tag">Fase 2 — ¿Es un problema de IA?</p>
+  <h2 class="ruled">Muchos problemas no requieren IA</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Problema</th>
+        <th>¿Necesita IA?</th>
+        <th>Solución posible</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Buscar documentos por palabras clave</td>
+        <td>No necesariamente</td>
+        <td>Motor de búsqueda</td>
+      </tr>
+      <tr>
+        <td>Clasificar correos automáticamente</td>
+        <td>Sí</td>
+        <td>IA supervisada</td>
+      </tr>
+      <tr>
+        <td>Detectar fraude desconocido</td>
+        <td>Sí</td>
+        <td>IA no supervisada</td>
+      </tr>
+      <tr>
+        <td>Generar contratos</td>
+        <td>Tal vez</td>
+        <td>GenIA + reglas jurídicas</td>
+      </tr>
+      <tr>
+        <td>Extraer datos de PDFs</td>
+        <td>A veces</td>
+        <td>OCR + reglas</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    Una solución tradicional suele ser <strong>más barata, más explicable, más auditable y menos riesgosa jurídicamente</strong>.
+  </div>
+</section>
+
+<!-- SLIDE 4 — Diagrama de decisión -->
+<section>
+  <p class="phase-tag">Fase 2 — ¿Es un problema de IA?</p>
+  <h2 class="ruled">Diagrama de decisión</h2>
+  <div class="svg-wrap">
+    <!-- SVG 2: Flowchart de decisión -->
+    <svg width="680" height="440" viewBox="0 0 680 440" xmlns="http://www.w3.org/2000/svg" aria-label="Diagrama de decisión IA">
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#1a3558"/>
+        </marker>
+      </defs>
+      <!-- Step 1 -->
+      <polygon points="90,30 180,55 90,80 0,55" fill="#1a3558"/>
+      <text x="90" y="52" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff" font-weight="600">¿Existe una regla clara?</text>
+      <!-- Arrow right: Sí -->
+      <line x1="180" y1="55" x2="260" y2="55" stroke="#1a3558" stroke-width="1.5" marker-end="url(#arr)"/>
+      <text x="218" y="48" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#c85a00">Sí</text>
+      <rect x="262" y="38" width="130" height="34" rx="6" fill="#f3f4f6" stroke="#d1d5db"/>
+      <text x="327" y="59" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#1a3558">Automatizar con reglas</text>
+      <!-- Arrow down: No -->
+      <line x1="90" y1="80" x2="90" y2="120" stroke="#1a3558" stroke-width="1.5" marker-end="url(#arr)"/>
+      <text x="78" y="104" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#c85a00">No</text>
+      <!-- Step 2 -->
+      <polygon points="90,125 190,150 90,175 -10,150" fill="#1a3558"/>
+      <text x="90" y="147" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff" font-weight="600">¿Hay suficientes datos?</text>
+      <!-- Arrow right: No -->
+      <line x1="190" y1="150" x2="260" y2="150" stroke="#1a3558" stroke-width="1.5" marker-end="url(#arr)"/>
+      <text x="224" y="143" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#c85a00">No</text>
+      <rect x="262" y="133" width="130" height="34" rx="6" fill="#f3f4f6" stroke="#d1d5db"/>
+      <text x="327" y="147" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#1a3558">Recopilar datos</text>
+      <text x="327" y="161" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#1a3558">o rediseñar</text>
+      <!-- Arrow down: Sí -->
+      <line x1="90" y1="175" x2="90" y2="215" stroke="#1a3558" stroke-width="1.5" marker-end="url(#arr)"/>
+      <text x="78" y="200" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#c85a00">Sí</text>
+      <!-- Step 3 -->
+      <polygon points="90,220 195,245 90,270 -15,245" fill="#2e5f9e"/>
+      <text x="90" y="241" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff" font-weight="600">¿El problema cambia</text>
+      <text x="90" y="256" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff" font-weight="600">constantemente?</text>
+      <!-- Arrow right: No -->
+      <line x1="195" y1="245" x2="260" y2="245" stroke="#1a3558" stroke-width="1.5" marker-end="url(#arr)"/>
+      <text x="227" y="238" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#c85a00">No</text>
+      <rect x="262" y="228" width="130" height="34" rx="6" fill="#f3f4f6" stroke="#d1d5db"/>
+      <text x="327" y="249" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#1a3558">IA supervisada</text>
+      <!-- Arrow down: Sí -->
+      <line x1="90" y1="270" x2="90" y2="310" stroke="#1a3558" stroke-width="1.5" marker-end="url(#arr)"/>
+      <text x="78" y="294" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#c85a00">Sí</text>
+      <!-- Step 4 -->
+      <polygon points="90,315 200,332 90,349 -20,332" fill="#2e5f9e"/>
+      <text x="90" y="335" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff" font-weight="600">¿Se necesita inferencia?</text>
+      <!-- Arrow right: Sí -->
+      <line x1="200" y1="332" x2="260" y2="332" stroke="#1a3558" stroke-width="1.5" marker-end="url(#arr)"/>
+      <text x="229" y="325" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#c85a00">Sí</text>
+      <rect x="262" y="315" width="130" height="34" rx="6" fill="#1a3558"/>
+      <text x="327" y="329" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff" font-weight="600">IA generativa</text>
+      <text x="327" y="343" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#bfdbfe">evaluar viabilidad legal</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============================================================
+     FASE 3 — TIPOS DE IA
+     ============================================================ -->
+
+<!-- SLIDE 5 — IA Supervisada -->
+<section>
+  <p class="phase-tag">Fase 3 — Tipos de IA</p>
+  <h2 class="ruled">IA Supervisada</h2>
+  <div class="two-col">
+    <div>
+      <h3 class="mid-blue">Qué hace</h3>
+      <p>Aprende con ejemplos <strong>etiquetados</strong>: para cada entrada de entrenamiento existe una respuesta correcta conocida.</p>
+      <h3 class="mid-blue" style="margin-top:0.8em;">Ejemplos</h3>
+      <ul>
+        <li>Detección de fraude</li>
+        <li>Clasificación de documentos</li>
+        <li>Predicción de riesgo</li>
+      </ul>
+      <h3 class="mid-blue" style="margin-top:0.8em;">Requisitos técnicos</h3>
+      <ul>
+        <li>Datos históricos etiquetados</li>
+        <li>Proceso de etiquetado continuo</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="mid-blue">Riesgos</h3>
+      <ul>
+        <li><span class="orange">Discriminación algorítmica</span> — si los datos históricos contienen sesgos, el modelo los amplifica.</li>
+        <li><span class="orange">Explicabilidad</span> — ¿puede justificarse una decisión ante un tribunal?</li>
+        <li><span class="orange">Trazabilidad</span> — ¿quién etiquetó los datos y con qué criterio?</li>
+      </ul>
+      <div class="callout" style="margin-top:1em;">
+        Los sesgos en los datos de entrenamiento no son un problema técnico menor: tienen consecuencias jurídicas directas.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 6 — IA No Supervisada -->
+<section>
+  <p class="phase-tag">Fase 3 — Tipos de IA</p>
+  <h2 class="ruled">IA No Supervisada</h2>
+  <div class="two-col">
+    <div>
+      <h3 class="mid-blue">Qué hace</h3>
+      <p>Busca <strong>patrones sin etiquetas</strong>. No existe una respuesta correcta predefinida; el modelo descubre estructuras en los datos.</p>
+      <h3 class="mid-blue" style="margin-top:0.8em;">Ejemplos</h3>
+      <ul>
+        <li>Segmentación de clientes</li>
+        <li>Detección de anomalías</li>
+        <li>Descubrimiento de patrones en litigios</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="mid-blue">Riesgos</h3>
+      <ul>
+        <li><span class="orange">Interpretabilidad limitada</span> — los grupos o patrones encontrados no siempre tienen una explicación intuitiva.</li>
+        <li><span class="orange">Justificación jurídica difícil</span> — si el modelo agrupa personas, ¿con qué base legal?</li>
+        <li><span class="orange">Resultados no deterministas</span> — dos ejecuciones pueden producir agrupaciones distintas.</li>
+      </ul>
+      <div class="callout" style="margin-top:1em;">
+        Sin capacidad de explicar por qué el modelo llegó a un resultado, la decisión puede ser impugnable.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 7 — IA Generativa + tabla comparativa -->
+<section>
+  <p class="phase-tag">Fase 3 — Tipos de IA</p>
+  <h2 class="ruled">IA Generativa — diferencias clave</h2>
+  <p style="font-size:0.85em; margin-bottom:0.5em;">Genera texto, imágenes, audio o código. Ejemplos: asistentes jurídicos, resumen documental, generación de contratos.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Aspecto</th>
+        <th>IA clásica</th>
+        <th>IA Generativa</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Predice valores</td>
+        <td>Sí</td>
+        <td>A veces</td>
+      </tr>
+      <tr>
+        <td>Genera contenido</td>
+        <td>No</td>
+        <td>Sí</td>
+      </tr>
+      <tr>
+        <td>Explicabilidad</td>
+        <td>Mayor</td>
+        <td class="risk-high">Menor</td>
+      </tr>
+      <tr>
+        <td>Costos operativos</td>
+        <td>Moderados</td>
+        <td class="risk-high">Potencialmente altos</td>
+      </tr>
+      <tr>
+        <td>Riesgo de fuga de datos</td>
+        <td>Medio</td>
+        <td class="risk-high">Alto</td>
+      </tr>
+      <tr>
+        <td>Dependencia de terceros</td>
+        <td>Baja</td>
+        <td class="risk-high">Alta</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    La IA generativa <strong>puede alucinar</strong>: produce texto coherente pero factualmente incorrecto, con plena confianza aparente.
+  </div>
+</section>
+
+<!-- ============================================================
+     FASE 4 — PRIVACIDAD Y APIs EXTERNAS
+     ============================================================ -->
+
+<!-- SLIDE 8 — Flujo de datos via API -->
+<section>
+  <p class="phase-tag">Fase 4 — Privacidad y uso de APIs externas</p>
+  <h2 class="ruled">Qué ocurre cuando se usa una API externa</h2>
+  <div class="svg-wrap">
+    <!-- SVG 3: Flujo API -->
+    <svg width="1000" height="235" viewBox="0 0 1000 235" xmlns="http://www.w3.org/2000/svg" aria-label="Flujo de datos via API externa">
+      <defs>
+        <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#1a3558"/>
+        </marker>
+      </defs>
+
+      <!-- Box 1: Usuario / Organización  x=5, w=140, right=145 -->
+      <rect x="5" y="55" width="140" height="54" rx="8" fill="#1a3558"/>
+      <text x="75" y="78" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11.5" fill="#fff" font-weight="600">Usuario /</text>
+      <text x="75" y="97" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11.5" fill="#fff" font-weight="600">Organización</text>
+
+      <!-- Arrow 1→2  (80px gap: 145→225) -->
+      <line x1="148" y1="82" x2="218" y2="82" stroke="#1a3558" stroke-width="2" marker-end="url(#arr2)"/>
+      <text x="183" y="47" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#c85a00" font-weight="600">datos salen</text>
+      <text x="183" y="60" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#6b7280">de la organización</text>
+
+      <!-- Box 2: API externa  x=220, w=140, right=360 -->
+      <rect x="220" y="55" width="140" height="54" rx="8" fill="#2e5f9e"/>
+      <text x="290" y="78" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11.5" fill="#fff" font-weight="600">API</text>
+      <text x="290" y="97" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11.5" fill="#fff" font-weight="600">externa</text>
+      <!-- Annotation below -->
+      <text x="290" y="126" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#c85a00">¿se acoje</text>
+      <text x="290" y="140" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#c85a00">a la politica de uso del proveedor?</text>
+
+      <!-- Arrow 2→3  (80px gap: 360→440) -->
+      <line x1="363" y1="82" x2="433" y2="82" stroke="#1a3558" stroke-width="2" marker-end="url(#arr2)"/>
+      <text x="398" y="47" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#c85a00" font-weight="600">tránsito</text>
+      <text x="398" y="60" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#6b7280">fuera del perímetro</text>
+
+      <!-- Box 3: Nube internacional  x=435, w=150, right=585 -->
+      <rect x="435" y="55" width="150" height="54" rx="8" fill="#2e5f9e"/>
+      <text x="510" y="78" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11.5" fill="#fff" font-weight="600">Nube</text>
+      <text x="510" y="97" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11.5" fill="#fff" font-weight="600">internacional</text>
+      <!-- Annotation below -->
+      <text x="510" y="126" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#c85a00">transferencia internacional</text>
+      <text x="510" y="140" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#1a3558">logs + almacenamiento temporal</text>
+
+      <!-- Arrow 3→4  (75px gap: 585→660) -->
+      <line x1="588" y1="82" x2="653" y2="82" stroke="#1a3558" stroke-width="2" marker-end="url(#arr2)"/>
+      <text x="621" y="47" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#6b7280">procesa</text>
+
+      <!-- Box 4: Modelo  x=655, w=140, right=795 -->
+      <rect x="655" y="55" width="140" height="54" rx="8" fill="#1a3558"/>
+      <text x="725" y="78" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11.5" fill="#fff" font-weight="600">Modelo</text>
+      <text x="725" y="97" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11.5" fill="#fff" font-weight="600">de IA</text>
+      <!-- Annotation below -->
+      <text x="725" y="126" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#c85a00">¿alimenta reentrenamiento</text>
+      <text x="725" y="140" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#c85a00">con datos enviados?</text>
+
+      <!-- Arrow 4→5  (70px gap: 795→865) -->
+      <line x1="798" y1="82" x2="858" y2="82" stroke="#1a3558" stroke-width="2" marker-end="url(#arr2)"/>
+      <text x="828" y="47" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#6b7280">responde</text>
+
+      <!-- Box 5: Respuesta  x=860, w=130, right=990 -->
+      <rect x="860" y="55" width="130" height="54" rx="8" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1.5"/>
+      <text x="925" y="78" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11.5" fill="#1a3558" font-weight="600">Respuesta</text>
+      <text x="925" y="97" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#6b7280">al usuario</text>
+
+      <!-- Bottom warning -->
+      <rect x="5" y="163" width="990" height="42" rx="6" fill="#fff3e6" stroke="#c85a00" stroke-width="1"/>
+      <text x="500" y="181" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#c85a00" font-weight="600">Riesgo: datos confidenciales o sensibles pueden quedar fuera del control de la organización</text>
+      <text x="500" y="197" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#1a3558">La facilidad técnica no implica viabilidad jurídica</text>
+    </svg>
+  </div>
+</section>
+
+<!-- SLIDE 9 — Preguntas jurídicas clave -->
+<section>
+  <p class="phase-tag">Fase 4 — Privacidad y uso de APIs externas</p>
+  <h2 class="ruled">Preguntas que deben responderse</h2>
+  <div class="two-col">
+    <div>
+      <ul>
+        <li>¿Se pueden transferir esos datos al exterior?</li>
+        <li>¿Los datos incluyen información sensible?</li>
+        <li>¿Existe autorización del titular?</li>
+        <li>¿Qué jurisdicción aplica?</li>
+        <li>¿Existe tratamiento internacional de datos?</li>
+      </ul>
+    </div>
+    <div>
+      <ul>
+        <li>¿Existen cláusulas de procesamiento por encargo?</li>
+        <li>¿Quién es el responsable y quién el encargado?</li>
+        <li>¿Puede el proveedor usar los datos para reentrenar?</li>
+        <li>¿Hay retención de logs con datos del usuario?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:1.2em; font-size:1em;">
+    <strong>Principio:</strong> a veces un proyecto es <strong>técnicamente trivial y jurídicamente inviable</strong>.
+  </div>
+</section>
+
+<!-- ============================================================
+     FASE 5 — LOS DATOS
+     ============================================================ -->
+
+<!-- SLIDE 10 — ¿Qué datos se necesitan? -->
+<section>
+  <p class="phase-tag">Fase 5 — Los datos</p>
+  <h2 class="ruled">La IA depende más de los datos que del modelo</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Pregunta sobre los datos</th>
+        <th>Impacto en el proyecto</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>¿Existen los datos?</td>
+        <td>Viabilidad del proyecto</td>
+      </tr>
+      <tr>
+        <td>¿Están completos y sin errores?</td>
+        <td>Calidad del modelo</td>
+      </tr>
+      <tr>
+        <td>¿Son accesibles técnicamente?</td>
+        <td>Tiempo y costo de integración</td>
+      </tr>
+      <tr>
+        <td>¿Son legales de usar para este fin?</td>
+        <td class="risk-high">Riesgo</td>
+      </tr>
+      <tr>
+        <td>¿Están etiquetados?</td>
+        <td>Posibilidad de entrenamiento supervisado</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    La calidad del sistema depende de: <strong>cantidad, calidad, cobertura, actualización y representatividad</strong> de los datos.
+  </div>
+</section>
+
+<!-- SLIDE 11 — "Tenemos los datos" -->
+<section>
+  <p class="phase-tag">Fase 5 — Los datos</p>
+  <h2 class="ruled">"La organización dice que tiene los datos"</h2>
+  <div class="two-col">
+    <div>
+      <h3 class="mid-blue">Lo que suele encontrarse en la práctica</h3>
+      <ul>
+        <li>Datos dispersos en múltiples sistemas</li>
+        <li>Errores, duplicados y valores faltantes</li>
+        <li>Información en PDFs o documentos escaneados</li>
+        <li>Datos pertenecientes a diferentes áreas sin acceso unificado</li>
+        <li>Permisos de uso no definidos o inexistentes</li>
+        <li>Formatos incompatibles entre sistemas</li>
+      </ul>
+    </div>
+    <div>
+      <div class="callout" style="font-size:1em; margin-top:1em;">
+        <strong>"Tener datos" no significa que sean utilizables.</strong>
+      </div>
+      <p style="margin-top:1em; font-size:0.88em; color:#6b7280;">
+        Antes de iniciar un proyecto de IA, es necesario realizar un inventario de datos que incluya: origen, formato, propietario, permisos y calidad.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 12 — Acceso y gobierno de datos -->
+<section>
+  <p class="phase-tag">Fase 5 — Los datos</p>
+  <h2 class="ruled">Acceso y gobierno de datos</h2>
+  <div class="two-col">
+    <div>
+      <h3 class="mid-blue">Antes de usar cualquier dato se requiere</h3>
+      <ul>
+        <li>Permisos formales de acceso</li>
+        <li>Acuerdos entre áreas</li>
+        <li>Políticas de acceso y uso</li>
+        <li>Clasificación de sensibilidad</li>
+        <li>Trazabilidad del dato desde su origen</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="mid-blue">Actores que deben intervenir</h3>
+      <ul>
+        <li>Área jurídica</li>
+        <li>Compliance</li>
+        <li>Seguridad de la información</li>
+        <li>TI / Arquitectura</li>
+        <li>Dueños del dato por área de negocio</li>
+        <li>Protección de datos / DPO</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:0.8em;">
+    El acceso a los datos no es un trámite administrativo: es un proceso que puede demorar semanas y determinar la viabilidad del proyecto.
+  </div>
+</section>
+
+<!-- SLIDE 13 — Mapa organizacional -->
+<section>
+  <p class="phase-tag">Fase 5 — Los datos</p>
+  <h2 class="ruled">Aprobaciones necesarias antes de usar datos</h2>
+  <div class="svg-wrap">
+    <!-- SVG 4: Mapa organizacional -->
+    <svg width="600" height="310" viewBox="0 0 600 310" xmlns="http://www.w3.org/2000/svg" aria-label="Mapa organizacional de aprobaciones de datos">
+      <!-- Center node -->
+      <ellipse cx="300" cy="155" rx="68" ry="38" fill="#1a3558"/>
+      <text x="300" y="149" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12" fill="#fff" font-weight="700">Acceso</text>
+      <text x="300" y="166" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12" fill="#fff" font-weight="700">al Dato</text>
+      <!-- Node 1: Jurídica (top-left) -->
+      <line x1="240" y1="132" x2="160" y2="70" stroke="#2e5f9e" stroke-width="1.5"/>
+      <rect x="80" y="42" width="110" height="36" rx="8" fill="#2e5f9e"/>
+      <text x="135" y="58" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff">Área Jurídica</text>
+      <text x="135" y="72" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#bfdbfe">contratos, permisos</text>
+      <!-- Node 2: Compliance (top) -->
+      <line x1="300" y1="117" x2="300" y2="52" stroke="#2e5f9e" stroke-width="1.5"/>
+      <rect x="230" y="24" width="140" height="36" rx="8" fill="#2e5f9e"/>
+      <text x="300" y="40" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff">Compliance / DPO</text>
+      <text x="300" y="54" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#bfdbfe">privacidad, RGPD, ley local</text>
+      <!-- Node 3: Seguridad (top-right) -->
+      <line x1="360" y1="130" x2="435" y2="70" stroke="#2e5f9e" stroke-width="1.5"/>
+      <rect x="402" y="42" width="110" height="36" rx="8" fill="#2e5f9e"/>
+      <text x="457" y="58" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff">Seguridad TI</text>
+      <text x="457" y="72" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#bfdbfe">cifrado, accesos</text>
+      <!-- Node 4: TI/Arquitectura (right) -->
+      <line x1="368" y1="155" x2="460" y2="155" stroke="#2e5f9e" stroke-width="1.5"/>
+      <rect x="462" y="135" width="120" height="36" rx="8" fill="#1a3558"/>
+      <text x="522" y="151" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff">TI / Arquitectura</text>
+      <text x="522" y="165" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#bfdbfe">integración técnica</text>
+      <!-- Node 5: Dueños del dato (bottom-right) -->
+      <line x1="355" y1="178" x2="432" y2="240" stroke="#2e5f9e" stroke-width="1.5"/>
+      <rect x="390" y="234" width="120" height="36" rx="8" fill="#1a3558"/>
+      <text x="450" y="250" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff">Dueños del dato</text>
+      <text x="450" y="264" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#bfdbfe">áreas de negocio</text>
+      <!-- Node 6: Protección de datos (bottom-left) -->
+      <line x1="245" y1="180" x2="170" y2="240" stroke="#2e5f9e" stroke-width="1.5"/>
+      <rect x="68" y="234" width="130" height="36" rx="8" fill="#1a3558"/>
+      <text x="133" y="250" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff">Protección de Datos</text>
+      <text x="133" y="264" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#bfdbfe">base legal del tratamiento</text>
+      <!-- Bottom note -->
+      <text x="300" y="300" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#6b7280">Cada nodo puede vetar o condicionar el acceso al dato</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============================================================
+     FASE 6 — INTEGRACIÓN DE FUENTES
+     ============================================================ -->
+
+<!-- SLIDE 14 — Tabla de complejidad -->
+<section>
+  <p class="phase-tag">Fase 6 — Integración de fuentes de datos</p>
+  <h2 class="ruled">Integrar datos es costoso</h2>
+  <p style="font-size:0.88em; margin-bottom:0.6em;">Los datos rara vez están en un solo lugar: ERP, CRM, SharePoint, correos, bases de datos, documentos físicos, APIs externas.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Actividad</th>
+        <th>Complejidad típica</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Conectar sistemas heterogéneos</td>
+        <td class="risk-high">Alta</td>
+      </tr>
+      <tr>
+        <td>Limpiar y corregir datos</td>
+        <td class="risk-high">Alta</td>
+      </tr>
+      <tr>
+        <td>Homologar formatos y catálogos</td>
+        <td class="risk-high">Alta</td>
+      </tr>
+      <tr>
+        <td>Resolver duplicados y conflictos</td>
+        <td>Media</td>
+      </tr>
+      <tr>
+        <td>Etiquetar datos manualmente</td>
+        <td class="risk-high">Muy alta</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    En la mayoría de proyectos, <strong>integrar y preparar datos consume más tiempo que entrenar el modelo</strong>.
+  </div>
+</section>
+
+<!-- SLIDE 15 — Diagrama multi-fuente -->
+<section>
+  <p class="phase-tag">Fase 6 — Integración de fuentes de datos</p>
+  <h2 class="ruled">Arquitectura de integración</h2>
+  <div class="svg-wrap">
+    <!-- SVG 5: Múltiples fuentes → Data Lake -->
+    <svg width="680" height="400" viewBox="0 0 680 400" xmlns="http://www.w3.org/2000/svg" aria-label="Múltiples fuentes convergiendo a Data Lake">
+      <defs>
+        <marker id="arr3" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L7,3 z" fill="#2e5f9e"/>
+        </marker>
+      </defs>
+      <!-- Sources (left column) -->
+      <!-- ERP -->
+      <rect x="5" y="10" width="100" height="32" rx="6" fill="#1a3558"/>
+      <text x="55" y="31" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff">ERP</text>
+      <line x1="105" y1="26" x2="270" y2="110" stroke="#2e5f9e" stroke-width="1.5" marker-end="url(#arr3)"/>
+      <!-- CRM -->
+      <rect x="5" y="56" width="100" height="32" rx="6" fill="#1a3558"/>
+      <text x="55" y="77" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff">CRM</text>
+      <line x1="105" y1="72" x2="270" y2="118" stroke="#2e5f9e" stroke-width="1.5" marker-end="url(#arr3)"/>
+      <!-- SharePoint -->
+      <rect x="5" y="102" width="100" height="32" rx="6" fill="#2e5f9e"/>
+      <text x="55" y="123" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff">SharePoint</text>
+      <line x1="105" y1="118" x2="270" y2="130" stroke="#2e5f9e" stroke-width="1.5" marker-end="url(#arr3)"/>
+      <!-- Correos -->
+      <rect x="5" y="148" width="100" height="32" rx="6" fill="#2e5f9e"/>
+      <text x="55" y="169" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff">Correos</text>
+      <line x1="105" y1="164" x2="270" y2="142" stroke="#2e5f9e" stroke-width="1.5" marker-end="url(#arr3)"/>
+      <!-- Bases de datos -->
+      <rect x="5" y="194" width="100" height="32" rx="6" fill="#1a3558"/>
+      <text x="55" y="215" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff">Bases de datos</text>
+      <line x1="105" y1="210" x2="270" y2="152" stroke="#2e5f9e" stroke-width="1.5" marker-end="url(#arr3)"/>
+      <!-- Documentos -->
+      <rect x="5" y="240" width="100" height="32" rx="6" fill="#6b7280"/>
+      <text x="55" y="261" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff">Documentos</text>
+      <line x1="105" y1="256" x2="270" y2="162" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arr3)"/>
+      <!-- APIs externas -->
+      <rect x="5" y="283" width="100" height="32" rx="6" fill="#6b7280"/>
+      <text x="55" y="304" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#fff">APIs externas</text>
+      <line x1="105" y1="295" x2="270" y2="175" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arr3)"/>
+      <!-- Ingestion layer -->
+      <rect x="200" y="95" width="120" height="90" rx="8" fill="#f3f4f6" stroke="#d1d5db" stroke-dasharray="5,3"/>
+      <text x="260" y="127" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#6b7280">Capa de</text>
+      <text x="260" y="143" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#6b7280">ingestión /</text>
+      <text x="260" y="159" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#6b7280">ETL</text>
+      <!-- Arrow to Data Lake -->
+      <line x1="320" y1="140" x2="375" y2="140" stroke="#1a3558" stroke-width="2" marker-end="url(#arr3)"/>
+      <!-- Data Lake -->
+      <rect x="377" y="95" width="140" height="90" rx="10" fill="#1a3558"/>
+      <text x="447" y="130" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" fill="#fff" font-weight="700">Data Lake /</text>
+      <text x="447" y="150" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" fill="#fff" font-weight="700">Repositorio</text>
+      <text x="447" y="170" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#bfdbfe">centralizado</text>
+      <!-- Arrow to Model -->
+      <line x1="517" y1="140" x2="565" y2="140" stroke="#1a3558" stroke-width="2" marker-end="url(#arr3)"/>
+      <!-- Model box -->
+      <rect x="567" y="110" width="108" height="60" rx="8" fill="#c85a00"/>
+      <text x="621" y="137" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12" fill="#fff" font-weight="700">Modelo</text>
+      <text x="621" y="155" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12" fill="#fff" font-weight="700">de IA</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============================================================
+     FASE 7 — ENTRENAMIENTO
+     ============================================================ -->
+
+<!-- SLIDE 16 — Requisitos del entrenamiento -->
+<section>
+  <p class="phase-tag">Fase 7 — Entrenamiento del modelo</p>
+  <h2 class="ruled">Entrenar IA tiene costos reales</h2>
+  <div class="two-col">
+    <div>
+      <h3 class="mid-blue">Lo que se requiere</h3>
+      <ul>
+        <li>GPUs especializadas</li>
+        <li>Gran capacidad de almacenamiento</li>
+        <li>Alto consumo energético</li>
+        <li>Tiempo medido en días o semanas</li>
+        <li>Talento técnico especializado</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="mid-blue">Preguntas que deben responderse antes</h3>
+      <ul>
+        <li>¿Se entrenará desde cero o se ajustará un modelo existente?</li>
+        <li>¿Se usará inferencia vía API de terceros?</li>
+        <li>¿Se cuenta con infraestructura propia?</li>
+        <li>¿El costo operativo es sostenible a largo plazo?</li>
+        <li>¿Quién mantiene el modelo cuando se desactualiza?</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 17 — Tabla estrategias + Escalera -->
+<section>
+  <p class="phase-tag">Fase 7 — Entrenamiento del modelo</p>
+  <h2 class="ruled">Estrategias y complejidad</h2>
+  <div class="two-col" style="align-items:center;">
+    <div>
+      <table>
+        <thead>
+          <tr>
+            <th>Estrategia</th>
+            <th>Costo</th>
+            <th>Control</th>
+            <th>Riesgo privacidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>API externa (prompting)</td>
+            <td>Bajo inicio</td>
+            <td class="risk-high">Bajo</td>
+            <td class="risk-high">Alto</td>
+          </tr>
+          <tr>
+            <td>Fine-tuning</td>
+            <td>Medio</td>
+            <td>Medio</td>
+            <td>Medio</td>
+          </tr>
+          <tr>
+            <td>Modelo propio</td>
+            <td class="risk-high">Muy alto</td>
+            <td class="risk-low">Alto</td>
+            <td class="risk-low">Bajo</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- SVG 6: Escalera de complejidad -->
+    <div class="svg-wrap">
+      <svg width="280" height="240" viewBox="0 0 280 240" xmlns="http://www.w3.org/2000/svg" aria-label="Escalera de complejidad IA">
+        <!-- Step 4: Train from scratch (top, narrowest) -->
+        <rect x="70" y="10" width="140" height="40" rx="5" fill="#1a3558"/>
+        <text x="140" y="28" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#fff" font-weight="700">Entrenamiento completo</text>
+        <text x="140" y="42" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#bfdbfe">costo muy alto</text>
+        <!-- Step 3: Fine-tuning -->
+        <rect x="50" y="62" width="180" height="40" rx="5" fill="#2e5f9e"/>
+        <text x="140" y="80" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#fff" font-weight="700">Fine-tuning</text>
+        <text x="140" y="94" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#bfdbfe">ajuste con datos propios</text>
+        <!-- Step 2: RAG -->
+        <rect x="30" y="114" width="220" height="40" rx="5" fill="#2e5f9e" opacity="0.75"/>
+        <text x="140" y="132" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#fff" font-weight="700">RAG</text>
+        <text x="140" y="146" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#e0eaff">recuperación de contexto externo</text>
+        <!-- Step 1: Prompting (base, widest) -->
+        <rect x="5" y="166" width="270" height="40" rx="5" fill="#6b7280"/>
+        <text x="140" y="184" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#fff" font-weight="700">Prompting</text>
+        <text x="140" y="198" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#e5e7eb">uso directo del modelo via API</text>
+        <!-- Labels -->
+        <text x="140" y="228" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#c85a00">↑ Mayor control · Mayor costo · Menor dependencia</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FASE 8 — COSTOS OCULTOS
+     ============================================================ -->
+
+<!-- SLIDE 18 — Costos ocultos -->
+<section>
+  <p class="phase-tag">Fase 8 — Costos ocultos de IA</p>
+  <h2 class="ruled">El costo no es solo "usar el modelo"</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Componente de costo</th>
+        <th>¿Único o recurrente?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Desarrollo e ingeniería inicial</td>
+        <td>Único</td>
+      </tr>
+      <tr>
+        <td>Infraestructura (servidores, nube)</td>
+        <td class="risk-high">Recurrente</td>
+      </tr>
+      <tr>
+        <td>Licencias de APIs y modelos</td>
+        <td class="risk-high">Recurrente</td>
+      </tr>
+      <tr>
+        <td>GPUs y cómputo</td>
+        <td class="risk-high">Recurrente</td>
+      </tr>
+      <tr>
+        <td>Etiquetado y actualización de datos</td>
+        <td class="risk-high">Recurrente</td>
+      </tr>
+      <tr>
+        <td>Monitoreo y mantenimiento</td>
+        <td class="risk-high">Recurrente</td>
+      </tr>
+      <tr>
+        <td>Auditoría y cumplimiento</td>
+        <td class="risk-high">Recurrente</td>
+      </tr>
+      <tr>
+        <td>Reentrenamiento periódico</td>
+        <td class="risk-high">Recurrente</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    La mayoría de los costos <strong>no son de instalación sino de operación continua</strong>.
+  </div>
+</section>
+
+<!-- ============================================================
+     FASE 9 — RIESGOS JURÍDICOS
+     ============================================================ -->
+
+<!-- SLIDE 19 — Lista de riesgos -->
+<section>
+  <p class="phase-tag">Fase 9 — Riesgos jurídicos en proyectos de IA</p>
+  <h2 class="ruled">Riesgos que deben evaluarse desde el inicio</h2>
+  <div class="two-col">
+    <div>
+      <ul>
+        <li><span class="orange">Privacidad</span> — tratamiento de datos personales sin base legal</li>
+        <li><span class="orange">Propiedad intelectual</span> — contenido generado con datos de terceros</li>
+        <li><span class="orange">Sesgos y discriminación</span> — decisiones automatizadas con impacto diferenciado</li>
+        <li><span class="orange">Opacidad</span> — modelos que no pueden explicar sus decisiones</li>
+        <li><span class="orange">Responsabilidad</span> — ¿quién responde cuando el modelo falla?</li>
+      </ul>
+    </div>
+    <div>
+      <ul>
+        <li><span class="orange">Soberanía digital</span> — datos en infraestructura extranjera</li>
+        <li><span class="orange">Dependencia tecnológica</span> — proveedor único sin alternativa viable</li>
+        <li><span class="orange">Fuga de información</span> — datos confidenciales en prompts externos</li>
+        <li><span class="orange">Cumplimiento regulatorio</span> — IA Act (UE) y marcos locales</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 20 — Mapa de riesgos por etapa -->
+<section>
+  <p class="phase-tag">Fase 9 — Riesgos jurídicos en proyectos de IA</p>
+  <h2 class="ruled">Riesgos por etapa del proyecto</h2>
+  <div class="svg-wrap">
+    <!-- SVG 7: Mapa de riesgos por etapa -->
+    <svg width="700" height="290" viewBox="0 0 700 290" xmlns="http://www.w3.org/2000/svg" aria-label="Mapa de riesgos por etapa del proyecto de IA">
+      <!-- Column headers -->
+      <rect x="5"   y="8" width="162" height="36" rx="6" fill="#1a3558"/>
+      <rect x="177" y="8" width="162" height="36" rx="6" fill="#2e5f9e"/>
+      <rect x="349" y="8" width="162" height="36" rx="6" fill="#2e5f9e"/>
+      <rect x="521" y="8" width="174" height="36" rx="6" fill="#1a3558"/>
+      <text x="86"  y="32" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12" fill="#fff" font-weight="700">Datos</text>
+      <text x="258" y="32" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12" fill="#fff" font-weight="700">Entrenamiento</text>
+      <text x="430" y="32" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12" fill="#fff" font-weight="700">Despliegue</text>
+      <text x="608" y="32" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12" fill="#fff" font-weight="700">Uso operativo</text>
+      <!-- Row items: Datos -->
+      <text x="86"  y="70"  text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#c85a00">Falta de base legal</text>
+      <text x="86"  y="92"  text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#1a3558">Transferencia intl.</text>
+      <text x="86"  y="114" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#1a3558">Datos sensibles</text>
+      <text x="86"  y="136" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#1a3558">Permisos insuficientes</text>
+      <text x="86"  y="158" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#c85a00">Sesgos en origen</text>
+      <text x="86"  y="180" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#1a3558">Trazabilidad</text>
+      <!-- Row items: Entrenamiento -->
+      <text x="258" y="70"  text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#c85a00">Discriminación alg.</text>
+      <text x="258" y="92"  text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#1a3558">Prop. intelectual</text>
+      <text x="258" y="114" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#1a3558">Datos sin licencia</text>
+      <text x="258" y="136" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#c85a00">Reidentificación</text>
+      <text x="258" y="158" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#1a3558">Falta de auditabilidad</text>
+      <!-- Row items: Despliegue -->
+      <text x="430" y="70"  text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#c85a00">Opacidad del modelo</text>
+      <text x="430" y="92"  text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#1a3558">Fuga de datos</text>
+      <text x="430" y="114" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#1a3558">Dependencia proveedor</text>
+      <text x="430" y="136" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#c85a00">Sin mecanismo de recurso</text>
+      <text x="430" y="158" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#1a3558">Cumplimiento IA Act</text>
+      <!-- Row items: Uso operativo -->
+      <text x="608" y="70"  text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#c85a00">Deriva del modelo</text>
+      <text x="608" y="92"  text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#1a3558">Decisiones sin revisión</text>
+      <text x="608" y="114" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#c85a00">Alucinaciones</text>
+      <text x="608" y="136" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#1a3558">Sin gobierno activo</text>
+      <text x="608" y="158" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#1a3558">Responsabilidad difusa</text>
+      <!-- Vertical dividers -->
+      <line x1="171" y1="50" x2="171" y2="175" stroke="#d1d5db" stroke-width="1"/>
+      <line x1="343" y1="50" x2="343" y2="175" stroke="#d1d5db" stroke-width="1"/>
+      <line x1="515" y1="50" x2="515" y2="175" stroke="#d1d5db" stroke-width="1"/>
+      <!-- Legend -->
+      <circle cx="30" cy="210" r="6" fill="#c85a00"/>
+      <text x="44" y="215" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#1a3558">Riesgo jurídico alto</text>
+      <circle cx="200" cy="210" r="6" fill="#1a3558"/>
+      <text x="214" y="215" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#1a3558">Riesgo operativo</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============================================================
+     FASE 10 — GOBIERNO DE IA
+     ============================================================ -->
+
+<!-- SLIDE 21 — Gobierno de IA -->
+<section>
+  <p class="phase-tag">Fase 10 — Gobierno de IA</p>
+  <h2 class="ruled">IA requiere gobernanza permanente</h2>
+  <div class="two-col">
+    <div>
+      <h3 class="mid-blue">Una organización necesita</h3>
+      <ul>
+        <li>Políticas de uso aceptable de IA</li>
+        <li>Comité o función de supervisión de IA</li>
+        <li>Evaluación de riesgo por caso de uso</li>
+        <li>Trazabilidad de decisiones automatizadas</li>
+        <li>Proceso de auditoría continua</li>
+        <li>Monitoreo de rendimiento en producción</li>
+      </ul>
+    </div>
+    <div>
+      <div class="callout">
+        <strong>Un modelo no termina cuando se despliega.</strong>
+      </div>
+      <ul style="margin-top:0.8em;">
+        <li>Los modelos <span class="orange">derivan</span>: su rendimiento cae con el tiempo.</li>
+        <li>Los <span class="orange">datos del mundo cambian</span>; el modelo no lo sabe.</li>
+        <li>El <span class="orange">contexto regulatorio evoluciona</span>.</li>
+        <li>Sin monitoreo, un modelo puede tomar decisiones incorrectas meses sin que nadie lo detecte.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FASE 11 — CASO PRÁCTICO
+     ============================================================ -->
+
+<!-- SLIDE 22 — Qué parece vs. qué implica -->
+<section>
+  <p class="phase-tag">Fase 11 — Caso práctico</p>
+  <h2 class="ruled">Asistente jurídico inteligente para análisis contractual</h2>
+  <div class="two-col">
+    <div>
+      <div class="col-label">Lo que parece</div>
+      <div class="callout" style="border-color: #6b7280; background:#f9fafb;">
+        "Conectemos ChatGPT a nuestros contratos y listo."
+      </div>
+      <p style="font-size:0.82em; color:#6b7280; margin-top:0.8em;">Percepción habitual: 1 semana de trabajo técnico.</p>
+    </div>
+    <div>
+      <div class="col-label">Lo que realmente implica</div>
+      <ul style="font-size:0.85em;">
+        <li>Clasificación y categorización documental</li>
+        <li>Extracción OCR de documentos escaneados</li>
+        <li>Anonimización de datos personales</li>
+        <li>Vectorización y arquitectura RAG</li>
+        <li>Gestión de permisos y control de acceso</li>
+        <li>Auditoría de consultas y respuestas</li>
+        <li>Costos por token (precio variable)</li>
+        <li>Revisión humana obligatoria de salidas</li>
+        <li>Evaluación jurídica del proveedor</li>
+        <li>Gobierno, monitoreo y mantenimiento</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 23 — Arquitectura completa -->
+<section>
+  <p class="phase-tag">Fase 11 — Caso práctico</p>
+  <h2 class="ruled">Arquitectura del asistente jurídico</h2>
+  <div class="svg-wrap">
+    <!-- SVG 8: Arquitectura extremo a extremo -->
+    <svg width="720" height="280" viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" aria-label="Arquitectura extremo a extremo del asistente jurídico">
+      <defs>
+        <marker id="arr4" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L7,3 z" fill="#1a3558"/>
+        </marker>
+      </defs>
+      <!-- Row 1: Ingesta -->
+      <!-- Contratos PDF -->
+      <rect x="5" y="20" width="95" height="48" rx="6" fill="#1a3558"/>
+      <text x="52" y="41" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#fff" font-weight="600">Contratos</text>
+      <text x="52" y="56" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#bfdbfe">PDF / Docs</text>
+      <line x1="100" y1="44" x2="120" y2="44" stroke="#1a3558" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <!-- OCR -->
+      <rect x="122" y="20" width="80" height="48" rx="6" fill="#2e5f9e"/>
+      <text x="162" y="41" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#fff" font-weight="600">OCR /</text>
+      <text x="162" y="56" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#bfdbfe">Extracción</text>
+      <line x1="202" y1="44" x2="222" y2="44" stroke="#1a3558" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <!-- Anonimización -->
+      <rect x="224" y="20" width="100" height="48" rx="6" fill="#2e5f9e"/>
+      <text x="274" y="41" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#fff" font-weight="600">Anonimización</text>
+      <text x="274" y="56" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#bfdbfe">datos personales</text>
+      <line x1="324" y1="44" x2="344" y2="44" stroke="#1a3558" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <!-- Vectorización -->
+      <rect x="346" y="20" width="95" height="48" rx="6" fill="#2e5f9e"/>
+      <text x="393" y="41" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#fff" font-weight="600">Vectorización</text>
+      <text x="393" y="56" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#bfdbfe">embeddings</text>
+      <line x1="441" y1="44" x2="461" y2="44" stroke="#1a3558" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <!-- Vector DB -->
+      <rect x="463" y="20" width="100" height="48" rx="6" fill="#1a3558"/>
+      <text x="513" y="41" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#fff" font-weight="600">Vector DB</text>
+      <text x="513" y="56" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#bfdbfe">índice semántico</text>
+
+      <!-- Row 2: Query pipeline -->
+      <text x="360" y="100" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#6b7280">— flujo de consulta —</text>
+      <!-- Usuario -->
+      <rect x="5" y="110" width="90" height="48" rx="6" fill="#f3f4f6" stroke="#d1d5db"/>
+      <text x="50" y="130" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#1a3558" font-weight="600">Abogado</text>
+      <text x="50" y="145" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#6b7280">consulta</text>
+      <line x1="95" y1="134" x2="115" y2="134" stroke="#1a3558" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <!-- Auth / ACL -->
+      <rect x="117" y="110" width="90" height="48" rx="6" fill="#1a3558"/>
+      <text x="162" y="130" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#fff" font-weight="600">Auth / ACL</text>
+      <text x="162" y="145" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#bfdbfe">control acceso</text>
+      <line x1="207" y1="134" x2="227" y2="134" stroke="#1a3558" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <!-- RAG -->
+      <rect x="229" y="110" width="90" height="48" rx="6" fill="#c85a00"/>
+      <text x="274" y="130" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#fff" font-weight="600">RAG</text>
+      <text x="274" y="145" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#ffe0c0">recuperación</text>
+      <line x1="319" y1="134" x2="339" y2="134" stroke="#1a3558" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <!-- LLM -->
+      <rect x="341" y="110" width="90" height="48" rx="6" fill="#1a3558"/>
+      <text x="386" y="130" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#fff" font-weight="600">LLM</text>
+      <text x="386" y="145" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#bfdbfe">modelo lenguaje</text>
+      <line x1="431" y1="134" x2="451" y2="134" stroke="#1a3558" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <!-- Revisión humana -->
+      <rect x="453" y="110" width="100" height="48" rx="6" fill="#2e5f9e"/>
+      <text x="503" y="130" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#fff" font-weight="600">Revisión</text>
+      <text x="503" y="145" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#bfdbfe">humana obligatoria</text>
+      <line x1="553" y1="134" x2="573" y2="134" stroke="#1a3558" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <!-- Auditoría log -->
+      <rect x="575" y="110" width="100" height="48" rx="6" fill="#2e5f9e"/>
+      <text x="625" y="130" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#fff" font-weight="600">Auditoría</text>
+      <text x="625" y="145" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#bfdbfe">log de consultas</text>
+
+      <!-- Bottom governance row -->
+      <rect x="5" y="185" width="710" height="44" rx="8" fill="#f3f4f6" stroke="#d1d5db" stroke-dasharray="6,3"/>
+      <text x="360" y="204" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#1a3558" font-weight="600">Capa transversal: Gobierno · Monitoreo · Evaluación de riesgo · Cumplimiento regulatorio</text>
+      <text x="360" y="220" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#6b7280">esta capa aplica a todas las etapas y no se desactiva nunca</text>
+
+      <!-- Bracket: "lo que parece" -->
+      <text x="360" y="260" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#c85a00">"Conectar ChatGPT" oculta aproximadamente 12 decisiones técnicas, jurídicas y operativas</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============================================================
+     FASE 12 — CONCLUSIONES
+     ============================================================ -->
+
+<!-- SLIDE 24 — 7 mensajes -->
+<section>
+  <p class="phase-tag">Conclusiones</p>
+  <h2 class="ruled">Lo que todo proyecto de IA exige reconocer</h2>
+  <ol style="font-size:0.9em; line-height:2.0;">
+    <li>La IA es principalmente un <strong>problema de datos y gobernanza</strong>.</li>
+    <li><strong>No todos los problemas requieren IA</strong>; muchos tienen soluciones más simples y auditables.</li>
+    <li>La IA generativa <strong>no reemplaza</strong> la ingeniería de datos.</li>
+    <li>La <strong>viabilidad legal puede limitar la viabilidad técnica</strong> antes de escribir una sola línea de código.</li>
+    <li>La integración y preparación de datos suele ser <strong>el mayor costo real</strong>.</li>
+    <li>El entrenamiento propio puede ser <strong>inviable sin infraestructura adecuada</strong>.</li>
+    <li>Todo proyecto de IA requiere <strong>evaluación jurídica desde el inicio</strong>, no al final.</li>
+  </ol>
+</section>
+
+<!-- SLIDE 25 — Cierre -->
+<section>
+  <span class="title-accent"></span>
+  <h2 style="font-size:1.4em; color:#1a3558; margin-bottom:0.8em;">La pregunta no es si podemos usar IA.</h2>
+  <h2 style="font-size:1.4em; color:#1a3558; margin-bottom:1.2em;">La pregunta es si podemos hacerlo:</h2>
+  <div class="closing-question">
+    <span class="cq-item">— <strong>legalmente</strong>, respetando la privacidad y la regulación vigente;</span>
+    <span class="cq-item">— <strong>económicamente</strong>, con un modelo de costos sostenible;</span>
+    <span class="cq-item">— <strong>técnicamente</strong>, con infraestructura y datos adecuados;</span>
+    <span class="cq-item">— <strong>y de forma sostenible</strong>, con gobierno, auditoría y mantenimiento continuo.</span>
+  </div>
+  <p class="small gray" style="margin-top:1.6em; text-align:center;">
+    Antes de contratar un proveedor de IA, asegúrese de que estas cuatro preguntas tienen respuesta.
+  </p>
+</section>
+
+</div><!-- /slides -->
+</div><!-- /reveal -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    center: false,
+    transition: 'fade',
+    transitionSpeed: 'fast',
+    progress: true,
+    controls: true,
+    slideNumber: 'c/t',
+    width: 1280,
+    height: 720,
+    margin: 0.04
+  });
+</script>
+</body>
+</html>
