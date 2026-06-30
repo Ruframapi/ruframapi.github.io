@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Página del libro Notas de Procesamiento de Lenguaje Natural, de Rubén Manrique.">
+<title>Notas de Procesamiento de Lenguaje Natural | Rubén Manrique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,600;6..72,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f7f6f2;
+    --border: #d8d4ca;
+    --text: #1c1c1a;
+    --muted: #5f5a52;
+    --accent: #26231d;
+    --accent-soft: #ece8de;
+    --max-width: 1140px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    line-height: 1.75;
+  }
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+  .page {
+    width: min(var(--max-width), calc(100% - 48px));
+    margin: 0 auto;
+  }
+  .topbar {
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.94);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .topbar-inner {
+    width: min(var(--max-width), calc(100% - 48px));
+    margin: 0 auto;
+    padding: 18px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .crumb {
+    font-size: 0.92rem;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .hero {
+    padding: 56px 0 34px;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 56px;
+    align-items: start;
+  }
+  .cover-panel {
+    position: sticky;
+    top: 96px;
+  }
+  .cover-frame {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 18px;
+  }
+  .cover-caption {
+    margin-top: 14px;
+    font-size: 0.9rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  .eyebrow {
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  h1, h2, h3 {
+    font-family: 'Newsreader', Georgia, serif;
+    line-height: 1.12;
+    margin: 0;
+  }
+  h1 {
+    font-size: clamp(2.1rem, 4vw, 3.9rem);
+    margin-bottom: 12px;
+  }
+  h2 {
+    font-size: 1.75rem;
+    margin-bottom: 18px;
+  }
+  .subtitle {
+    font-size: 1.24rem;
+    color: var(--muted);
+    margin: 0 0 18px;
+  }
+  .byline, .meta {
+    color: var(--muted);
+    font-size: 1rem;
+  }
+  .byline { margin-bottom: 18px; }
+  .meta {
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    max-width: 620px;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 28px 0 34px;
+  }
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 20px;
+    border: 1px solid var(--accent);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  .button.primary {
+    background: var(--accent);
+    color: #ffffff;
+  }
+  .button.secondary {
+    background: transparent;
+    color: var(--accent);
+  }
+  .button:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .button.primary:hover {
+    background: #3a352d;
+    color: #ffffff;
+  }
+  .lead {
+    font-size: 1.08rem;
+    max-width: 760px;
+  }
+  .section {
+    padding: 24px 0 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 26px;
+  }
+  .section p {
+    margin: 0 0 1rem;
+    max-width: 800px;
+  }
+  .topics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 36px;
+    max-width: 860px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .topics li {
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--accent-soft);
+  }
+  .parts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    max-width: 900px;
+  }
+  .part {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 18px;
+  }
+  .part h3 {
+    font-size: 1.15rem;
+    margin-bottom: 10px;
+  }
+  .part ol {
+    margin: 0;
+    padding-left: 18px;
+  }
+  .part li {
+    margin-bottom: 6px;
+  }
+  .preface {
+    max-width: 800px;
+  }
+  footer {
+    border-top: 1px solid var(--border);
+    margin-top: 52px;
+    padding: 26px 0 42px;
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+  @media (max-width: 960px) {
+    .hero-grid,
+    .parts,
+    .topics {
+      grid-template-columns: 1fr;
+    }
+    .cover-panel {
+      position: static;
+      max-width: 340px;
+    }
+  }
+  @media (max-width: 640px) {
+    .page, .topbar-inner {
+      width: min(var(--max-width), calc(100% - 28px));
+    }
+    .hero {
+      padding-top: 34px;
+    }
+    .actions {
+      flex-direction: column;
+    }
+    .button {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="crumb" href="../../index.html">Volver al sitio principal</a>
+      <span class="crumb">Libros</span>
+    </div>
+  </header>
+
+  <main class="page hero">
+    <div class="hero-grid">
+      <aside class="cover-panel">
+        <div class="cover-frame">
+          <img src="portada2026.png" alt="Portada del libro Notas de Procesamiento de Lenguaje Natural">
+        </div>
+        <p class="cover-caption">Edición abierta en PDF</p>
+      </aside>
+
+      <section>
+        <div class="eyebrow">Libro</div>
+        <h1>Notas de Procesamiento de Lenguaje Natural</h1>
+        <p class="subtitle">De fundamentos clásicos a modelos neuronales y LLMs</p>
+        <p class="byline">Rubén Manrique</p>
+        <p class="meta">Texto de acceso abierto orientado a la enseñanza del procesamiento del lenguaje natural, desde métodos clásicos hasta transformers, LLMs, RAG, alineación y riesgos éticos.</p>
+
+        <div class="actions">
+          <a class="button primary" href="Notas%20de%20Procesamiento%20de%20Lenguaje%20Natural.pdf" target="_blank" rel="noopener noreferrer">Descargar PDF completo</a>
+          <a class="button secondary" href="#prefacio">Ir al prefacio</a>
+        </div>
+
+        <p class="lead">Este libro surge de varios años de docencia en cursos introductorios de procesamiento del lenguaje natural para estudiantes de ingeniería. Su propósito es ofrecer un recorrido coherente, riguroso y pedagógico que conecte la tradición estadística del área con los modelos neuronales y los grandes modelos de lenguaje.</p>
+
+        <section class="section">
+          <h2>Tópicos que aborda el libro</h2>
+          <ul class="topics">
+            <li>Introducción al PLN</li>
+            <li>Pipeline y preprocesamiento de texto</li>
+            <li>Recuperación de información</li>
+            <li>Evaluación de sistemas de IR</li>
+            <li>Modelos de lenguaje n-grama</li>
+            <li>Clasificación de texto y análisis de sentimientos</li>
+            <li>Semántica vectorial e incrustaciones</li>
+            <li>Redes feedforward para lenguaje</li>
+            <li>RNN y LSTM</li>
+            <li>Encoder-decoder y tokenización de subpalabras</li>
+            <li>Transformer</li>
+            <li>MLM y BERT</li>
+            <li>LLMs y fine-tuning eficiente</li>
+            <li>Prompting, RAG y alineación</li>
+            <li>Ética, riesgos e implicaciones del PLN y los LLMs</li>
+          </ul>
+        </section>
+
+        <section class="section">
+          <h2>Estructura del contenido</h2>
+          <div class="parts">
+            <article class="part">
+              <h3>Parte I. Fundamentos y técnicas clásicas</h3>
+              <ol>
+                <li>Introducción al PLN</li>
+                <li>Pipeline y preprocesamiento</li>
+                <li>Recuperación de información</li>
+                <li>Evaluación de IR</li>
+                <li>Modelos n-grama</li>
+                <li>Clasificación de texto</li>
+                <li>Semántica vectorial e incrustaciones</li>
+              </ol>
+            </article>
+            <article class="part">
+              <h3>Parte II. Modelos neuronales y LLMs</h3>
+              <ol start="8">
+                <li>Feedforward para lenguaje</li>
+                <li>RNN y LSTM</li>
+                <li>Encoder-decoder y subpalabras</li>
+                <li>Transformer</li>
+                <li>MLM y BERT</li>
+                <li>LLMs y PEFT</li>
+                <li>Prompting, RAG y alineación</li>
+              </ol>
+            </article>
+            <article class="part">
+              <h3>Parte III. Aspectos éticos y riesgos</h3>
+              <ol start="15">
+                <li>Ética y riesgos</li>
+              </ol>
+            </article>
+          </div>
+        </section>
+
+        <section class="section preface" id="prefacio">
+          <h2>Prefacio</h2>
+          <p>Escribir un libro sobre procesamiento del lenguaje natural en la actualidad puede parecer una decisión difícil de justificar. La disciplina cuenta con textos de referencia consolidados y, además, vivimos en una época en la que los modelos de inteligencia artificial pueden responder preguntas y producir explicaciones casi de manera instantánea.</p>
+          <p>Sin embargo, este libro no nació para reemplazar obras existentes ni para competir con dichas herramientas. Surgió como resultado de una necesidad docente. Durante varios años, las notas de clase fueron creciendo, reorganizándose y refinándose semestre tras semestre, hasta convertirse en un material estructurado para acompañar de manera progresiva el aprendizaje del área.</p>
+          <p>El texto busca ofrecer un recorrido coherente que permita comprender la evolución del campo, desde métodos clásicos basados en reglas y estadísticas hasta modelos neuronales, transformers y grandes modelos de lenguaje. Cada capítulo fue concebido como un peldaño para construir el siguiente, procurando que las ideas aparezcan en el momento en que resultan más naturales para el proceso de aprendizaje.</p>
+          <p>Otro objetivo central de esta obra es contribuir a la disponibilidad de material técnico de calidad en español. El libro intenta reducir la barrera adicional que enfrentan muchos estudiantes cuando deben aprender simultáneamente una disciplina técnica y estudiar en un idioma distinto. Por ello, se propone una exposición rigurosa, pero accesible, escrita íntegramente en español.</p>
+          <p>Si este material logra facilitar el aprendizaje de nuevos estudiantes, servir como apoyo para docentes y ampliar modestamente la literatura técnica disponible en nuestra lengua, entonces habrá cumplido su propósito.</p>
+          <p><strong>Rubén Manrique</strong></p>
+        </section>
+      </section>
+    </div>
+  </main>
+
+  <footer class="page">
+    <p>Rubén Manrique · Publicaciones y material académico</p>
+  </footer>
+</body>
+</html>

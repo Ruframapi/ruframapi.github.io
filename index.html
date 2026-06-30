@@ -222,6 +222,7 @@ details.project-card[open] .project-chevron{transform:rotate(180deg)}
 .book-meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-muted);margin-bottom:20px;line-height:1.8}
 .book-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
 .book-badge{font-family:'IBM Plex Mono',monospace;font-size:10.5px;padding:4px 12px;border-radius:12px;background:rgba(0,184,24,.1);border:1px solid var(--accent-deep);color:var(--accent-tint)}
+.book-stack{display:flex;flex-direction:column;gap:48px}
 /* CONTACT */
 .contact-inner{max-width:600px;margin:0 auto;text-align:center;padding:90px 24px}
 .contact-cards{display:flex;flex-direction:column;gap:10px;margin:36px 0}
@@ -735,24 +736,45 @@ footer p{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-m
 <!-- BOOK -->
 <section id="book">
   <div class="section-inner">
-    <span class="section-label">Featured Publication</span>
-    <h2 class="section-title">AI Book</h2>
-    <div class="book-layout animate-on-scroll">
-      <div class="book-cover" aria-hidden="true">
-        <div class="book-spine">UNIANDES 2025</div>
-        <div class="book-face">
-          <p class="book-label">EDICIONES UNIANDES 2025</p>
-          <h3>Inteligencia artificial</h3>
-          <p class="book-subtitle">Teor&iacute;as, aplicaciones, futuro</p>
-          <p class="book-author">Juan D. Rodríguez & Rub&eacute;n Manrique (Eds.)</p>
+    <span class="section-label">Books</span>
+    <h2 class="section-title">Books</h2>
+    <div class="book-stack">
+      <div class="book-layout animate-on-scroll">
+        <div class="book-cover" aria-hidden="true">
+          <div class="book-spine">UNIANDES 2025</div>
+          <div class="book-face">
+            <p class="book-label">EDICIONES UNIANDES 2025</p>
+            <h3>Inteligencia artificial</h3>
+            <p class="book-subtitle">Teor&iacute;as, aplicaciones, futuro</p>
+            <p class="book-author">Juan D. Rodríguez & Rub&eacute;n Manrique (Eds.)</p>
+          </div>
+        </div>
+        <div class="book-content">
+          <h2 style="font-size:1.6rem;margin-bottom:16px">Inteligencia artificial: Teor&iacute;as, aplicaciones, futuro</h2>
+          <p style="font-size:15px;color:var(--text-secondary)">Co-edited with Professor Juan David Guti&eacute;rrez (School of Government), this interdisciplinary book brings together 36 authors from across the faculties of Universidad de los Andes. Organized around theoretical and methodological foundations, applications and societal impacts, and the interactions between AI and the State, it is the first comprehensive effort to compile the most relevant AI research from University faculty &mdash; a 19-month project with rigorous international peer review, launched on October 31, 2025.</p>
+          <p class="book-meta">Co-editor &middot; Co-author<br>Ediciones Uniandes &middot; 2025<br>ISBN 978-958-798-844-4<br>36 authors &middot; Multi-faculty &middot; Peer-reviewed</p>
+          <div class="book-badges"><span class="book-badge">Interdisciplinary</span><span class="book-badge">Multi-faculty</span><span class="book-badge">Co-editor &amp; Co-author</span></div>
+          <a class="btn btn-primary" href="books/ia/index.html">View book</a>
         </div>
       </div>
-      <div class="book-content">
-        <h2 style="font-size:1.6rem;margin-bottom:16px">Inteligencia artificial: Teor&iacute;as, aplicaciones, futuro</h2>
-        <p style="font-size:15px;color:var(--text-secondary)">Co-edited with Professor Juan David Guti&eacute;rrez (School of Government), this interdisciplinary book brings together 36 authors from across the faculties of Universidad de los Andes. Organized around theoretical and methodological foundations, applications and societal impacts, and the interactions between AI and the State, it is the first comprehensive effort to compile the most relevant AI research from University faculty &mdash; a 19-month project with rigorous international peer review, launched on October 31, 2025.</p>
-        <p class="book-meta">Co-editor &middot; Co-author<br>Ediciones Uniandes &middot; 2025<br>ISBN 978-958-798-844-4<br>36 authors &middot; Multi-faculty &middot; Peer-reviewed</p>
-        <div class="book-badges"><span class="book-badge">Interdisciplinary</span><span class="book-badge">Multi-faculty</span><span class="book-badge">Co-editor &amp; Co-author</span></div>
-        <a class="btn btn-primary" href="https://ediciones.uniandes.edu.co/gpd-inteligencia-artificial-9789587988444-68ffb33055319.html" target="_blank" rel="noopener noreferrer">Purchase online &#x2197;</a>
+
+      <div class="book-layout animate-on-scroll">
+        <div class="book-cover" aria-hidden="true">
+          <div class="book-spine">NLP NOTES</div>
+          <div class="book-face">
+            <p class="book-label">OPEN ACCESS</p>
+            <h3>Notas de Procesamiento de Lenguaje Natural</h3>
+            <p class="book-subtitle">De fundamentos cl&aacute;sicos a modelos neuronales y LLMs</p>
+            <p class="book-author">Rub&eacute;n Manrique</p>
+          </div>
+        </div>
+        <div class="book-content">
+          <h2 style="font-size:1.6rem;margin-bottom:16px">Notas de Procesamiento de Lenguaje Natural</h2>
+          <p style="font-size:15px;color:var(--text-secondary)">Open-access lecture notes developed over several years of teaching introductory NLP to engineering students. The book covers the field from classical preprocessing, language modeling, information retrieval and text classification to transformers, BERT, efficient fine-tuning, RAG, alignment, and ethical risks.</p>
+          <p class="book-meta">Author<br>Open access digital edition<br>Foundations, neural models, transformers and LLMs<br>Designed for teaching in Spanish</p>
+          <div class="book-badges"><span class="book-badge">Open access</span><span class="book-badge">Teaching material</span><span class="book-badge">NLP</span></div>
+          <a class="btn btn-primary" href="books/nlp/index.html">View book</a>
+        </div>
       </div>
     </div>
   </div>
