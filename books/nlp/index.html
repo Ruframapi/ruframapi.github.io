@@ -134,6 +134,44 @@
     font-size: 0.98rem;
     color: var(--text);
   }
+  .citation-code {
+    margin: 10px 0 0;
+    padding: 12px 14px;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    overflow-x: auto;
+  }
+  .citation-tools {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+  .copy-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 14px;
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  .copy-button:hover,
+  .copy-button:focus-visible {
+    background: var(--accent-soft);
+    outline: none;
+  }
+  .copy-button[data-copied="true"] {
+    background: var(--accent);
+    color: #ffffff;
+  }
   .actions {
     display: flex;
     flex-wrap: wrap;
@@ -277,6 +315,18 @@
         <div class="citation-box">
           <p class="citation-label">Cita APA</p>
           <p class="citation-text">Manrique, R. (2026). <em>Notas sobre procesamiento de lenguaje natural: De fundamentos clásicos a modelos neuronales y LLMs</em>.</p>
+          <p class="citation-label">Cita BibTeX</p>
+          <pre class="citation-code" id="bibtex-citation">@book{manrique2026nlp,
+  author    = {Rub{\'e}n Manrique},
+  title     = {Notas sobre procesamiento de lenguaje natural: De fundamentos cl{\'a}sicos a modelos neuronales y LLMs},
+  year      = {2026},
+  publisher = {Edici{\'o}n abierta},
+  url       = {https://ruframap.github.io/books/nlp/},
+  note      = {Acceso al PDF completo desde la p{\'a}gina oficial del libro}
+}</pre>
+          <div class="citation-tools">
+            <button class="copy-button" type="button" data-copy-target="bibtex-citation" data-copied="false">Copiar BibTeX</button>
+          </div>
         </div>
 
         <div class="actions">
@@ -359,5 +409,36 @@
   <footer class="page">
     <p>Rubén Manrique · Publicaciones y material académico</p>
   </footer>
+  <script>
+    (function () {
+      var copyButton = document.querySelector('[data-copy-target="bibtex-citation"]');
+      if (!copyButton) {
+        return;
+      }
+
+      copyButton.addEventListener('click', async function () {
+        var targetId = copyButton.getAttribute('data-copy-target');
+        var citation = targetId ? document.getElementById(targetId) : null;
+        if (!citation) {
+          return;
+        }
+
+        try {
+          await navigator.clipboard.writeText(citation.textContent);
+          copyButton.textContent = 'BibTeX copiado';
+          copyButton.setAttribute('data-copied', 'true');
+          window.setTimeout(function () {
+            copyButton.textContent = 'Copiar BibTeX';
+            copyButton.setAttribute('data-copied', 'false');
+          }, 1800);
+        } catch (error) {
+          copyButton.textContent = 'No se pudo copiar';
+          window.setTimeout(function () {
+            copyButton.textContent = 'Copiar BibTeX';
+          }, 1800);
+        }
+      });
+    }());
+  </script>
 </body>
 </html>
