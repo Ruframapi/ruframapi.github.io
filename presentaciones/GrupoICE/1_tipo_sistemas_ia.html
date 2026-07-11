@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Tipos de Sistemas de IA — ICE</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="css/tema-proyectos-ia.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+<!--SLIDES_START-->
+
+<!-- 1 -->
+<section>
+  <div class="slide-fill tpl-portada">
+    <img class="portada-logo" src="assets/logo_ice.png" alt="Logo ICE">
+    <div class="portada-brand">
+      <img class="uniandes-logo" src="assets/logo_uniandes.png" alt="Logo Universidad de los Andes">
+    </div>
+    <div class="portada-main">
+      <div class="portada-kicker">Formación interna · Inteligencia Artificial</div>
+      <h1 class="portada-title">Tipos de Sistemas de IA</h1>
+      <p class="portada-sub">De las reglas simbólicas a los modelos de lenguaje: cómo funcionan los sistemas de inteligencia artificial actuales.</p>
+    </div>
+    <div class="portada-foot">
+      <div class="portada-foot-main">Rubén Manrique (rf.manrique@uniandes.edu.co)<br>Depto. de Ingeniería de Sistemas y Computación · Universidad de los Andes</div>
+      <div class="portada-foot-mark">ICE · Universidad de los Andes</div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section>
+  <div class="slide-fill tpl-pregunta">
+    <div class="slide-header">
+      <div class="pregunta-tag">Objetivo de la sesión</div>
+      <div class="pregunta-text">Identificar y definir los diferentes sistemas de IA, y describir sus componentes básicos.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Fundamentos</span>
+    <h2 class="c-title">Inteligencia artificial: definición</h2>
+    <p class="lead">La <span class="accent">racionalidad</span> es la capacidad que permite evaluar, entender y actuar de acuerdo a ciertos principios de mejora, para satisfacer algún objetivo o finalidad.</p>
+    <p class="small-note">Russell, S. J., &amp; Norvig, P. (2020). Artificial Intelligence: A Modern Approach (4th ed.).</p>
+  </div>
+</section>
+
+<!-- 4 -->
+<section>
+  <div class="slide-fill tpl-hito">
+    <div class="hito-text">
+      <div class="slide-header">
+        <div class="hito-year">1997</div>
+        <h2>IBM Deep Blue vence a Garry Kasparov</h2>
+      </div>
+      <p>Uno de los primeros hitos mediáticos de la IA: una máquina supera al campeón mundial de ajedrez.</p>
+      <p class="small-note" style="color:#8fb3d1;">Imagen tomada de: datascientest.com</p>
+    </div>
+    <div class="hito-img"><img src="assets/deepblue.png"></div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section>
+  <div class="slide-fill tpl-hito">
+    <div class="hito-text">
+      <div class="slide-header">
+        <div class="hito-year">2011</div>
+        <h2>IBM Watson vence en Jeopardy!</h2>
+      </div>
+      <p>Watson derrota a Ken Jennings y Brad Rutter en el famoso show de TV, demostrando comprensión de lenguaje natural a gran escala.</p>
+      <p class="small-note" style="color:#8fb3d1;">Fuente: IBM Research / TechRepublic</p>
+    </div>
+    <div class="hito-img"><img src="assets/watson.png"></div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section>
+  <div class="slide-fill tpl-hito">
+    <div class="hito-text">
+      <div class="slide-header">
+        <div class="hito-year">2016</div>
+        <h2>Google DeepMind vence a Lee Sedol 4-1</h2>
+      </div>
+      <p>AlphaGo derrota a uno de los mejores jugadores de Go del mundo, un juego considerado mucho más complejo que el ajedrez.</p>
+      <p class="small-note" style="color:#8fb3d1;">Fuente: Google DeepMind</p>
+    </div>
+    <div class="hito-img"><img src="assets/alphago.png"></div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section>
+  <div class="slide-fill tpl-hito">
+    <div class="hito-text">
+      <div class="slide-header">
+        <div class="hito-year">2018</div>
+        <h2>Los autos autoconducidos llegan a las carreteras</h2>
+      </div>
+      <p>Los vehículos autónomos comienzan a operar en condiciones reales de tráfico.</p>
+      <p class="small-note" style="color:#8fb3d1;">Fuente: Waymo</p>
+    </div>
+    <div class="hito-img"><img src="assets/waymo.png"></div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section>
+  <div class="slide-fill tpl-hito">
+    <div class="hito-text">
+      <div class="slide-header">
+        <div class="hito-year">2023</div>
+        <h2>Masificación de los modelos de lenguaje</h2>
+      </div>
+      <p><span class="accent">¡1 millón de usuarios en 5 días!</span> ChatGPT populariza la IA generativa a nivel mundial.</p>
+    </div>
+    <div class="hito-img"><img src="assets/chatgpt1.jpg"></div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section>
+  <div class="slide-fill tpl-pregunta">
+    <div class="slide-header">
+      <div class="pregunta-tag">Pausa para pensar</div>
+      <div class="pregunta-text">¿De dónde salen las reglas para satisfacer algún objetivo o finalidad?</div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section>
+  <div class="slide-fill tpl-divisor">
+    <img class="divisor-logo" src="assets/logo_ice.png">
+    <div class="slide-header">
+      <div class="divisor-num">Sección 01</div>
+      <h2 class="divisor-title">Las reglas se construyen<br>con técnicas de IA</h2>
+      <div class="divisor-sub">Del conocimiento experto codificado a mano, hasta las reglas aprendidas automáticamente de los datos.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">IA Simbólica</span>
+    <h2 class="c-title">Ejemplo I — Análisis sintáctico</h2>
+    <div class="two-col">
+      <div class="col">
+        <p class="lead" style="font-size:1.1rem;">"El niño juega con la pelota."</p>
+        <ul class="bullets" style="font-size:0.95rem;">
+          <li><b>El</b> (Artículo) · <b>niño</b> (Sustantivo) · <b>juega</b> (Verbo) · <b>con</b> (Preposición) · <b>la</b> (Artículo) · <b>pelota</b> (Sustantivo)</li>
+        </ul>
+        <p class="small-note">Reglas sintácticas: O → SN SV &nbsp;·&nbsp; SN → (Det)(Cuant) Sust/Pron (Adv)(Adj)* &nbsp;·&nbsp; Diccionario de artículos y determinantes</p>
+      </div>
+      <div class="col">
+        <div class="flow" style="flex-direction:column; align-items:stretch;">
+          <div class="flow-box">Datos<br><span style="font-weight:400;font-size:0.8rem;">"El niño juega con la pelota"</span></div>
+          <div style="text-align:center;"><span class="flow-arrow">↓</span></div>
+          <div class="flow-box gold">Reglas<br><span style="font-weight:400;font-size:0.8rem;">Sintácticas + Diccionario</span></div>
+          <div style="text-align:center;"><span class="flow-arrow">↓</span></div>
+          <div class="flow-box">Salida<br><span style="font-weight:400;font-size:0.8rem;">Análisis gramatical</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">IA Simbólica</span>
+    <h2 class="c-title">Ejemplo I — Clasificador de spam</h2>
+    <div class="two-col">
+      <div class="col">
+        <p class="lead" style="font-size:1.1rem;">"Gana un viaje a Bogotá. Participar es totalmente gratis."</p>
+        <p class="small-note" style="font-size:0.95rem; color:#33414d;">Rápidamente se dieron cuenta de la necesidad de utilizar representaciones formales en la definición del conocimiento de dominio → reutilización de reglas.</p>
+      </div>
+      <div class="col">
+        <div class="flow" style="flex-direction:column; align-items:stretch;">
+          <div class="flow-box">Datos<br><span style="font-weight:400;font-size:0.8rem;">Correo entrante</span></div>
+          <div style="text-align:center;"><span class="flow-arrow">↓</span></div>
+          <div class="flow-box gold">Reglas<br><span style="font-weight:400;font-size:0.8rem;">Palabras clave, patrones</span></div>
+          <div style="text-align:center;"><span class="flow-arrow">↓</span></div>
+          <div class="flow-box">Salida<br><span style="font-weight:400;font-size:0.8rem;">SPAM</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">IA Simbólica · Ontologías y grafos de conocimiento</span>
+    <h2 class="c-title">Ontología</h2>
+    <ul class="bullets">
+      <li>Un <span class="accent">vocabulario</span> construido con cierto consenso y descrito formalmente.</li>
+      <li>Está presente en las recomendaciones del W3C (lenguajes) como el esquema <b>RDF</b> o el lenguaje de ontología web (<b>OWL</b>).</li>
+      <li>Permite definir términos, cómo se clasifican, sus propiedades, relaciones, etc.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 14 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">IA Simbólica · Ontologías y grafos de conocimiento</span>
+    <h2 class="c-title">De vocabularios a grafos de conocimiento</h2>
+    <div class="two-col">
+      <div class="col">
+        <p class="lead" style="font-size:1.05rem;">La interconexión de conceptos mediante vocabularios forma grafos. Miles de grafos interconectados siguen el estándar W3C:</p>
+        <ul class="bullets">
+          <li>Nombres para las cosas: <b>URI</b></li>
+          <li>Modelo de datos: <b>RDF</b></li>
+          <li>Consumible vía <b>HTTP</b></li>
+        </ul>
+      </div>
+      <div class="col fig">
+        <img src="assets/dbpedia.png">
+        <figcaption>Extracto del conocimiento de fondo en DBpedia para "Red Neuronal Artificial". Tomado de Manrique Piramanrique, R. (2019). Towards automatic learning resources organization via knowledge graphs. Uniandes.</figcaption>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">IA Simbólica</span>
+    <h2 class="c-title">Limitaciones y ventajas de los enfoques basados en reglas</h2>
+    <div class="cards">
+      <div class="card">
+        <h4>⚠️ Limitaciones</h4>
+        <p>Requieren <span class="accent">conocimiento experto humano</span> para generar reglas. Incluso para tareas de baja complejidad, la generación de reglas es extenuante (cientos de reglas).</p>
+      </div>
+      <div class="card">
+        <h4>✅ Ventajas</h4>
+        <p>La salida de un modelo basado en reglas es <span class="accent">explicable y auditable</span>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Enfoque basado en datos</span>
+    <h2 class="c-title">Aprendizaje de máquina</h2>
+    <div class="flow">
+      <div class="flow-box">Datos</div>
+      <div class="flow-arrow">+</div>
+      <div class="flow-box gold">Salida esperada</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Reglas</div>
+    </div>
+    <p class="lead" style="margin-top:1.6rem; font-size:1.1rem;">En vez de programar las reglas a mano, se <span class="accent">aprenden a partir de ejemplos</span>. ¡Esto se entiende mejor con un par de ejercicios!</p>
+  </div>
+</section>
+
+<!-- 17 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Enfoque basado en datos</span>
+    <h2 class="c-title">Ejercicio: Acerous vs. Non-acerous</h2>
+    <div class="gallery">
+      <div class="gallery-item"><img src="assets/animal_cow.png"><span class="gallery-tag">ACEROUS</span></div>
+      <div class="gallery-item"><img src="assets/animal_horns.jpg"><span class="gallery-tag">ACEROUS</span></div>
+      <div class="gallery-item"><img src="assets/animal_cat.jpg"><span class="gallery-tag">NON-ACEROUS</span></div>
+      <div class="gallery-item"><img src="assets/animal_dog.jpg"><span class="gallery-tag">NON-ACEROUS</span></div>
+      <div class="gallery-item"><img src="assets/animal_beetle.jpg"><span class="gallery-tag">ACEROUS</span></div>
+      <div class="gallery-item"><img src="assets/animal_croc.jpg"><span class="gallery-tag">NON-ACEROUS</span></div>
+      <div class="gallery-item"><img src="assets/animal_horse.jpg"><span class="gallery-tag">?</span></div>
+    </div>
+    <p class="lead" style="margin-top:1rem; font-size:1.15rem;">¿A qué categoría pertenece <span class="accent">el caballo</span>?</p>
+  </div>
+</section>
+
+<!-- 18 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Enfoque basado en datos</span>
+    <h2 class="c-title">Ejercicio: ¿Es una palabra portmanteau?</h2>
+    <p class="lead" style="font-size:1.05rem;">Determinar si la palabra <span class="accent">"eduentretenimiento"</span> es un portmanteau.</p>
+    <div class="two-col">
+      <div class="col card">
+        <h4>Portmanteau</h4>
+        <p>boquiabierto · spanglish · pelirrojo · ofimática · emoticón</p>
+      </div>
+      <div class="col card">
+        <h4>No son portmanteau</h4>
+        <p>bandera · alumno · aprendizaje · aburrido · medianoche · carro · libertad</p>
+      </div>
+    </div>
+    <p class="small-note" style="margin-top:1rem;">Reglas ⇒ Patrones aprendidos de ejemplos, no programados explícitamente.</p>
+  </div>
+</section>
+
+<!-- 19 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Enfoque basado en datos · Evolución</span>
+    <h2 class="c-title">¿Qué es el aprendizaje de máquina?</h2>
+    <p class="lead">Una rama de la inteligencia artificial donde la regresión, las inferencias y las <span class="accent">"reglas" de clasificación</span> están determinadas por los datos… en lugar de estar "programadas" explícitamente.</p>
+  </div>
+</section>
+
+<!-- 20 -->
+<section>
+  <div class="slide-fill tpl-divisor">
+    <img class="divisor-logo" src="assets/logo_ice.png">
+    <div class="slide-header">
+      <div class="divisor-num">Sección 02</div>
+      <h2 class="divisor-title">Enfoque basado en datos<br>Tipos de aprendizaje</h2>
+      <div class="divisor-sub">Supervisado · No supervisado · Por refuerzo</div>
+    </div>
+  </div>
+</section>
+
+<!-- 21 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Aprendizaje de máquina</span>
+    <h2 class="c-title">Aprendizaje supervisado</h2>
+    <p class="lead" style="font-size:1.05rem;">En los datos de entrenamiento existe una <span class="accent">señal de supervisión</span> que nos permite guiar el aprendizaje: etiqueta categórica → Clasificación · número real → Regresión.</p>
+    <table class="tbl">
+      <tr><th>Tarea</th><th>Tipo de aprendizaje</th></tr>
+      <tr><td>¿Identificar un correo spam o no spam?</td><td><b>Clasificación</b></td></tr>
+      <tr><td>¿Predecir el peso de una persona según su altura y edad?</td><td><b>Regresión</b></td></tr>
+      <tr><td>¿Identificar si en una imagen hay una cara?</td><td><b>Clasificación</b></td></tr>
+      <tr><td>¿Determinar niveles de azúcar en la sangre a partir de la dieta?</td><td><b>Regresión</b></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- 22 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Aprendizaje supervisado</span>
+    <h2 class="c-title">Clasificación: correo bueno vs. SPAM</h2>
+    <div class="flow">
+      <div class="flow-box">📥 Datos de<br>entrenamiento</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box gold">⚙️ Algoritmo de<br>aprendizaje</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">🧠 MODELO</div>
+    </div>
+    <div class="flow" style="margin-top:1rem;">
+      <div class="flow-box">📥 Datos de<br>prueba</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box gold">🧠 MODELO</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">✅ Correo bueno<br>❌ Correo SPAM</div>
+    </div>
+    <p class="small-note" style="margin-top:1rem;">Etiquetas: ✅ correo bueno · ❌ correo SPAM &nbsp;·&nbsp; Algoritmos: KNN, SVM, Árboles de decisión, Naïve Bayes, Redes Bayesianas, Regresión logística, Random Forests, Redes Neuronales.</p>
+    <p class="small-note">Fases: Entrenamiento → Evaluación.</p>
+  </div>
+</section>
+
+<!-- 23 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Aprendizaje supervisado</span>
+    <h2 class="c-title">Regresión: predecir la altura de niños</h2>
+    <div class="two-col">
+      <div class="col">
+        <p class="small-note" style="font-size:0.9rem;">Objetivo: predecir la altura en base a edad y lugar de nacimiento. Señal de supervisión: Altura (cm).</p>
+        <table class="tbl" style="font-size:0.85rem;">
+          <tr><th>Edad</th><th>País</th><th>Altura (cm)</th></tr>
+          <tr><td>1</td><td>Colombia</td><td>75</td></tr>
+          <tr><td>2</td><td>Costa Rica</td><td>85</td></tr>
+          <tr><td>3</td><td>Perú</td><td>95</td></tr>
+          <tr><td>4</td><td>Chile</td><td>102</td></tr>
+          <tr><td>5</td><td>Argentina</td><td>109</td></tr>
+        </table>
+      </div>
+      <div class="col">
+        <div class="flow" style="flex-direction:column; align-items:stretch;">
+          <div class="flow-box">Datos de entrenamiento</div>
+          <div style="text-align:center;"><span class="flow-arrow">↓</span></div>
+          <div class="flow-box gold">Algoritmo de aprendizaje<br><span style="font-weight:400;font-size:0.75rem;">Regresión lineal, SVR, Árboles, Bayesiana, Adaboost, Redes Neuronales</span></div>
+          <div style="text-align:center;"><span class="flow-arrow">↓</span></div>
+          <div class="flow-box">MODELO</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 25 -->
+<section>
+  <div class="slide-fill tpl-subdivisor">
+    <div class="slide-header">
+      <div class="subdivisor-tag">Nuevo tipo</div>
+      <div class="subdivisor-title">Aprendizaje de máquina<br>— Aprendizaje NO supervisado —</div>
+    </div>
+  </div>
+</section>
+
+<!-- 26 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Aprendizaje NO supervisado</span>
+    <h2 class="c-title">Sin señal de supervisión</h2>
+    <p class="lead" style="font-size:1.05rem;">No hay etiquetas: la idea es <span class="accent">describir los datos</span>, generalmente construyendo grupos (clustering).</p>
+    <div class="gallery" style="margin-top:1rem;">
+      <img src="assets/cluster1.png" style="height:90px;">
+      <img src="assets/cluster2.png" style="height:90px;">
+      <img src="assets/cluster3.png" style="height:90px;">
+      <img src="assets/cluster4.png" style="height:90px;">
+      <img src="assets/cluster5.png" style="height:90px;">
+    </div>
+    <p class="lead" style="margin-top:0.8rem; font-size:1.1rem;">¿Cómo organizarían estos elementos?</p>
+  </div>
+</section>
+
+<!-- 27 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Aprendizaje NO supervisado</span>
+    <h2 class="c-title">Agrupamiento sin etiquetas (clustering)</h2>
+    <div class="two-col">
+      <div class="col">
+        <p class="lead" style="font-size:1.05rem;">Los grupos se forman con base en la <span class="accent">distancia en el espacio de características</span> (= características comunes).</p>
+      </div>
+      <div class="col fig"><img src="assets/cluster_dist.png"><figcaption>Imagen tomada de sharpsight.ai</figcaption></div>
+    </div>
+  </div>
+</section>
+
+<!-- 28 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Aprendizaje NO supervisado</span>
+    <h2 class="c-title">Detección de anomalías</h2>
+    <div class="two-col">
+      <div class="col">
+        <p class="lead" style="font-size:1.05rem;">Los grupos se forman con base en la distancia en el espacio de características. Los puntos alejados de todo grupo se consideran <span class="accent">anomalías</span>.</p>
+      </div>
+      <div class="col fig"><img src="assets/anomaly.png"><figcaption>Loo CE, Ng MY, Leckie C, Palaniswami M. Intrusion Detection for Routing Attacks in Sensor Networks.</figcaption></div>
+    </div>
+  </div>
+</section>
+
+<!-- 30 -->
+<section>
+  <div class="slide-fill tpl-subdivisor">
+    <div class="slide-header">
+      <div class="subdivisor-tag">Nuevo tipo</div>
+      <div class="subdivisor-title">Aprendizaje de máquina<br>— Aprendizaje reforzado —</div>
+    </div>
+  </div>
+</section>
+
+<!-- 31 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Aprendizaje reforzado</span>
+    <h2 class="c-title">Aprendizaje por refuerzo</h2>
+    <div class="two-col">
+      <div class="col">
+        <p class="lead" style="font-size:1.05rem;">Un paradigma del aprendizaje automático en el que un <span class="accent">agente aprende a tomar decisiones</span> mediante la interacción con un entorno, recibiendo recompensas o penalizaciones según sus acciones.</p>
+      </div>
+      <div class="col fig"><img src="assets/rl_diagram.png"><figcaption>Imagen tomada de ceupe.com</figcaption></div>
+    </div>
+  </div>
+</section>
+
+<!-- 32 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Aprendizaje reforzado</span>
+    <h2 class="c-title">Agentes</h2>
+    <div class="two-col">
+      <div class="col fig"><img src="assets/agente1.png"><figcaption>Tomado de mathworks.com</figcaption></div>
+      <div class="col fig"><img src="assets/agente2.jpg"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 33 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Agentes modernos</span>
+    <h2 class="c-title">Agentes modernos = LLM + ambiente externo</h2>
+    <p class="lead" style="font-size:1.05rem;">¡Integramos modelos de lenguaje grande (LLMs) en agentes de IA para que puedan usar el lenguaje para razonar y comunicarse!</p>
+    <div class="flow">
+      <div class="flow-box">👁️ Percepciones<br><span style="font-weight:400;font-size:0.75rem;">Text Input</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box gold">🤖 Agente LLM</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">⚡ Acciones<br><span style="font-weight:400;font-size:0.75rem;">Text Output</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 34 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Agentes modernos</span>
+    <h2 class="c-title">¿Por qué razonar es importante?</h2>
+    <p class="lead" style="font-size:1.05rem;">Mapear una observación directamente a una acción sin un proceso de razonamiento es difícil.</p>
+    <div class="flow">
+      <div class="flow-box">👁️ Percepciones</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box gold">🧩 Razonamiento</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">⚡ Acciones</div>
+    </div>
+    <p class="small-note" style="margin-top:1rem; font-size:1rem;"><b>ReAct</b> = Reason to Act (Razonamiento para actuar)</p>
+  </div>
+</section>
+
+<!-- 35 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Agentes modernos</span>
+    <h2 class="c-title">Memoria</h2>
+    <ul class="bullets">
+      <li>Capaz de <span class="accent">leer y escribir</span> información.</li>
+      <li>Almacena experiencias, conocimientos, habilidades, etc.</li>
+      <li>Permanece a lo largo de nuevas experiencias (memoria a largo plazo).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 36 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Agentes modernos</span>
+    <h2 class="c-title">Herramientas (Acciones = Herramientas)</h2>
+    <p class="lead" style="font-size:1rem;">Una <i>tool</i> es una función que se le proporciona a un LLM para que cumpla un objetivo específico, ampliando sus capacidades para interactuar con el mundo externo.</p>
+    <table class="tbl">
+      <tr><th>Herramienta</th><th>Descripción</th></tr>
+      <tr><td>Búsqueda Web</td><td>Permite al agente obtener información actualizada de Internet.</td></tr>
+      <tr><td>Generación de Imágenes</td><td>Crea imágenes a partir de descripciones en texto.</td></tr>
+      <tr><td>Recuperación (Retrieval)</td><td>Obtiene información desde una fuente externa o base de datos.</td></tr>
+      <tr><td>Interfaz API</td><td>Interactúa con servicios externos (GitHub, YouTube, Spotify, etc.).</td></tr>
+    </table>
+    <p class="small-note">¿Cómo funciona? El LLM detecta que necesita una herramienta → genera una invocación (ej. <code>call weather_tool("París")</code>) → el agente la ejecuta → el resultado vuelve al LLM para responder al usuario.</p>
+  </div>
+</section>
+
+<!-- 37 -->
+<section>
+  <div class="slide-fill tpl-divisor">
+    <img class="divisor-logo" src="assets/logo_ice.png">
+    <div class="slide-header">
+      <div class="divisor-num">Sección 03</div>
+      <h2 class="divisor-title">Aprendizaje profundo</h2>
+    </div>
+  </div>
+</section>
+
+<!-- 38 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Aprendizaje profundo · Evolución tecnológica</span>
+    <h2 class="c-title">¡Construir redes neuronales grandes!</h2>
+    <ul class="bullets">
+      <li>El término empezó a ganar popularidad a mediados de los <span class="accent">2000s</span>.</li>
+      <li>El aprendizaje profundo desbloqueó muchas soluciones en múltiples dominios.</li>
+      <li>Se han realizado más avances en los últimos <b>10 años</b> que en los <b>60 años anteriores</b>.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 39 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Redes neuronales artificiales</span>
+    <h2 class="c-title">Inspiración biológica</h2>
+    <div class="two-col">
+      <div class="col">
+        <p class="lead" style="font-size:1.05rem;">Entre las décadas de 1950 y 1960, el científico <span class="accent">Frank Rosenblatt</span>, inspirado en el trabajo de Warren McCulloch y Walter Pitts, creó el <b>Perceptrón</b>.</p>
+      </div>
+      <div class="col fig"><img src="assets/perceptron.png"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 40 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Redes neuronales artificiales</span>
+    <h2 class="c-title">1965 — Multilayer Perceptron</h2>
+    <div class="two-col">
+      <div class="col">
+        <div class="gallery">
+          <img src="assets/mlp_horse.jpg" style="height:90px;">
+        </div>
+        <p class="small-note">Clasificación de imágenes: entrada (píxeles) → capas ocultas → salida (categoría).</p>
+      </div>
+      <div class="col">
+        <div class="flow" style="flex-direction:column; align-items:stretch;">
+          <div class="flow-box">Capa de entrada</div>
+          <div style="text-align:center;"><span class="flow-arrow">↓</span></div>
+          <div class="flow-box gold">Capas ocultas</div>
+          <div style="text-align:center;"><span class="flow-arrow">↓</span></div>
+          <div class="flow-box">Capa de salida</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 41 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Redes profundas</span>
+    <h2 class="c-title">Muchas capas ocultas intermedias</h2>
+    <ul class="bullets">
+      <li>Difíciles de entrenar para la época y <span class="accent">costosas computacionalmente</span>.</li>
+      <li>En los años 80 y 90 se entrenaban redes neuronales por debajo del millón de parámetros.</li>
+      <li>Hoy en día los modelos son del orden de <b>billones o trillones</b> de parámetros.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 42 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Redes profundas</span>
+    <h2 class="c-title">¿Gracias a qué se lograron?</h2>
+    <div class="cards">
+      <div class="card">
+        <h4>📊 Datos</h4>
+        <p>Ubuntu Dialogue Corpus (2016) — 1 millón de diálogos. BlenderBot (2020) — 9.4B parámetros, 1.5B conversaciones de Reddit.</p>
+      </div>
+      <div class="card">
+        <h4>🖥️ Hardware</h4>
+        <p>Las GPUs tienen la capacidad de realizar varias tareas de forma simultánea.</p>
+      </div>
+      <div class="card">
+        <h4>⚙️ Algoritmos</h4>
+        <p>Algoritmos e implementaciones cada vez más eficientes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 43 -->
+<section>
+  <div class="slide-fill tpl-divisor">
+    <img class="divisor-logo" src="assets/logo_ice.png">
+    <div class="slide-header">
+      <div class="divisor-num">Sección 04</div>
+      <h2 class="divisor-title">IA Generativa</h2>
+    </div>
+  </div>
+</section>
+
+<!-- 44 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">IA Generativa</span>
+    <h2 class="c-title">¿Qué es la IA Generativa?</h2>
+    <p class="lead">La IA generativa (<span class="accent">GenAI</span>) es un tipo de Inteligencia Artificial que crea nuevo contenido en base a lo que aprendió de contenido existente.</p>
+    <p class="lead" style="font-size:1rem; margin-top:0.8rem;">Ya existía, pero solo fue con la llegada de los modelos de deep learning que generó resultados al nivel humano.</p>
+  </div>
+</section>
+
+<!-- 45 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">IA Generativa</span>
+    <h2 class="c-title">¿De dónde viene lo "generativo"?</h2>
+    <div class="two-col">
+      <div class="col">
+        <p class="lead" style="font-size:1.1rem;">Modelos <span class="accent">generativos</span> vs. <span class="accent">discriminativos</span></p>
+        <p class="small-note" style="font-size:1rem;">Tarea de ejemplo: diferenciar entre un gato y un perro.</p>
+      </div>
+      <div class="col">
+        <div class="gallery">
+          <img src="assets/dog1.jpg" style="height:110px;">
+          <img src="assets/cat1.jpg" style="height:110px;">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 46 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Modelos discriminativos</span>
+    <h2 class="c-title">Discriminativos</h2>
+    <div class="two-col">
+      <div class="col">
+        <p class="lead" style="font-size:1.15rem;">"¡Mira!, los perros tienen collar, y los gatos no. Ignoremos todo lo demás."</p>
+        <p class="small-note" style="font-size:1rem;">Aprenden la <span class="accent">frontera de decisión</span> entre clases usando pocas características distintivas.</p>
+      </div>
+      <div class="col">
+        <div class="gallery">
+          <img src="assets/dog2.jpg" style="height:110px;">
+          <img src="assets/cat2.jpg" style="height:110px;">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 47 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Modelos generativos</span>
+    <h2 class="c-title">Generativos: "¿qué es un perro?"</h2>
+    <p class="lead" style="font-size:1rem;">Ahora que has aprendido sobre perros mirando grandes corpus de información…</p>
+    <div class="cards">
+      <div class="card">
+        <h4>📄 Tipo Textual (documentos)</h4>
+        <p>"Mamífero carnívoro doméstico de la familia de los cánidos que se caracteriza por tener los sentidos del olfato y el oído muy finos…"</p>
+        <p class="small-note">GPT, PaLM, LLaMA</p>
+      </div>
+      <div class="card">
+        <h4>🖼️ Tipo Gráfica (imágenes)</h4>
+        <div class="gallery"><img src="assets/dog3.jpg" style="height:80px;"></div>
+        <p class="small-note">DALL·E, Stable Diffusion</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 48 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Modelos generativos</span>
+    <h2 class="c-title">Dos grandes familias de modelos generativos</h2>
+    <div class="two-col">
+      <div class="col card">
+        <h4>🖼️ Modelos generativos de imágenes</h4>
+        <p>Producen nuevas imágenes usando técnicas como <span class="accent">difusión</span>. Dado un prompt, transforman ruido aleatorio en imágenes.</p>
+      </div>
+      <div class="col card">
+        <h4>💬 Modelos de lenguaje generativos (LLMs)</h4>
+        <p>Aprenden patrones del lenguaje usando grandes corpus documentales, y dado un texto de entrada predicen la <span class="accent">siguiente palabra</span>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 49 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Modelos de lenguaje</span>
+    <h2 class="c-title">¿Qué es un modelo de lenguaje?</h2>
+    <div class="two-col">
+      <div class="col">
+        <p class="lead" style="font-size:1.05rem;">Modelos construidos para predecir la <span class="accent">distribución de probabilidad</span> de la siguiente palabra en una secuencia, dadas las palabras anteriores.</p>
+        <p class="small-note" style="font-size:1rem;">Contexto: "Bogotá es la capital de ______"</p>
+      </div>
+      <div class="col chart-box">
+        <canvas data-chart='{"type":"pie","data":{"labels":["Colombia","Canadá","España","Ecuador","México","Perú"],"datasets":[{"data":[30,15,15,20,10,10],"backgroundColor":["#005595","#FCCE0D","#7fa8c9","#e6b800","#a9c6de","#f5deb3"]}]},"options":{"plugins":{"legend":{"position":"bottom","labels":{"font":{"size":10}}}}}}'></canvas>
+        <h5>Distribución antes de entrenar más</h5>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 50 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Modelos de lenguaje · Entrenamiento</span>
+    <h2 class="c-title">A más datos, más certeza</h2>
+    <p class="lead" style="font-size:1rem;">Aprender a crear el modelo probabilístico de manera efectiva: modelos de atención + grandes corpus documentales. "Bogotá" y "capital" son las palabras más importantes.</p>
+    <div class="chart-row">
+      <div class="chart-box">
+        <canvas data-chart='{"type":"pie","data":{"labels":["Colombia","Canadá","España","Ecuador","México","Perú"],"datasets":[{"data":[30,15,15,20,10,10],"backgroundColor":["#005595","#FCCE0D","#7fa8c9","#e6b800","#a9c6de","#f5deb3"]}]},"options":{"plugins":{"legend":{"display":false}}}}'></canvas>
+        <h5>Poco entrenamiento</h5>
+      </div>
+      <div class="chart-box">
+        <canvas data-chart='{"type":"pie","data":{"labels":["Colombia","Canadá","España","Ecuador","México","Perú"],"datasets":[{"data":[50,10,5,15,10,10],"backgroundColor":["#005595","#FCCE0D","#7fa8c9","#e6b800","#a9c6de","#f5deb3"]}]},"options":{"plugins":{"legend":{"display":false}}}}'></canvas>
+        <h5>Entrenamiento medio</h5>
+      </div>
+      <div class="chart-box">
+        <canvas data-chart='{"type":"pie","data":{"labels":["Colombia","Canadá","España","Ecuador","México","Perú"],"datasets":[{"data":[90,3,3,3,1,1],"backgroundColor":["#005595","#FCCE0D","#7fa8c9","#e6b800","#a9c6de","#f5deb3"]}]},"options":{"plugins":{"legend":{"position":"bottom","labels":{"font":{"size":9}}}}}}'></canvas>
+        <h5>Mucho entrenamiento</h5>
+      </div>
+    </div>
+    <p class="small-note" style="margin-top:0.6rem;">→ Incremento en el tamaño del conjunto de datos de entrenamiento</p>
+  </div>
+</section>
+
+<!-- 51 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Modelos de lenguaje · Predicción</span>
+    <h2 class="c-title">Generación autoregresiva</h2>
+    <p class="lead" style="font-size:1rem;">Aplico de forma repetitiva el proceso de predecir la palabra siguiente:</p>
+    <div style="background:var(--ice-panel); border-radius:10px; padding:1.2rem 1.4rem; font-family:monospace; font-size:0.95rem; line-height:1.9; color:#1a2733;">
+      Lima es la capital de <span class="accent">Perú</span><br>
+      Lima es la capital de Perú<span class="accent">.</span><br>
+      Lima es la capital de Perú. <span class="accent">Se</span><br>
+      Lima es la capital de Perú. Se <span class="accent">encuentra</span><br>
+      Lima es la capital de Perú. Se encuentra <span class="accent">situada</span><br>
+      Lima es la ciudad capital de la República del Perú. Se encuentra situada en la costa central del país, a orillas del océano Pacífico…
+    </div>
+  </div>
+</section>
+
+<!-- 52 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Modelos de lenguaje</span>
+    <h2 class="c-title">😝 Alucinaciones</h2>
+    <p class="lead" style="font-size:1.1rem;">Palabras o frases generadas por el modelo que <span class="accent">carecen de veracidad</span>, no tienen sentido, o son gramaticalmente incorrectas.</p>
+    <p class="small-note" style="font-size:1.2rem; font-weight:700; color:#c0392b; margin-top:1rem;">¡FALSO!</p>
+  </div>
+</section>
+
+<!-- 53 -->
+<section>
+  <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;margin-top: 150px;">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <div class="fig"><img src="assets/llm_survey.png" style="max-height:480px;"><figcaption>Tomado de: "A Survey of Large Language Models" — arxiv.org/abs/2303.18223</figcaption></div>
+  </div>
+</section>
+
+<!-- 54 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Modelos de lenguaje</span>
+    <h2 class="c-title">Modelos cada vez más grandes</h2>
+    <div class="fig"><img src="assets/llm_growth.png" style="max-height:420px;"></div>
+  </div>
+</section>
+
+<!-- 55 -->
+<section>
+  <div class="slide-fill tpl-divisor">
+    <img class="divisor-logo" src="assets/logo_ice.png">
+    <div class="slide-header">
+      <div class="divisor-num">Sección 05</div>
+      <h2 class="divisor-title">Ingeniería de prompts y<br>aprendizaje en contexto</h2>
+    </div>
+  </div>
+</section>
+
+<!-- 56 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Ingeniería de prompts</span>
+    <h2 class="c-title">¿Qué es un prompt?</h2>
+    <div class="two-col">
+      <div class="col">
+        <p class="lead" style="font-size:1rem;">Una cadena de texto que un usuario envía a un modelo de lenguaje para que realice algo útil. El prompt crea un <span class="accent">contexto</span> que guía al LLM a generar resultados útiles.</p>
+        <p class="small-note" style="font-size:0.9rem;">El proceso de encontrar prompts efectivos para una tarea se conoce como <b>ingeniería de prompts</b>.</p>
+      </div>
+      <div class="col fig">
+        <img src="assets/mago.jpg" style="max-height:260px;">
+        <figcaption>Prompt: "Genera la imagen de un mago negro escribiendo unas palabras en un teclado mágico…" (Generado con Flux 1.1)</figcaption>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 57 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Ingeniería de prompts</span>
+    <h2 class="c-title">Interacción conversacional vía prompts</h2>
+    <p class="lead" style="font-size:1rem;">Sistema conversacional (chatbot) que genera respuestas coherentes y naturales a instrucciones (prompts) dadas.</p>
+    <div class="flow">
+      <div class="flow-box">💬 Prompt</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box gold">🗂️ Contexto</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">✅ Respuesta</div>
+      <div class="flow-arrow">↻</div>
+    </div>
+    <p class="small-note" style="margin-top:0.8rem;">Cada nuevo prompt se suma al contexto previo, permitiendo una conversación coherente turno a turno.</p>
+  </div>
+</section>
+
+<!-- 58 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Ingeniería de prompts</span>
+    <h2 class="c-title">Lineamientos básicos</h2>
+    <ul class="bullets" style="font-size:0.95rem;">
+      <li><b>Escribir instrucciones claras.</b> Use delimitadores para indicar las distintas partes de la entrada: <code>```</code>, <code>"""</code>, <code>&lt;tag&gt;&lt;/tag&gt;</code>, <code>:</code></li>
+      <li>Entre más sofisticado el prompt, con mayor claridad debe estar escrito. Descomponer tareas complejas en tareas más pequeñas y ordenadas ayuda a obtener mejores resultados.</li>
+    </ul>
+    <div style="background:var(--ice-panel); border-radius:10px; padding:1rem 1.2rem; font-family:monospace; font-size:0.8rem; margin-top:0.8rem; color:#1a2733;">
+      { "resumen_frances": "La Cour internationale de justice rejette la demande du Nicaragua…", "numero_de_nombres": 5 }
+    </div>
+  </div>
+</section>
+
+<!-- 59 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Aprendizaje en contexto</span>
+    <h2 class="c-title">Una nueva propiedad emergente</h2>
+    <p class="lead" style="font-size:1rem;">A medida que los modelos son cada vez más grandes, exhiben una nueva propiedad: el <span class="accent">aprendizaje en contexto</span>. Parecen aprender sin actualizar sus parámetros, simplemente a partir de ejemplos dados en el prompt.</p>
+    <p class="small-note">Tom B. Brown, et al. (2020) realizó el primer estudio al respecto y denominó a la técnica <i>few-shot learning</i>. "Language models are few-shot learners", NeurIPS 2020.</p>
+  </div>
+</section>
+
+<!-- 60 -->
+<section>
+  <div class="slide-fill tpl-pregunta">
+    <div class="slide-header">
+      <div class="pregunta-tag">Pregunta para analizar</div>
+      <div class="pregunta-text">¿Por qué si los modelos de lenguaje como GPT-3 fueron entrenados en la predicción de la palabra siguiente, son capaces de realizar aprendizaje en contexto para tareas en las que no fueron entrenados?</div>
+    </div>
+  </div>
+</section>
+
+<!-- 61 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Aprendizaje en contexto</span>
+    <h2 class="c-title">Ejemplos de few-shot learning</h2>
+    <div class="cards">
+      <div class="card"><h4>Cycle letters</h4><p><code>pleap → apple</code></p></div>
+      <div class="card"><h4>Random insertion</h4><p><code>a.p!p/l!e → apple</code></p></div>
+      <div class="card"><h4>Reversed words</h4><p><code>elppa → apple</code></p></div>
+    </div>
+    <p class="small-note" style="margin-top:0.8rem;">Tom B. Brown, et al. 2020. "Language models are few-shot learners", NeurIPS 2020.</p>
+  </div>
+</section>
+
+<!-- 62 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Grandes modelos de lenguaje</span>
+    <h2 class="c-title">Fluido, pero no fáctico</h2>
+    <ul class="bullets">
+      <li>Construye sentencias sintáctica y gramaticalmente correctas en múltiples lenguajes.</li>
+      <li>Estilos: informal, formal, académico.</li>
+      <li><span class="accent">No necesariamente basado en hechos.</span></li>
+      <li><span class="accent">No necesariamente veraz.</span></li>
+    </ul>
+    <p class="small-note">"What ChatGPT and generative AI mean for science", Chris Stokel-Walker &amp; Richard Van Noorden, 2023, Nature.</p>
+  </div>
+</section>
+
+<!-- 63 -->
+<section>
+  <div class="slide-fill tpl-contenido">
+    <img class="content-logo" src="assets/logo_ice.png">
+    <span class="eyebrow">Grandes modelos de lenguaje</span>
+    <h2 class="c-title">Datos de entrenamiento (2023)</h2>
+    <div class="two-col">
+      <div class="col">
+        <table class="tbl" style="font-size:0.85rem;">
+          <tr><th>Dataset</th><th># tokens</th><th>Proporción</th></tr>
+          <tr><td>Common Crawl (Internet)</td><td>410 mil millones</td><td>60%</td></tr>
+          <tr><td>WebText2 (Internet)</td><td>19 mil millones</td><td>22%</td></tr>
+          <tr><td>Books1</td><td>12 mil millones</td><td>8%</td></tr>
+          <tr><td>Books2</td><td>55 mil millones</td><td>8%</td></tr>
+          <tr><td>Wikipedia</td><td>3 mil millones</td><td>3%</td></tr>
+        </table>
+        <p class="small-note" style="font-size:1rem; font-weight:700; color:var(--ice-blue);">&gt;80% proviene de Internet</p>
+      </div>
+      <div class="col card">
+        <h4>⚠️ Problemas de Internet como fuente</h4>
+        <p>Información desactualizada, confusa o falsa. Perpetúa estereotipos (discriminación/exclusión). Lenguaje tóxico u ofensivo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 64 -->
+<section>
+  <div class="slide-fill tpl-portada">
+    <img class="portada-logo" src="assets/logo_ice.png" alt="Logo ICE">
+    <div class="portada-brand">
+      <img class="uniandes-logo" src="assets/logo_uniandes.png" alt="Logo Universidad de los Andes">
+    </div>
+    <div class="portada-main">
+      <div class="portada-kicker">Gracias</div>
+      <h1 class="portada-title">¿Preguntas?</h1>
+      <p class="portada-sub">Conversemos sobre reglas, aprendizaje de máquina, agentes y modelos de lenguaje.</p>
+    </div>
+    <div class="portada-foot">
+      <div class="portada-foot-main">Rubén Manrique · rf.manrique@uniandes.edu.co<br>Depto. de Ingeniería de Sistemas y Computación · Universidad de los Andes</div>
+      <div class="portada-foot-mark">Cierre</div>
+    </div>
+  </div>
+</section>
+
+<!--SLIDES_END-->
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script>
+  Reveal.initialize({
+    hash:true,
+    controls:true,
+    progress:true,
+    slideNumber:true,
+    transition:'none',
+    center:false,
+    margin:0.02,
+    plugins: []
+  });
+  Reveal.addEventListener('slidechanged', function(){
+    document.querySelectorAll('canvas[data-chart]').forEach(function(c){
+      if(!c.dataset.rendered){ renderChart(c); c.dataset.rendered = "1"; }
+    });
+  });
+  function renderChart(canvas){
+    var cfg = JSON.parse(canvas.dataset.chart);
+    new Chart(canvas.getContext('2d'), cfg);
+  }
+  window.addEventListener('load', function(){
+    document.querySelectorAll('canvas[data-chart]').forEach(function(c){
+      renderChart(c); c.dataset.rendered = "1";
+    });
+  });
+</script>
+</body>
+</html>
