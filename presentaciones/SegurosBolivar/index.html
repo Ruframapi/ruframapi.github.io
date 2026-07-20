@@ -1,0 +1,930 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Qué tan confiable es tu IA ante la ley colombiana?</title>
+
+<link rel="stylesheet" href="reveal/dist/reveal.css">
+<link rel="stylesheet" href="reveal/dist/theme/white.css">
+
+<style>
+/* ============ Design tokens (paleta validada, superficie clara) ============ */
+:root{
+  --azul:#2a78d6;       /* serie 1 */
+  --azul-osc:#1c5cab;
+  --azul-claro:#9ec5f4;
+  --verde:#008300;      /* serie 2 */
+  --naranja:#eb6834;    /* serie 6 */
+  --amarillo:#eda100;   /* serie 4 — siempre con etiqueta directa */
+  --ok:#0ca30c;         /* estado: bueno  (siempre con ícono+texto) */
+  --mal:#d03b3b;        /* estado: crítico (siempre con ícono+texto) */
+  --tinta:#0b0b0b;
+  --tinta2:#52514e;
+  --tinta3:#898781;
+  --grid:#e1e0d9;
+  --superficie:#ffffff;
+}
+
+.reveal{ font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 34px; color: var(--tinta); }
+.reveal .slides section{ text-align:left; }
+.reveal h1,.reveal h2,.reveal h3{ font-family: inherit; text-transform:none; letter-spacing:-0.01em; color:var(--tinta); }
+.reveal h1{ font-size:1.9em; font-weight:800; line-height:1.12; }
+.reveal h2{ font-size:1.35em; font-weight:800; line-height:1.15; margin-bottom:.5em; }
+.reveal h3{ font-size:1.0em; font-weight:700; }
+.reveal p, .reveal li{ line-height:1.35; }
+.reveal .progress{ color:var(--azul); }
+.reveal .slide-number{ color:var(--tinta3); background:transparent; font-size:16px; }
+
+small, .fine{ font-size:.55em; color:var(--tinta2); }
+.cite{ position:absolute; bottom:-70px; left:0; right:0; font-size:.42em; color:var(--tinta3); line-height:1.35; }
+.muted{ color:var(--tinta2); }
+.acento{ color:var(--azul-osc); }
+.malo{ color:var(--mal); }
+.bueno{ color:#006300; }
+
+/* chips */
+.chip{ display:inline-block; font-size:.5em; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  padding:.35em .9em; border-radius:999px; background:#eef4fc; color:var(--azul-osc); margin-bottom:.8em; }
+.chip.publico{ background:#fdf3e2; color:#8a5a00; }
+.chip.riesgo{ background:#fbeaea; color:#8f2020; }
+.chip.ok{ background:#e9f6e9; color:#0a5d0a; }
+
+/* layout helpers */
+.cols{ display:flex; gap:1em; align-items:stretch; }
+.cols > div{ flex:1; min-width:0; }
+.center-slide{ text-align:center !important; }
+
+.card{ background:#fbfbfa; border:1px solid var(--grid); border-radius:14px; padding:.7em .9em; font-size:.62em; line-height:1.4; }
+.card h3{ margin:0 0 .35em 0; font-size:1.05em; }
+.card.pos{ border-top:6px solid var(--ok); }
+.card.neg{ border-top:6px solid var(--mal); }
+.card .fuente{ display:block; margin-top:.5em; font-size:.75em; color:var(--tinta3); }
+
+/* hero numbers */
+.hero-num{ font-size:3.2em; font-weight:800; line-height:1; color:var(--azul-osc); letter-spacing:-0.02em; }
+.hero-num.rojo{ color:var(--mal); }
+.hero-label{ font-size:.6em; color:var(--tinta2); margin-top:.3em; }
+.stat-row{ display:flex; gap:1.2em; text-align:center; justify-content:center; }
+.stat-row > div{ flex:1; }
+
+/* ============ Gráficos HTML/CSS ============ */
+.viz{ background:var(--superficie); }
+.viz-title{ font-size:.6em; font-weight:700; color:var(--tinta); margin-bottom:.6em; }
+.viz-sub{ font-size:.48em; color:var(--tinta2); margin-top:.4em; }
+
+.barrow{ display:flex; align-items:center; gap:.5em; margin:4px 0; }
+.barrow .blabel{ width:250px; font-size:.5em; color:var(--tinta2); text-align:right; flex:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.barrow .btrack{ flex:1; position:relative; height:20px; }
+.barrow .bfill{ height:100%; border-radius:0 4px 4px 0; background:var(--azul); position:relative; }
+.barrow .bfill.destacado{ background:var(--azul-osc); }
+.barrow .bfill.gris{ background:#c9c8c1; }
+.barrow .bval{ position:absolute; left:100%; top:50%; transform:translateY(-50%); padding-left:8px; font-size:13px; color:var(--tinta); font-variant-numeric:tabular-nums; }
+.baseline-025{ position:absolute; top:-6px; bottom:-6px; border-left:2px dashed var(--tinta3); }
+.baseline-lab{ position:absolute; top:-24px; font-size:12px; color:var(--tinta3); transform:translateX(-50%); white-space:nowrap; }
+
+.legend{ display:flex; gap:1.4em; font-size:.5em; color:var(--tinta2); margin:.4em 0 .6em; }
+.legend .sw{ display:inline-block; width:14px; height:14px; border-radius:4px; margin-right:.4em; vertical-align:-2px; }
+
+/* rangos relevancia vs correctitud */
+.range-strip{ position:relative; height:30px; background:#f3f2ef; border-radius:8px; margin:.35em 0 1em; }
+.range-strip .rfill{ position:absolute; top:4px; bottom:4px; border-radius:6px; }
+.range-strip .rlab{ position:absolute; top:-26px; font-size:14px; color:var(--tinta2); }
+.range-ticks{ display:flex; justify-content:space-between; font-size:12px; color:var(--tinta3); margin-top:-14px; }
+
+/* ============ Demo de tokens ============ */
+#tokendemo .contexto{ background:#fbfbfa; border:1px solid var(--grid); border-radius:14px; padding:.55em .8em; font-size:.85em; min-height:2.4em; }
+#tokendemo .contexto .gen{ color:var(--azul-osc); font-weight:700; }
+#tokendemo .contexto .cursor{ display:inline-block; width:.55em; height:1.05em; background:var(--azul); vertical-align:-0.15em; margin-left:2px; animation:blink 1s steps(1) infinite; }
+@keyframes blink{ 50%{opacity:0;} }
+.tok-opts{ margin-top:.7em; }
+.tok-row{ display:flex; align-items:center; gap:.6em; margin:7px 0; cursor:pointer; }
+.tok-row:hover .tfill{ background:var(--azul-osc); }
+.tok-row .tword{ width:210px; flex:none; text-align:right; font-size:.62em; font-weight:700; color:var(--tinta); }
+.tok-row .ttrack{ flex:1; height:26px; position:relative; }
+.tok-row .tfill{ position:relative; height:100%; background:var(--azul); border-radius:0 4px 4px 0; transition:width .35s ease, background .15s; }
+.tok-row .tpct{ position:absolute; left:100%; padding-left:8px; top:50%; transform:translateY(-50%); font-size:14px; color:var(--tinta2); font-variant-numeric:tabular-nums; }
+.tok-row.derogado .tfill{ background:var(--amarillo); }
+.tok-controls{ margin-top:.8em; display:flex; gap:.8em; align-items:center; }
+.btn{ font-size:.55em; font-weight:700; padding:.55em 1.1em; border-radius:10px; border:2px solid var(--azul-osc);
+  background:var(--azul); color:#fff; cursor:pointer; }
+.btn.sec{ background:#fff; color:var(--azul-osc); }
+.btn:disabled{ opacity:.35; cursor:default; }
+#tok-aviso{ margin-top:.7em; font-size:.55em; background:#fdf3e2; border-left:6px solid var(--amarillo); padding:.6em .8em; border-radius:0 10px 10px 0; display:none; }
+#tok-final{ margin-top:.7em; font-size:.55em; background:#eef4fc; border-left:6px solid var(--azul); padding:.6em .8em; border-radius:0 10px 10px 0; display:none; }
+
+/* ============ Chat de alucinación ============ */
+.chatwin{ background:#fbfbfa; border:1px solid var(--grid); border-radius:16px; padding:.7em .9em; min-height:7.2em; font-size:.6em; }
+.msg{ margin:.5em 0; display:flex; gap:.6em; }
+.msg .avatar{ flex:none; width:1.9em; height:1.9em; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.95em; background:#e8e7e2; }
+.msg.ia .avatar{ background:#dcebfa; }
+.msg .burb{ background:#fff; border:1px solid var(--grid); border-radius:12px; padding:.5em .7em; line-height:1.45; }
+.msg.user .burb{ background:#eef4fc; border-color:#cfe0f5; }
+.citajur{ font-weight:700; white-space:nowrap; position:relative; padding:0 .15em; border-radius:6px; }
+.citajur.v-real{ background:#e9f6e9; }
+.citajur.v-falsa{ background:#fbeaea; text-decoration:line-through; text-decoration-color:var(--mal); text-decoration-thickness:2px; }
+.stamp{ font-size:.72em; font-weight:800; letter-spacing:.05em; margin-left:.3em; padding:.05em .4em; border-radius:6px; }
+.stamp.real{ color:#fff; background:var(--ok); }
+.stamp.falsa{ color:#fff; background:var(--mal); }
+#verif-nota{ display:none; margin-top:.6em; font-size:.55em; background:#fbeaea; border-left:6px solid var(--mal); padding:.6em .8em; border-radius:0 10px 10px 0; }
+
+/* ============ Quiz ============ */
+.quiz{ display:flex; gap:.8em; }
+.quiz .qcard{ flex:1; background:#fbfbfa; border:2px solid var(--grid); border-radius:14px; padding:.7em .8em; font-size:.55em; line-height:1.4; cursor:pointer; transition:transform .15s; position:relative; }
+.quiz .qcard:hover{ transform:translateY(-4px); }
+.quiz .qcard .letra{ font-size:1.5em; font-weight:800; color:var(--azul-osc); }
+.quiz .qcard .veredicto{ display:none; margin-top:.6em; font-weight:800; }
+.quiz.revelado .qcard .veredicto{ display:block; }
+.quiz.revelado .qcard.real{ border-color:var(--ok); }
+.quiz.revelado .qcard.falsa{ border-color:var(--mal); background:#fff7f7; }
+
+/* U invertida svg */
+.linechart text{ font-family:inherit; }
+
+/* imágenes IA pendientes */
+.ai-ph{ border:2px dashed var(--grid); border-radius:14px; background:#fbfbfa; color:var(--tinta3);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+  font-size:.45em; padding:1em; gap:.5em; }
+.ai-img{ border-radius:14px; max-width:100%; }
+
+/* logos pie de página persistente */
+#pie-logos{ position:fixed; bottom:14px; left:18px; z-index:30; display:flex; gap:18px; align-items:center; opacity:.8; }
+#pie-logos img{ height:28px; }
+
+/* tablas comparativas */
+.tabla2{ width:100%; border-collapse:collapse; font-size:.55em; }
+.tabla2 th{ text-align:left; color:var(--tinta2); font-weight:700; border-bottom:2px solid var(--grid); padding:.35em .5em; }
+.tabla2 td{ border-bottom:1px solid var(--grid); padding:.42em .5em; vertical-align:top; line-height:1.35; }
+
+.bigquote{ font-size:1.25em; font-weight:800; line-height:1.25; }
+.bigquote .sub{ display:block; font-size:.5em; font-weight:400; color:var(--tinta2); margin-top:.9em; }
+
+ul.limpia{ list-style:none; margin-left:0; }
+ul.limpia li{ margin:.5em 0; padding-left:1.4em; position:relative; }
+ul.limpia li::before{ content:"—"; position:absolute; left:0; color:var(--azul); font-weight:800; }
+</style>
+</head>
+<body>
+
+<div class="reveal">
+<div class="slides">
+
+<!-- ══════════════════ 1. PORTADA ══════════════════ -->
+<section class="center-slide">
+  <p class="chip">Seguros Bolívar · Universidad de los Andes</p>
+  <h1>¿Qué tan confiable es tu IA<br>ante la ley colombiana?</h1>
+  <p class="muted" style="font-size:.65em; margin-top:.8em;">Benchmarking de veracidad y mitigación de alucinaciones jurídicas</p>
+  <p style="font-size:.55em; margin-top:1.6em;">
+    <strong>Rubén Manrique</strong><br>
+    <span class="muted">Profesor · Depto. de Ingeniería de Sistemas y Computación · Universidad de los Andes<br>
+    Investigador en Procesamiento de Lenguaje Natural · rf.manrique@uniandes.edu.co</span>
+  </p>
+  <div style="display:flex; gap:50px; justify-content:center; align-items:center; margin-top:1.2em;">
+    <img src="imagenes/logo-uniandes-negro.png" alt="Universidad de los Andes" style="height:70px;">
+    <img src="imagenes/logo-seguros-bolivar.png" alt="Seguros Bolívar" style="height:70px;">
+  </div>
+  <aside class="notes">Bienvenida. 40 minutos. Presentarse: profesor e investigador en NLP. (≈1 min)</aside>
+</section>
+
+<!-- ══════════════════ 2. PREGUNTA AL PÚBLICO #1 ══════════════════ -->
+<section>
+  <p class="chip publico">✋ Pregunta al público</p>
+  <h2>¿Quién usó ChatGPT, Gemini o Claude<br>esta semana… para algo del trabajo?</h2>
+  <div class="stat-row fragment" style="margin-top:1.2em;">
+    <div>
+      <div class="hero-num">40%</div>
+      <div class="hero-label">de jueces y abogados encuestados globalmente<br>ya usan estas herramientas (UNESCO, 2023)</div>
+    </div>
+    <div>
+      <div class="hero-num">1 de 3</div>
+      <div class="hero-label">empleados judiciales en Colombia ha usado IA;<br>ChatGPT es la más común (CSJ, n=3.152)</div>
+    </div>
+  </div>
+  <p class="fragment" style="margin-top:1.1em; font-size:.7em;"><strong>La adopción ya ocurrió.</strong> <span class="muted">Y es, en su mayoría, sin supervisión.</span></p>
+  <div class="cite">Fuentes: UNESCO Global Judges' Survey (2023); Consejo Superior de la Judicatura, encuesta a 3.152 empleados judiciales.</div>
+  <aside class="notes">Manos arriba. Contar rápido. La transición: "no vengo a decirles que no la usen — vengo a mostrarles cómo saber cuándo creerle". (≈2 min)</aside>
+</section>
+
+<!-- ══════════════════ 3. MAPA DE LA CHARLA ══════════════════ -->
+<section>
+  <h2>Hoy, en 40 minutos</h2>
+  <ul class="limpia" style="font-size:.75em;">
+    <li class="fragment"><strong>Cómo funciona</strong> un modelo de lenguaje — por dentro, en vivo</li>
+    <li class="fragment"><strong>Cómo falla</strong> — una alucinación jurídica, en vivo</li>
+    <li class="fragment"><strong>Cómo se mide</strong> — la evidencia científica desde Uniandes: <em>Mind the Gap</em> e <em>IureBench</em></li>
+    <li class="fragment"><strong>Cómo protegerse</strong> — guardrails de evaluación, privacidad y el derecho a una explicación</li>
+  </ul>
+  <p class="fragment bigquote" style="margin-top:1em; font-size:.9em;">Tesis: <span class="acento">la confianza en una IA no se declara — se mide.</span></p>
+  <aside class="notes">Anticipar la tesis. Para una aseguradora esto debería sonar familiar: nadie asegura un riesgo sin tasarlo. (≈1 min)</aside>
+</section>
+
+<!-- ══════════════════ 4. QUÉ ES UN LLM ══════════════════ -->
+<section>
+  <p class="chip">Parte 1 · Cómo funciona</p>
+  <h2>Un modelo de lenguaje es una máquina de<br><span class="acento">apostar a la siguiente palabra</span></h2>
+  <div class="cols" style="margin-top:.5em;">
+    <div>
+      <ul class="limpia" style="font-size:.65em;">
+        <li class="fragment">Leyó billones de palabras: leyes, sentencias, prensa, foros, novelas…</li>
+        <li class="fragment">De ahí aprendió <strong>una distribución de probabilidad</strong>: dado un texto, ¿qué palabra suele venir después?</li>
+        <li class="fragment">No tiene una base de datos de normas vigentes. No consulta el Diario Oficial. <strong>Calcula probabilidades.</strong></li>
+      </ul>
+    </div>
+    <div style="flex:0 0 38%;">
+      <img class="ai-img" src="imagenes/loro-estocastico.png" alt="Metáfora: autocompletado gigante" data-ph="imagenes/loro-estocastico.png">
+    </div>
+  </div>
+  <aside class="notes">Desmontar la idea de "oráculo que consulta la ley". Preparar el demo. (≈2 min)</aside>
+</section>
+
+<!-- ══════════════════ 5. DEMO INTERACTIVO: TOKENS ══════════════════ -->
+<section id="tokendemo">
+  <p class="chip">Interactivo · dentro del modelo</p>
+  <h3 style="margin-bottom:.4em;">Completemos juntos el artículo 1036 del Código de Comercio</h3>
+  <div class="contexto"><span class="muted">Prompt:</span> «El seguro es un contrato <span class="gen" id="tok-gen"></span><span class="cursor"></span>»</div>
+  <div class="tok-opts" id="tok-opts"></div>
+  <div class="tok-controls">
+    <button class="btn sec" id="tok-sample">🎲 Dejar que el modelo muestree</button>
+    <button class="btn sec" id="tok-reset">↺ Reiniciar</button>
+    <span class="muted" style="font-size:.5em;">…o hagan clic en una palabra para elegirla ustedes</span>
+  </div>
+  <div id="tok-aviso">⚠️ <strong>«solemne»</strong> es perfectamente fluido… y jurídicamente <strong>derogado</strong>: el seguro dejó de ser un contrato solemne con la <strong>Ley 389 de 1997</strong>. El corpus recuerda; la ley cambia.</div>
+  <div id="tok-final">✅ <strong>Art. 1036 C. de Co.:</strong> «El seguro es un contrato consensual, bilateral, oneroso, aleatorio y de ejecución sucesiva.» El modelo puede reproducirlo — pero no porque lo <em>sepa</em>: porque es <strong>la secuencia más probable</strong>. Cada palabra fue una apuesta.</div>
+  <aside class="notes">Jugar 2 rondas: una eligiendo lo más probable, otra con muestreo. Si sale "solemne", oro puro: corpus desactualizado. Cierre: la misma máquina que acierta el 1036 inventará una sentencia con idéntica seguridad. (≈4 min)</aside>
+</section>
+
+<!-- ══════════════════ 6. EL TWIST ══════════════════ -->
+<section class="center-slide">
+  <p class="bigquote">El modelo no sabe derecho.<br><span class="acento">Sabe qué palabras suelen ir juntas<br>en textos sobre derecho.</span>
+  <span class="sub">Y eso incluye derecho derogado, doctrina minoritaria, apuntes de estudiantes y errores de internet — todo mezclado en la misma distribución de probabilidad.</span></p>
+  <aside class="notes">Pausa retórica. Este es el fundamento conceptual de todo lo que sigue. (≈1 min)</aside>
+</section>
+
+<!-- ══════════════════ 7. QUÉ ES UNA ALUCINACIÓN ══════════════════ -->
+<section>
+  <p class="chip">Parte 2 · Cómo falla</p>
+  <h2>Alucinación: cuando la apuesta<br>produce una realidad que no existe</h2>
+  <div class="cols">
+    <div>
+      <ul class="limpia" style="font-size:.65em;">
+        <li class="fragment">Texto <strong>falso con sintaxis impecable</strong>: números de sentencia, magistrados ponentes, artículos, fechas.</li>
+        <li class="fragment">No es un "bug": es el mismo mecanismo que produce los aciertos, <strong>operando sin ancla en la realidad</strong>.</li>
+        <li class="fragment">GPT-4 y similares alucinan en <strong>más de la mitad</strong> de consultas jurídicas; herramientas comerciales "sin alucinaciones" con RAG aún erran <strong>17–33%</strong>.</li>
+      </ul>
+    </div>
+    <div style="flex:0 0 36%;">
+      <img class="ai-img" src="imagenes/biblioteca-fantasma.png" alt="Biblioteca fantasma" data-ph="imagenes/biblioteca-fantasma.png">
+    </div>
+  </div>
+  <div class="cite">Dahl et al. (2024), "Large Legal Fictions", J. Legal Analysis; Magesh et al. (2024), Stanford HAI/RegLab sobre Lexis+ AI y Westlaw AI-AR.</div>
+  <aside class="notes">Clave: no es un defecto reparable con un parche; es constitutivo del mecanismo. (≈1.5 min)</aside>
+</section>
+
+<!-- ══════════════════ 8. DEMO INTERACTIVO: ALUCINACIÓN ══════════════════ -->
+<section>
+  <p class="chip">Interactivo · alucinación en vivo</p>
+  <h3 style="margin-bottom:.4em;">Preguntémosle a un chatbot por jurisprudencia colombiana</h3>
+  <div class="chatwin" id="chatwin">
+    <div class="msg user" id="chat-q" style="display:none;">
+      <div class="avatar">👤</div>
+      <div class="burb">¿Qué ha dicho la Corte Constitucional sobre exonerar de copagos a menores con autismo? Cite las sentencias.</div>
+    </div>
+    <div class="msg ia" id="chat-a" style="display:none;">
+      <div class="avatar">🤖</div>
+      <div class="burb" id="chat-a-text"></div>
+    </div>
+  </div>
+  <div class="tok-controls">
+    <button class="btn" id="chat-play">▶ Preguntar</button>
+    <button class="btn sec" id="chat-verify" disabled>🔎 Verificar en la Relatoría</button>
+  </div>
+  <div id="verif-nota">De tres citas, <strong>dos no existen</strong>: ni la sentencia <strong>T-1234 de 2019</strong> (ese año la numeración de tutelas no llegó a 700) ni el <strong>artículo 214A de la Ley 100</strong>. Mismo tono seguro, misma fluidez — <strong>cero señales de alerta en el texto</strong>. La única defensa fue verificar la fuente.</div>
+  <aside class="notes">La respuesta mezcla 1 cita real (T-760/2008, la gran sentencia de salud) con 2 inventadas. Preguntar al público ANTES de verificar: "¿alguien detecta algo raro?" Nadie podrá. Ese es el punto. (≈4 min)</aside>
+</section>
+
+<!-- ══════════════════ 9. QUIZ PÚBLICO ══════════════════ -->
+<section>
+  <p class="chip publico">✋ Pregunta al público · votemos</p>
+  <h3>Uno de estos casos judiciales <span class="malo">no existe</span>. ¿Cuál?</h3>
+  <div class="quiz" id="quiz1" style="margin-top:.8em;">
+    <div class="qcard real"><span class="letra">A</span><br><strong>Mata v. Avianca</strong> (S.D.N.Y., 2023) — un pasajero demanda a la aerolínea por lesiones con un carrito de servicio.
+      <span class="veredicto bueno">✔ REAL — y célebre por lo que viene…</span></div>
+    <div class="qcard falsa"><span class="letra">B</span><br><strong>Varghese v. China Southern Airlines</strong>, 925 F.3d 1339 (11th Cir. 2019) — precedente sobre prescripción en el Convenio de Montreal.
+      <span class="veredicto malo">✘ NO EXISTE — lo inventó ChatGPT… y fue citado ante un juez federal.</span></div>
+    <div class="qcard real"><span class="letra">C</span><br><strong>United States v. Cohen</strong> (S.D.N.Y., 2023–24) — el exabogado de Trump pide terminar antes su libertad condicional.
+      <span class="veredicto bueno">✔ REAL — con citas falsas generadas por Google Bard adentro.</span></div>
+  </div>
+  <button class="btn" style="margin-top:.8em;" onclick="document.getElementById('quiz1').classList.add('revelado')">Revelar</button>
+  <div class="cite">Mata v. Avianca, Inc., 678 F.Supp.3d 443 (S.D.N.Y. 2023); U.S. v. Cohen, 18-cr-602 (S.D.N.Y.), opinión del 20/03/2024; AI Incident Database #623.</div>
+  <aside class="notes">Votación a mano alzada por A, B, C. El giro: B es la alucinación DENTRO del caso A. Transición perfecta a casos reales. (≈3 min)</aside>
+</section>
+
+<!-- ══════════════════ 10. CASOS: LOS TROPIEZOS ══════════════════ -->
+<section>
+  <p class="chip riesgo">Casos documentados · lo que sale mal</p>
+  <h2 style="font-size:1.15em;">El pseudo-derecho ya llegó a los estrados</h2>
+  <div class="cols">
+    <div class="card neg fragment">
+      <h3>🇺🇸 Mata v. Avianca (2023)</h3>
+      Abogados presentan <strong>precedentes inexistentes</strong> generados por ChatGPT; al pedirles copias, le preguntan a ChatGPT si eran reales — y este "confirma". Multa de <strong>US$5.000</strong> y fallo por mala fe (Regla 11).
+      <span class="fuente">678 F.Supp.3d 443 (S.D.N.Y. 2023)</span>
+    </div>
+    <div class="card neg fragment">
+      <h3>🇨🇴 Corte Suprema, AC739-2026</h3>
+      Recurso con <strong>10 citas jurisprudenciales apócrifas</strong> y normas tergiversadas. Multa de <strong>15 SMMLV (~$26 millones)</strong> por temeridad procesal. La Corte bautiza el <em>«chat-chamber effect»</em>: el modelo devuelve un reflejo de tus propias expectativas.
+      <span class="fuente">CSJ, Sala de Casación Civil, Auto AC739-2026 (13/02/2026)</span>
+    </div>
+    <div class="card neg fragment">
+      <h3>🇪🇸 CGPJ multa a un juez (2026)</h3>
+      Un magistrado <strong>vuelca el expediente completo</strong> —datos personales y pruebas incluidos— en ChatGPT para redactar el borrador. Falta grave: <strong>€1.000</strong> y fuga de datos a servidores externos.
+      <span class="fuente">CGPJ, art. 418.8 LOPJ; El País, 27/04/2026</span>
+    </div>
+  </div>
+  <aside class="notes">Tres jurisdicciones, mismo patrón: la falla nunca fue usar IA, fue NO VERIFICAR (o no proteger datos). Nota: el caso español anticipa el bloque de privacidad. (≈3 min)</aside>
+</section>
+
+<!-- ══════════════════ 11. CASOS: BIEN USADO ══════════════════ -->
+<section>
+  <p class="chip ok">Casos documentados · lo que sale bien</p>
+  <h2 style="font-size:1.15em;">La misma herramienta, con verificación humana</h2>
+  <div class="cols">
+    <div class="card pos fragment">
+      <h3>🇨🇴 Juez Padilla, Cartagena (2023)</h3>
+      Primera sentencia latinoamericana redactada con apoyo de ChatGPT (tutela de salud de un menor con autismo). El juez <strong>decidió primero</strong> y usó el modelo como organizador de texto, amparado en la Ley 2213 de 2022. La Corte Constitucional revisó el caso en la <strong>T-323 de 2024</strong> y fijó reglas: transparencia, verificación y no delegación del juicio.
+      <span class="fuente">Juzgado 1º Laboral de Cartagena, 30/01/2023; CC, T-323/2024</span>
+    </div>
+    <div class="card pos fragment">
+      <h3>🇬🇧 Lord Justice Birss (2023)</h3>
+      Magistrado del Court of Appeal usa ChatGPT para resumir un área <strong>que él dominaba</strong>, valida el párrafo contra su propio conocimiento y lo incorpora al fallo: «tremendamente útil». Su advertencia: jamás usarlo fuera de tu especialidad.
+      <span class="fuente">The Guardian, 15/09/2023</span>
+    </div>
+  </div>
+  <p class="fragment" style="font-size:.7em; margin-top:.6em;"><strong>La variable que separa el éxito del desastre no es la herramienta:</strong> es si un experto humano verificó antes de firmar.</p>
+  <aside class="notes">Simetría deliberada con la slide anterior. Ambos jueces eran expertos verificando en su dominio. (≈2 min)</aside>
+</section>
+
+<!-- ══════════════════ 12. SEGUROS: LO BUENO ══════════════════ -->
+<section>
+  <p class="chip ok">Y en seguros · el potencial es real</p>
+  <h2 style="font-size:1.15em;">Donde los LLM ya generan valor medible</h2>
+  <div class="stat-row" style="margin-top:.9em;">
+    <div class="fragment">
+      <div class="hero-num">90–94%</div>
+      <div class="hero-label">precisión extrayendo datos de siniestros complejos desde documentos no estructurados (facturas médicas, reportes, tasaciones)</div>
+    </div>
+    <div class="fragment">
+      <div class="hero-num">0.6%</div>
+      <div class="hero-label">tasa de alucinación de INS-S1, un LLM entrenado específicamente para seguros — frente a >50% de modelos generales en derecho</div>
+    </div>
+    <div class="fragment">
+      <div class="hero-num">+48%</div>
+      <div class="hero-label">de mejora en NPS reportada por aseguradoras con arquitecturas de IA robustas (FNOL 24/7, triage de severidad)</div>
+    </div>
+  </div>
+  <p class="fragment" style="font-size:.65em; margin-top:1em;">El patrón del éxito: <strong>dominio acotado + datos propios + métricas de evaluación explícitas</strong>. No es magia: es ingeniería evaluada.</p>
+  <div class="cite">Uni. St. Gallen (2024), evaluación de LLMs en gestión de reclamaciones; arXiv:2603.14463 (INS-S1, benchmark INSEva); Datos Insights / IBM IBV.</div>
+  <aside class="notes">Audiencia de Seguros Bolívar: reconocer el valor antes de mostrar los riesgos. Fíjense: el modelo con 0.6% de alucinación NO es un chatbot general — fue construido y EVALUADO para el dominio. (≈2 min)</aside>
+</section>
+
+<!-- ══════════════════ 13. SEGUROS: LO MALO ══════════════════ -->
+<section>
+  <p class="chip riesgo">Y en seguros · el riesgo también</p>
+  <h2 style="font-size:1.15em;">Cuando el algoritmo decide sin supervisión</h2>
+  <div class="cols">
+    <div class="card neg fragment">
+      <h3>Cigna — algoritmo "PxDx"</h3>
+      <div class="hero-num rojo" style="font-size:2em;">1.2 s</div>
+      tiempo promedio de "revisión médica" por reclamación. <strong>300.000 denegaciones en dos meses</strong>, avaladas en bloque. Demandas colectivas por violar el deber de examen individual (California) y obligaciones ERISA.
+      <span class="fuente">Kisting-Leung v. Cigna; AI Incident Database #591</span>
+    </div>
+    <div class="card neg fragment">
+      <h3>UnitedHealth — "nH Predict"</h3>
+      <div class="hero-num rojo" style="font-size:2em;">~90%</div>
+      tasa de error en apelación de sus cortes de cobertura post-aguda para adultos mayores (Medicare Advantage): el algoritmo proyectaba el "último día médicamente necesario" por promedios, contra el criterio de los médicos tratantes.
+      <span class="fuente">Estate of Lokken v. UnitedHealth; Thompson Coburn (2024)</span>
+    </div>
+    <div class="card neg fragment">
+      <h3>Fraude sintético</h3>
+      <div class="hero-num rojo" style="font-size:2em;">50%</div>
+      precisión de peritos humanos distinguiendo fotos reales de siniestros vehiculares frente a imágenes generadas por IA — <strong>igual que lanzar una moneda</strong>. Y un deepfake en videollamada le costó <strong>US$25M</strong> a la firma Arup (2024).
+      <span class="fuente">Milliman (2024); CNN/FT sobre caso Arup, Hong Kong</span>
+    </div>
+  </div>
+  <aside class="notes">Tres números para recordar: 1.2s, 90%, 50%. El regulador (Superfinanciera aquí) mira exactamente esto: decisiones automatizadas sin supervisión individual. (≈3 min)</aside>
+</section>
+
+<!-- ══════════════════ 14. TRANSICIÓN A LA INVESTIGACIÓN ══════════════════ -->
+<section class="center-slide">
+  <p class="chip">Parte 3 · Cómo se mide</p>
+  <p class="bigquote">Todo esto es evidencia de EE.UU. y Europa,<br>en inglés, sobre <em>common law</em>.<br><br>
+  <span class="acento">¿Cuánto sabe realmente un LLM<br>de derecho colombiano?</span>
+  <span class="sub">Esa pregunta nos hicimos en la Universidad de los Andes — y nadie la había medido.</span></p>
+  <aside class="notes">Giro personal: "aquí entra nuestro trabajo". (≈1 min)</aside>
+</section>
+
+<!-- ══════════════════ 15. MIND THE GAP ══════════════════ -->
+<section>
+  <p class="chip">Investigación Uniandes · paso 1</p>
+  <h2 style="font-size:1.2em;"><em>Mind the Gap</em>: primero medimos el vacío</h2>
+  <div class="cols">
+    <div>
+      <ul class="limpia" style="font-size:.62em;">
+        <li class="fragment">Revisión sistemática de <strong>41 benchmarks legales de NLP</strong> (2018–2026): América Latina aparece en solo <strong>6</strong>… todos de Brasil, en portugués.</li>
+        <li class="fragment"><strong>Cero</strong> benchmarks de QA jurídico en español para la región — con 18 países de tradición civilista hablando español.</li>
+        <li class="fragment">Evaluación cero-shot: 5 LLMs sobre <strong>458 preguntas tipo examen</strong> de Bolivia, Colombia y Puerto Rico.</li>
+      </ul>
+    </div>
+    <div style="flex:0 0 38%; text-align:center;">
+      <div class="fragment">
+        <div class="hero-num">79.7%</div>
+        <div class="hero-label">el mejor modelo, en selección múltiple.<br>Los peores resultados: <strong>penal y administrativo</strong>.</div>
+      </div>
+    </div>
+  </div>
+  <p class="fragment" style="font-size:.65em; margin-top:.8em;">Conclusión del estudio: se necesitan benchmarks en español, <strong>más allá de la selección múltiple</strong> y <strong>validados por expertos</strong>. Eso hicimos después.</p>
+  <div class="cite">Manrique, Castellanos & Gutiérrez (2026), "Mind the Gap: A Systematic Review and Benchmark of Spanish-Language Legal QA in Latin America", ICML AI-for-Law Workshop.</div>
+  <aside class="notes">La ciencia empieza midiendo lo que falta. 79.7% suena bien hasta que recuerdas que es opción múltiple con 4 opciones. (≈2.5 min)</aside>
+</section>
+
+<!-- ══════════════════ 16. IUREBENCH: QUÉ ES ══════════════════ -->
+<section>
+  <p class="chip">Investigación Uniandes · paso 2</p>
+  <h2 style="font-size:1.2em;">IureBench: un benchmark de confiabilidad<br>para el derecho colombiano</h2>
+  <div class="stat-row" style="margin-top:.8em;">
+    <div class="fragment"><div class="hero-num">1.042</div><div class="hero-label">preguntas validadas por expertos</div></div>
+    <div class="fragment"><div class="hero-num">10</div><div class="hero-label">áreas del derecho: constitucional, administrativo, penal, laboral, civil, comercial, procesal, tributario, familia y mercados</div></div>
+    <div class="fragment"><div class="hero-num">3</div><div class="hero-label">formatos: cerradas (305), semiabiertas (682) y abiertas estilo IRAC (55)</div></div>
+    <div class="fragment"><div class="hero-num">15</div><div class="hero-label">LLMs evaluados: GPT-5.4, Gemini 3.1 Pro, Claude Opus 4.5, Llama, DeepSeek, Qwen…</div></div>
+  </div>
+  <p class="fragment" style="font-size:.62em; margin-top:1em;">Construido con <strong>49 estudiantes y expertos de la Facultad de Derecho</strong> en 5 talleres, con protocolo de validación en 4 etapas (asistente legal → evaluador experto por área → comité). Cada pregunta tiene fuente legal documentada. Los modelos respondieron <strong>sin internet ni herramientas</strong>: medimos lo que llevan adentro.</p>
+  <div class="cite">Manrique, Castellanos, Morales, Gutiérrez, Barreto & Vélez (2026), "Do Large Language Models Know Colombian Law?", Universidad de los Andes.</div>
+  <aside class="notes">Énfasis metodológico para audiencia técnica: human-in-the-loop, validación multi-etapa, formatos que separan RECONOCER de PRODUCIR. (≈2.5 min)</aside>
+</section>
+
+<!-- ══════════════════ 17. RESULTADOS CERRADAS ══════════════════ -->
+<section>
+  <p class="chip">Resultados · preguntas cerradas</p>
+  <h3 style="margin-bottom:.2em;">En selección múltiple, los mejores modelos lucen bien</h3>
+  <p class="viz-sub" style="margin-bottom:.5em;">Exactitud en 305 preguntas cerradas (proporción de aciertos; azar = 0.25)</p>
+  <div class="viz" id="chart-acc"></div>
+  <p class="viz-sub fragment">Brecha de <strong>33 puntos</strong> entre el mejor y el peor. Áreas más difíciles: <strong>procesal y administrativo</strong> (media 0.71) — igual que en <em>Mind the Gap</em>. La elección del modelo importa.</p>
+  <aside class="notes">Leer el chart: tier líder >0.85 (Gemini, Opus, GPT-5.4, GLM), tier medio, y cola que apenas supera 2/3. Diferencias validadas con McNemar: son TIERS estadísticos, no un ranking fino. (≈2 min)</aside>
+</section>
+
+<!-- ══════════════════ 18. RESULTADOS ABIERTAS: EL COLAPSO ══════════════════ -->
+<section>
+  <p class="chip riesgo">Resultados · preguntas abiertas</p>
+  <h3 style="margin-bottom:.2em;">Pero al redactar la respuesta, el piso se cae</h3>
+  <p class="viz-sub" style="margin-bottom:.5em;">Mismos modelos: exactitud (cerradas) vs. correctitud factual de la respuesta redactada (RAGAS, 737 ítems, doble juez anclado a referencia experta)</p>
+  <div class="viz" id="chart-gap"></div>
+  <div class="legend"><span><span class="sw" style="background:var(--azul);"></span>Exactitud — selección múltiple</span><span><span class="sw" style="background:var(--naranja);"></span>Correctitud — respuesta redactada</span></div>
+  <p class="viz-sub fragment"><strong>Ningún modelo supera 0.451</strong> redactando respuestas jurídicas. Reconocer la opción correcta ≠ producir la respuesta correcta.</p>
+  <aside class="notes">EL resultado central de la charla. 0.905 → 0.447 para el mismo Gemini. El ranking se conserva (rho=0.94) pero el nivel absoluto se derrumba. En la práctica jurídica nadie te da 4 opciones: te piden redactar. (≈2.5 min)</aside>
+</section>
+
+<!-- ══════════════════ 19. FLUENT BUT WRONG ══════════════════ -->
+<section>
+  <p class="chip riesgo">El hallazgo más incómodo</p>
+  <h2 style="font-size:1.25em;">Suenan bien <span class="malo">mientras se equivocan</span></h2>
+  <div style="margin-top:1.4em;">
+    <div class="rlab" style="font-size:.55em; color:var(--tinta2);">Relevancia — qué tan pertinente <em>suena</em> la respuesta (los 15 modelos)</div>
+    <div class="range-strip"><div class="rfill" style="left:73%; width:9.4%; background:var(--verde);"></div></div>
+    <div style="font-size:.55em; color:var(--tinta2);">Correctitud — qué tan <em>cierta</em> es (los mismos 15 modelos)</div>
+    <div class="range-strip"><div class="rfill" style="left:30.9%; width:14.2%; background:var(--naranja);"></div></div>
+    <div class="range-ticks"><span>0</span><span>0.25</span><span>0.50</span><span>0.75</span><span>1.0</span></div>
+  </div>
+  <ul class="limpia" style="font-size:.62em; margin-top:.8em;">
+    <li class="fragment">Relevancia y correctitud están <strong>disociadas</strong> (ρ = −0.46): algunos de los modelos que <em>mejor suenan</em> son los <em>menos correctos</em>.</li>
+    <li class="fragment">Una respuesta fluida, estructurada y pertinente es <strong>exactamente lo que un no experto no puede poner en duda</strong>.</li>
+    <li class="fragment">Implicación de guardrail: <strong>la coherencia del texto no sirve como control de calidad</strong>. Jamás usar "se ve bien" como criterio.</li>
+  </ul>
+  <aside class="notes">Este es el eslogan para llevarse a casa: fluent but wrong. Conectar con el chat-chamber effect de la Corte Suprema. (≈2 min)</aside>
+</section>
+
+<!-- ══════════════════ 20. DOS SORPRESAS MÁS ══════════════════ -->
+<section>
+  <p class="chip">Dos sorpresas más del benchmark</p>
+  <div class="cols">
+    <div>
+      <h3 style="font-size:.85em;">La dificultad no es lineal: U invertida</h3>
+      <svg class="linechart" viewBox="0 0 420 260" style="width:100%;">
+        <line x1="50" y1="220" x2="400" y2="220" stroke="#c3c2b7" stroke-width="2"/>
+        <line x1="50" y1="30" x2="50" y2="220" stroke="#c3c2b7" stroke-width="2"/>
+        <text x="40" y="224" font-size="13" fill="#898781" text-anchor="end">0.35</text>
+        <text x="40" y="40"  font-size="13" fill="#898781" text-anchor="end">0.55</text>
+        <text x="105" y="245" font-size="14" fill="#52514e" text-anchor="middle">Baja</text>
+        <text x="225" y="245" font-size="14" fill="#52514e" text-anchor="middle">Media</text>
+        <text x="345" y="245" font-size="14" fill="#52514e" text-anchor="middle">Alta</text>
+        <polyline points="105,172 225,68 345,163" fill="none" stroke="#2a78d6" stroke-width="3"/>
+        <circle cx="105" cy="172" r="6" fill="#2a78d6"/><circle cx="225" cy="68" r="6" fill="#2a78d6"/><circle cx="345" cy="163" r="6" fill="#2a78d6"/>
+        <text x="105" y="158" font-size="14" fill="#0b0b0b" text-anchor="middle" font-weight="700">0.40</text>
+        <text x="225" y="54"  font-size="14" fill="#0b0b0b" text-anchor="middle" font-weight="700">0.51</text>
+        <text x="345" y="149" font-size="14" fill="#0b0b0b" text-anchor="middle" font-weight="700">0.41</text>
+        <text x="225" y="270" font-size="13" fill="#898781" text-anchor="middle"></text>
+      </svg>
+      <p style="font-size:.5em; color:var(--tinta2); margin-top:.2em;">Correctitud del mejor modelo (Gemini 3.1 Pro) por complejidad de la pregunta. Falla en lo <strong>simple-y-literal</strong> (citas textuales, vigencias exactas) y en lo <strong>complejo-interpretativo</strong>. El patrón se repite en casi todos los modelos.</p>
+    </div>
+    <div>
+      <h3 style="font-size:.85em;">Pedir "segunda opinión" a otra IA no ayuda</h3>
+      <div style="margin-top:1.2em;">
+        <div class="barrow"><div class="blabel">Mejor modelo solo</div><div class="btrack"><div class="bfill destacado" style="width:90.5%;"><span class="bval">0.905</span></div></div></div>
+        <div class="barrow"><div class="blabel">Voto de mayoría (15 modelos)</div><div class="btrack"><div class="bfill" style="width:84.3%;"><span class="bval">0.843</span></div></div></div>
+        <div class="barrow"><div class="blabel">Oráculo (≥1 acierta)</div><div class="btrack"><div class="bfill gris" style="width:98.4%;"><span class="bval">0.984</span></div></div></div>
+      </div>
+      <p style="font-size:.5em; color:var(--tinta2); margin-top:.8em;">Cuando los modelos fallan, <strong>fallan igual</strong>: eligen el mismo distractor el <strong>87%</strong> de las veces. Son <em>errores compartidos del corpus</em>, no ruido — por eso el consenso entre IAs rinde <em>menos</em> que el mejor modelo y no sustituye la verificación humana.</p>
+    </div>
+  </div>
+  <aside class="notes">La U invertida sorprende a todos: lo "fácil" exige literalidad verbatim que los modelos aproximan en vez de reproducir. Y la segunda opinión de otra IA: misconcepciones compartidas → consultar 15 modelos rinde MENOS que el mejor. (≈2.5 min)</aside>
+</section>
+
+<!-- ══════════════════ 21. QUÉ SIGNIFICA / RIESGOS ══════════════════ -->
+<section>
+  <p class="chip riesgo">Entonces, ¿qué arriesga quien usa esto sin revisar?</p>
+  <div class="cols" style="margin-top:.4em;">
+    <div class="card neg fragment">
+      <h3>⚖️ Sanciones y nulidades</h3>
+      Pseudo-derecho en escritos = temeridad procesal (multas de hasta 15 SMMLV ya impuestas); la Corte Constitucional ha <strong>anulado fallos</strong> fundados en sentencias inexistentes. El Consejo de Estado (2026): la valoración jurídica es <strong>indelegable</strong>.
+      <span class="fuente">CSJ AC739-2026; CC; Consejo de Estado, providencia de mayo/2026</span>
+    </div>
+    <div class="card neg fragment">
+      <h3>📉 Discriminación algorítmica</h3>
+      «Redlining 2.0»: variables aparentemente neutras (código postal, historial digital) actúan como <em>proxies</em> de raza o clase en tarificación y suscripción. Sesgo heredado del corpus + opacidad = pasivo regulatorio y reputacional.
+      <span class="fuente">CFPB/HUD (EE.UU.); literatura de fair lending y EU AI Act</span>
+    </div>
+    <div class="card neg fragment">
+      <h3>🏛️ Riesgo de cumplimiento</h3>
+      Para una aseguradora: decisiones de cobertura o reservas apoyadas en texto alucinado, sin trazabilidad ni supervisión individual — exactamente el patrón que Cigna y UnitedHealth hoy defienden en tribunales, y que un supervisor financiero puede objetar.
+      <span class="fuente">AI Incident Database #591; demandas ERISA en curso</span>
+    </div>
+  </div>
+  <p class="fragment" style="font-size:.68em; margin-top:.7em;"><strong>Y recuerden el dato:</strong> la respuesta incorrecta llega con la misma fluidez que la correcta. Sin proceso de verificación, no hay forma de notarlo a simple vista.</p>
+  <aside class="notes">Aterrizar en el negocio asegurador: sanción, discriminación, cumplimiento. (≈2.5 min)</aside>
+</section>
+
+<!-- ══════════════════ 22. GUARDRAILS: CONCEPTO ══════════════════ -->
+<section>
+  <p class="chip">Parte 4 · Cómo protegerse</p>
+  <h2>Guardrails de evaluación</h2>
+  <p class="bigquote" style="font-size:.85em;">Ustedes no aseguran un riesgo sin tasarlo.<br><span class="acento">No desplieguen una IA sin medirla.</span></p>
+  <ul class="limpia" style="font-size:.62em; margin-top:.8em;">
+    <li class="fragment">Un guardrail de evaluación es <strong>una barrera medible entre el modelo y la decisión</strong>: benchmark del dominio + umbral de aceptación + monitoreo continuo.</li>
+    <li class="fragment">Igual que una póliza: se define <em>qué</em> se cubre (tareas permitidas), se <em>tasa</em> el riesgo (evaluación), se fijan <em>exclusiones</em> (usos prohibidos) y se <em>audita</em> (monitoreo).</li>
+    <li class="fragment">No es burocracia: es lo que separa a INS-S1 (0.6% alucinación, evaluado) de un chatbot genérico respondiendo sobre cláusulas.</li>
+  </ul>
+  <div style="flex:0 0 30%; margin-top:.5em;">
+    <img class="ai-img" src="imagenes/guardrail-carretera.png" alt="Guardrail" data-ph="imagenes/guardrail-carretera.png" style="max-height:170px;">
+  </div>
+  <aside class="notes">La analogía aseguradora es el puente perfecto con esta audiencia: suscripción de riesgo tecnológico. (≈2 min)</aside>
+</section>
+
+<!-- ══════════════════ 23. GUARDRAILS: LOS 5 COMPONENTES ══════════════════ -->
+<section>
+  <h2 style="font-size:1.2em;">Cinco guardrails concretos para la organización</h2>
+  <table class="tabla2">
+    <tr><th style="width:26%;">Guardrail</th><th>En la práctica</th></tr>
+    <tr class="fragment"><td><strong>1 · Benchmark de dominio</strong></td><td>Evaluar el modelo con preguntas <em>de su negocio</em> (cláusulas, normativa Superfinanciera, jurisprudencia de seguros) antes de desplegarlo — como hicimos con IureBench. Medir <em>correctitud</em>, no solo fluidez.</td></tr>
+    <tr class="fragment"><td><strong>2 · Grounding (RAG)</strong></td><td>Obligar al modelo a responder <em>citando</em> un repositorio controlado y vigente (normas, condicionados, circulares) — y a decir "no sé" fuera de él. Reduce, no elimina: verificar igual.</td></tr>
+    <tr class="fragment"><td><strong>3 · Humano en el circuito</strong></td><td>Ninguna salida llega a un cliente, un juez o un regulador sin validación de un experto responsable. La Resolución 0-0077/2026 de la Fiscalía lo fijó así: la IA asiste; decidir es humano e indelegable.</td></tr>
+    <tr class="fragment"><td><strong>4 · Umbrales y exclusiones</strong></td><td>Definir qué tareas se permiten a qué nivel de desempeño medido, y qué queda prohibido (p. ej., denegación automática de reclamaciones — la lección de Cigna).</td></tr>
+    <tr class="fragment"><td><strong>5 · Monitoreo y red team</strong></td><td>La ley cambia y el modelo se desactualiza (¿recuerdan «solemne»?). Re-evaluar periódicamente, registrar incidentes (como la AI Incident Database) y atacar el sistema antes de que otros lo hagan.</td></tr>
+  </table>
+  <div class="cite">Fiscalía General de la Nación, Resolución 0-0077 del 6/04/2026; AI Incident Database (Responsible AI Collaborative).</div>
+  <aside class="notes">La slide más "accionable". Detenerse en 1 y 3. Mencionar que la Fiscalía colombiana ya reguló esto: usos permitidos, human-in-the-loop obligatorio, prohibiciones absolutas. (≈3 min)</aside>
+</section>
+
+<!-- ══════════════════ 24. PREGUNTA PÚBLICO #3 + PRIVACIDAD ══════════════════ -->
+<section>
+  <p class="chip publico">✋ Pregunta al público — honestidad total</p>
+  <h2 style="font-size:1.2em;">¿Alguien ha pegado datos de un cliente<br>en un chat de IA… "solo para redactar un correo"?</h2>
+  <div class="cols" style="margin-top:.7em;">
+    <div class="card neg fragment">
+      <h3>Samsung (2023)</h3>
+      Ingenieros pegaron código fuente y actas confidenciales en ChatGPT para "optimizar" su trabajo. Tres fugas en ~20 días. Todo lo que entra a una interfaz web puede usarse para <strong>entrenar futuras versiones</strong> — y resurgir después. Samsung prohibió la IA generativa en dispositivos corporativos.
+      <span class="fuente">Bloomberg, mayo 2023</span>
+    </div>
+    <div class="card neg fragment">
+      <h3>NYT v. OpenAI (2023– )</h3>
+      La demanda del New York Times mostró a GPT-4 <strong>regurgitando artículos casi textuales</strong> de su corpus de entrenamiento. Prueba viva de que los modelos memorizan y pueden devolver datos que ingirieron.
+      <span class="fuente">NYT v. OpenAI & Microsoft, S.D.N.Y., dic. 2023</span>
+    </div>
+    <div class="card neg fragment">
+      <h3>OmniGPT (2025)</h3>
+      Brecha de un agregador de chats corporativos: <strong>34 millones de líneas de conversación</strong>, llaves API y documentos expuestos en la dark web. Lo que se escribe en un chat de terceros es, en la práctica, un dato exportado.
+      <span class="fuente">Forcepoint / NHI Mgmt Group, feb. 2025</span>
+    </div>
+  </div>
+  <p class="fragment" style="font-size:.68em; margin-top:.6em;">En seguros esto se llama <strong>PII y datos sensibles de salud</strong>: pegarlos en una interfaz web gratuita puede violar la Ley 1581 de 2012 (habeas data) y, según el negocio, HIPAA/GDPR. El juez español multado ya lo aprendió.</p>
+  <aside class="notes">Nadie levantará la mano — decir "el 77% de quienes usan IA en el trabajo ha ingresado datos confidenciales, según estudios de monitoreo". Shadow AI. (≈3 min)</aside>
+</section>
+
+<!-- ══════════════════ 25. TRANSNACIONALIDAD ══════════════════ -->
+<section>
+  <h2 style="font-size:1.2em;">Tus datos no saben de fronteras<br><span class="muted" style="font-weight:400;">(pero la ley sí)</span></h2>
+  <div class="cols">
+    <div>
+      <ul class="limpia" style="font-size:.62em;">
+        <li class="fragment">Un prompt escrito en Bogotá puede procesarse y almacenarse en <strong>servidores de otra jurisdicción</strong>, bajo otras reglas de acceso y retención.</li>
+        <li class="fragment">Transferencia internacional de datos personales: la Ley 1581 exige nivel adecuado de protección o autorización — un chat gratuito no acredita nada de eso.</li>
+        <li class="fragment">Por eso la tendencia corporativa: <strong>modelos locales (on-premise / nube privada)</strong> y <strong>pasarelas de seguridad de IA</strong> que enmascaran PII antes de que salga — la información sensible nunca abandona la organización.</li>
+        <li class="fragment">Los modelos abiertos (Llama, Qwen, DeepSeek, GLM) hacen esto viable hoy — nuestra evaluación muestra que los mejores abiertos ya rivalizan con el tier propietario en tareas acotadas.</li>
+      </ul>
+    </div>
+    <div style="flex:0 0 34%;">
+      <img class="ai-img" src="imagenes/datos-fronteras.png" alt="Flujo transnacional de datos" data-ph="imagenes/datos-fronteras.png">
+    </div>
+  </div>
+  <aside class="notes">Puente con resultado propio: GLM 5.2 (open-weight) empata al tier propietario en cerradas → soberanía de datos sin sacrificar todo el desempeño. (≈2 min)</aside>
+</section>
+
+<!-- ══════════════════ 26. DERECHO A UNA EXPLICACIÓN ══════════════════ -->
+<section>
+  <h2 style="font-size:1.2em;">El derecho a una explicación</h2>
+  <div class="cols">
+    <div>
+      <ul class="limpia" style="font-size:.62em;">
+        <li class="fragment">Si un algoritmo niega una reclamación o sube una prima, el afectado tiene derecho a saber <strong>por qué</strong> — y "el modelo lo dijo" no es una razón.</li>
+        <li class="fragment">GDPR (art. 22): derecho a no ser objeto de decisiones <strong>puramente automatizadas</strong> con efectos significativos; el EU AI Act clasifica seguros y justicia como <strong>alto riesgo</strong>.</li>
+        <li class="fragment">En Colombia: habeas data (Ley 1581), debido proceso, y la <strong>T-323 de 2024</strong>: transparencia y no sustitución del juicio humano cuando hay IA en decisiones que afectan derechos.</li>
+        <li class="fragment">Un LLM genera texto plausible, <strong>no una justificación trazable</strong>. La explicación exige diseño: fuentes citadas y verificables, registro de decisión, responsable humano identificado.</li>
+      </ul>
+    </div>
+    <div style="flex:0 0 32%;">
+      <img class="ai-img" src="imagenes/caja-negra.png" alt="Caja negra vs explicación" data-ph="imagenes/caja-negra.png">
+    </div>
+  </div>
+  <p class="fragment" style="font-size:.65em; margin-top:.5em;"><strong>Regla de oro:</strong> si no puedes explicar la decisión ante la Superintendencia o ante un juez, no dejes que el algoritmo la tome solo.</p>
+  <aside class="notes">Cerrar el arco jurídico: del derecho sustancial al diseño técnico (XAI, trazabilidad). (≈2 min)</aside>
+</section>
+
+<!-- ══════════════════ 27. CONCLUSIÓN ══════════════════ -->
+<section class="center-slide">
+  <p class="chip">Conclusión</p>
+  <p class="bigquote">Los modelos de lenguaje ya rinden<br>el examen de derecho colombiano.<br><br>
+  <span class="fragment">Reconociendo respuestas: <span class="acento">notable — 0.905</span>.<br>
+  Redactándolas: <span class="malo">reprobado — 0.451</span>.<br>
+  Y siempre con la misma voz segura.</span>
+  <span class="sub fragment">La pregunta profesional del siglo ya no es «¿qué sabe la IA?»,<br>sino <strong>«¿cómo sé yo cuánto sabe?»</strong>. Esa respuesta tiene método científico:<br>benchmarks, umbrales, verificación. La confianza no se declara — <strong>se mide</strong>.</span></p>
+  <aside class="notes">Cierre en tres tiempos: nota del examen, la voz segura, la tesis. Pausa antes del "se mide". (≈2 min)</aside>
+</section>
+
+<!-- ══════════════════ 28. GRACIAS ══════════════════ -->
+<section class="center-slide">
+  <h1 style="font-size:1.5em;">Gracias</h1>
+  <p style="font-size:.6em; margin-top:1em;">
+    <strong>Rubén Manrique</strong> · rf.manrique@uniandes.edu.co<br>
+    <span class="muted">Departamento de Ingeniería de Sistemas y Computación · Universidad de los Andes</span>
+  </p>
+  <p style="font-size:.55em; margin-top:.8em;" class="muted">
+    ¿Quieren evaluar sus propios casos de uso? Hablemos de un benchmark para el dominio asegurador.
+  </p>
+  <div style="display:flex; gap:50px; justify-content:center; align-items:center; margin-top:1.2em;">
+    <img src="imagenes/logo-uniandes-negro.png" alt="Universidad de los Andes" style="height:64px;">
+    <img src="imagenes/logo-seguros-bolivar.png" alt="Seguros Bolívar" style="height:64px;">
+  </div>
+  <aside class="notes">Abrir Q&A. Ofrecer colaboración: benchmark de dominio asegurador es el llamado a la acción natural. (≈1 min + Q&A)</aside>
+</section>
+
+<!-- ══════════════════ 29. REFERENCIAS ══════════════════ -->
+<section>
+  <h3>Referencias principales</h3>
+  <div style="font-size:.42em; line-height:1.5; columns:2; column-gap:2em; color:var(--tinta2);">
+    <p>Manrique R., Castellanos M., Morales J., Gutiérrez J.D., Barreto A., Vélez J. (2026). <em>Do Large Language Models Know Colombian Law? A Reliability Benchmark for the Colombian Legal System.</em> Universidad de los Andes.</p>
+    <p>Manrique R., Castellanos M., Gutiérrez J.D. (2026). <em>Mind the Gap: A Systematic Review and Benchmark of Spanish-Language Legal QA in Latin America.</em> ICML AI-for-Law Workshop.</p>
+    <p>Dahl M. et al. (2024). <em>Large Legal Fictions: Profiling Legal Hallucinations in LLMs.</em> J. of Legal Analysis 16(1).</p>
+    <p>Magesh V. et al. (2024). <em>Hallucination-Free? Assessing the Reliability of Leading AI Legal Research Tools.</em> Stanford HAI/RegLab.</p>
+    <p><em>Mata v. Avianca, Inc.</em>, 678 F.Supp.3d 443 (S.D.N.Y. 2023).</p>
+    <p>Corte Suprema de Justicia (Colombia), Sala de Casación Civil, <em>Auto AC739-2026</em>, 13/02/2026, M.P. Guzmán Álvarez.</p>
+    <p>Corte Constitucional (Colombia), <em>Sentencia T-323 de 2024</em> (uso de IA en la judicatura); <em>T-760 de 2008</em> (derecho a la salud).</p>
+    <p>Consejo General del Poder Judicial (España), sanción disciplinaria art. 418.8 LOPJ; El País, 27/04/2026.</p>
+    <p>Fiscalía General de la Nación (Colombia), <em>Resolución 0-0077 del 6 de abril de 2026</em> — política de uso responsable de IA.</p>
+    <p><em>U.S. v. Cohen</em>, 18-cr-602 (S.D.N.Y.), opinión 20/03/2024; AI Incident Database, incidentes #591 (Cigna PxDx) y #623 (Cohen/Bard).</p>
+    <p><em>Kisting-Leung v. Cigna</em> (E.D. Cal.); <em>Estate of Lokken v. UnitedHealth</em> (D. Minn.) — nH Predict.</p>
+    <p>Milliman (2024). <em>Accidents that never happened: Generative AI and fraud in motor insurance.</em></p>
+    <p>Caso Arup (Hong Kong, 2024) — fraude por deepfake, ~US$25M; FT/CNN.</p>
+    <p>arXiv:2603.14463 — INS-S1: LLM industrial para seguros, benchmark INSEva.</p>
+    <p>Forcepoint (2025). <em>OmniGPT GenAI data breach</em>; Bloomberg (2023), fugas de Samsung vía ChatGPT; <em>NYT v. OpenAI & Microsoft</em> (S.D.N.Y. 2023).</p>
+    <p>UNESCO (2023). <em>Global Judges' Survey on AI.</em> Derechos Digitales / F. Karisma (2024), <em>Fiscal Watson.</em></p>
+  </div>
+</section>
+
+</div>
+</div>
+
+<!-- logos persistentes -->
+<div id="pie-logos">
+  <img src="imagenes/logo-uniandes-negro.png" alt="Uniandes">
+  <img src="imagenes/logo-seguros-bolivar.png" alt="Seguros Bolívar">
+</div>
+
+<script src="reveal/dist/reveal.js"></script>
+<script src="reveal/plugin/notes/notes.js"></script>
+<script>
+Reveal.initialize({
+  width: 1280, height: 720, margin: 0.05,
+  hash: true, slideNumber: 'c/t', transition: 'fade', transitionSpeed: 'fast',
+  controls: true, progress: true,
+  plugins: [ RevealNotes ]
+});
+
+/* ---- imágenes IA pendientes: placeholder elegante ---- */
+document.querySelectorAll('img.ai-img').forEach(img => {
+  img.addEventListener('error', () => {
+    const ph = document.createElement('div');
+    ph.className = 'ai-ph';
+    ph.style.minHeight = '220px';
+    ph.innerHTML = '<div style="font-size:2.2em;">🖼️</div><div>Imagen pendiente de generar<br><strong>' + (img.dataset.ph || img.src) + '</strong><br><span style="opacity:.7">ver imagenes/PROMPTS_IMAGENES.md</span></div>';
+    img.replaceWith(ph);
+  });
+});
+
+/* ================= DEMO 1: distribución de probabilidad ================= */
+const TOK = {
+  steps: [
+    { opts: [
+      {t:'consensual', p:58},
+      {t:'solemne',    p:17, derogado:true},
+      {t:'bilateral',  p:11},
+      {t:'aleatorio',  p:8},
+      {t:'mercantil',  p:6}
+    ], sep:', '},
+    { opts: [
+      {t:'bilateral',  p:64},
+      {t:'oneroso',    p:18},
+      {t:'aleatorio',  p:9},
+      {t:'típico',     p:5},
+      {t:'principal',  p:4}
+    ], sep:', '},
+    { opts: [
+      {t:'oneroso',      p:71},
+      {t:'aleatorio',    p:15},
+      {t:'conmutativo',  p:8},
+      {t:'gratuito',     p:4},
+      {t:'accesorio',    p:2}
+    ], sep:', '},
+    { opts: [
+      {t:'aleatorio',   p:66},
+      {t:'de tracto sucesivo', p:21},
+      {t:'intuitu personae',   p:7},
+      {t:'condicional', p:4},
+      {t:'real',        p:2}
+    ], sep:' '},
+    { opts: [
+      {t:'y de ejecución sucesiva.', p:83},
+      {t:'y de adhesión.',           p:9},
+      {t:'y de buena fe.',           p:5},
+      {t:'y solemne.',               p:3, derogado:true}
+    ], sep:''}
+  ]
+};
+let tokStep = 0, tokUsedDerogado = false;
+
+function tokRender(){
+  const cont = document.getElementById('tok-opts');
+  cont.innerHTML = '';
+  if (tokStep >= TOK.steps.length){
+    document.getElementById('tok-final').style.display = 'block';
+    document.getElementById('tok-sample').disabled = true;
+    return;
+  }
+  TOK.steps[tokStep].opts.forEach(o => {
+    const row = document.createElement('div');
+    row.className = 'tok-row' + (o.derogado ? ' derogado' : '');
+    row.innerHTML = '<div class="tword">' + o.t + '</div>' +
+      '<div class="ttrack"><div class="tfill" style="width:0%"><span class="tpct">' + o.p + '%</span></div></div>';
+    row.addEventListener('click', () => tokPick(o));
+    cont.appendChild(row);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      row.querySelector('.tfill').style.width = o.p + '%';
+    }));
+  });
+}
+function tokPick(o){
+  const gen = document.getElementById('tok-gen');
+  const sep = TOK.steps[tokStep].sep;
+  gen.textContent += o.t + (tokStep < TOK.steps.length - 1 ? sep : '');
+  if (o.derogado){
+    tokUsedDerogado = true;
+    document.getElementById('tok-aviso').style.display = 'block';
+  }
+  tokStep++;
+  tokRender();
+}
+function tokSample(){
+  if (tokStep >= TOK.steps.length) return;
+  const opts = TOK.steps[tokStep].opts;
+  const total = opts.reduce((s,o) => s + o.p, 0);
+  let r = Math.random() * total;
+  for (const o of opts){ r -= o.p; if (r <= 0){ tokPick(o); return; } }
+  tokPick(opts[0]);
+}
+function tokReset(){
+  tokStep = 0; tokUsedDerogado = false;
+  document.getElementById('tok-gen').textContent = '';
+  document.getElementById('tok-aviso').style.display = 'none';
+  document.getElementById('tok-final').style.display = 'none';
+  document.getElementById('tok-sample').disabled = false;
+  tokRender();
+}
+document.getElementById('tok-sample').addEventListener('click', tokSample);
+document.getElementById('tok-reset').addEventListener('click', tokReset);
+tokRender();
+
+/* ================= DEMO 2: chat con alucinación ================= */
+const CHAT_HTML =
+  'La Corte Constitucional ha protegido reiteradamente a los menores con trastorno del espectro autista. En la ' +
+  '<span class="citajur" data-v="real">Sentencia T-760 de 2008</span> consolidó el derecho fundamental a la salud y la ' +
+  'prohibición de barreras económicas de acceso. Posteriormente, en la ' +
+  '<span class="citajur" data-v="falsa">Sentencia T-1234 de 2019</span> ordenó expresamente exonerar de copagos y cuotas ' +
+  'moderadoras las terapias integrales de menores con TEA, con fundamento en el ' +
+  '<span class="citajur" data-v="falsa">artículo 214A de la Ley 100 de 1993</span>, que consagra la gratuidad para sujetos de especial protección.';
+
+let chatTyped = false;
+document.getElementById('chat-play').addEventListener('click', () => {
+  if (chatTyped) return;
+  chatTyped = true;
+  document.getElementById('chat-q').style.display = 'flex';
+  setTimeout(() => {
+    document.getElementById('chat-a').style.display = 'flex';
+    typeHTML(document.getElementById('chat-a-text'), CHAT_HTML, () => {
+      document.getElementById('chat-verify').disabled = false;
+    });
+  }, 700);
+});
+
+/* teclea HTML respetando etiquetas */
+function typeHTML(el, html, done){
+  let i = 0, out = '';
+  (function tick(){
+    if (i >= html.length){ el.innerHTML = html; done && done(); return; }
+    if (html[i] === '<'){ const j = html.indexOf('>', i); out += html.slice(i, j+1); i = j+1; }
+    else { out += html[i++]; }
+    el.innerHTML = out;
+    setTimeout(tick, 12);
+  })();
+}
+
+document.getElementById('chat-verify').addEventListener('click', () => {
+  document.querySelectorAll('#chat-a-text .citajur').forEach(c => {
+    const real = c.dataset.v === 'real';
+    c.classList.add(real ? 'v-real' : 'v-falsa');
+    const s = document.createElement('span');
+    s.className = 'stamp ' + (real ? 'real' : 'falsa');
+    s.textContent = real ? '✔ EXISTE' : '✘ NO EXISTE';
+    c.appendChild(s);
+  });
+  document.getElementById('verif-nota').style.display = 'block';
+});
+
+/* ================= GRÁFICOS DE RESULTADOS ================= */
+const MODELOS = [
+  ['Gemini 3.1 Pro',    0.905, 0.447],
+  ['Claude Opus 4.5',   0.869, 0.428],
+  ['GPT-5.4',           0.859, 0.451],
+  ['GLM 5.2',           0.856, 0.389],
+  ['Claude Sonnet 4.5', 0.803, 0.408],
+  ['GLM 4.6',           0.790, 0.387],
+  ['Kimi K2.5',         0.754, 0.354],
+  ['DeepSeek V3.2',     0.728, 0.359],
+  ['WizardLM-2 8x22B',  0.721, 0.364],
+  ['Qwen3 235B',        0.708, 0.342],
+  ['Nemotron 49B',      0.695, 0.330],
+  ['Qwen2.5 72B',       0.672, 0.340],
+  ['Llama 3.3 70B',     0.662, 0.352],
+  ['Nova Lite 1.0',     0.584, 0.309],
+  ['Command R',         0.577, 0.329]
+];
+
+/* Chart 1: accuracy cerradas, 15 modelos */
+(function(){
+  const box = document.getElementById('chart-acc');
+  let html = '<div style="position:relative;">';
+  MODELOS.forEach((m, idx) => {
+    const cls = idx === 0 ? 'destacado' : (m[1] < 0.70 ? 'gris' : '');
+    html += '<div class="barrow"><div class="blabel">' + m[0] + '</div>' +
+      '<div class="btrack"><div class="bfill ' + cls + '" style="width:' + (m[1]*88) + '%;">' +
+      '<span class="bval">' + m[1].toFixed(3) + '</span></div>' +
+      '<div class="baseline-025" style="left:22%;"></div>' +
+      '</div></div>';
+  });
+  html += '</div>';
+  box.innerHTML = html;
+})();
+
+/* Chart 2: accuracy vs correctitud, 6 modelos representativos */
+(function(){
+  const sel = [MODELOS[0], MODELOS[1], MODELOS[2], MODELOS[3], MODELOS[4], MODELOS[14]];
+  const box = document.getElementById('chart-gap');
+  let html = '';
+  sel.forEach(m => {
+    html += '<div style="margin:10px 0;">' +
+      '<div class="barrow" style="margin:2px 0;"><div class="blabel">' + m[0] + '</div>' +
+      '<div class="btrack" style="height:16px;"><div class="bfill" style="width:' + (m[1]*88) + '%;"><span class="bval">' + m[1].toFixed(3) + '</span></div></div></div>' +
+      '<div class="barrow" style="margin:2px 0;"><div class="blabel"></div>' +
+      '<div class="btrack" style="height:16px;"><div class="bfill" style="width:' + (m[2]*88) + '%; background:var(--naranja);"><span class="bval">' + m[2].toFixed(3) + '</span></div></div></div>' +
+      '</div>';
+  });
+  box.innerHTML = html;
+})();
+</script>
+</body>
+</html>
