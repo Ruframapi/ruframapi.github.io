@@ -181,7 +181,6 @@ ul.limpia li::before{ content:"—"; position:absolute; left:0; color:var(--azul
   </p>
   <div style="display:flex; gap:50px; justify-content:center; align-items:center; margin-top:1.2em;">
     <img src="imagenes/logo-uniandes-negro.png" alt="Universidad de los Andes" style="height:70px;">
-    <img src="imagenes/logo-seguros-bolivar.png" alt="Seguros Bolívar" style="height:70px;">
   </div>
   <aside class="notes">Bienvenida. 40 minutos. Presentarse: profesor e investigador en NLP. (≈1 min)</aside>
 </section>
@@ -214,8 +213,7 @@ ul.limpia li::before{ content:"—"; position:absolute; left:0; color:var(--azul
     <li class="fragment"><strong>Cómo se mide</strong> — la evidencia científica desde Uniandes: <em>Mind the Gap</em> e <em>IureBench</em></li>
     <li class="fragment"><strong>Cómo protegerse</strong> — guardrails de evaluación, privacidad y el derecho a una explicación</li>
   </ul>
-  <p class="fragment bigquote" style="margin-top:1em; font-size:.9em;">Tesis: <span class="acento">la confianza en una IA no se declara — se mide.</span></p>
-  <aside class="notes">Anticipar la tesis. Para una aseguradora esto debería sonar familiar: nadie asegura un riesgo sin tasarlo. (≈1 min)</aside>
+  <aside class="notes">Para una aseguradora esto debería sonar familiar: nadie asegura un riesgo sin tasarlo. (≈1 min)</aside>
 </section>
 
 <!-- ══════════════════ 4. QUÉ ES UN LLM ══════════════════ -->
@@ -456,8 +454,8 @@ ul.limpia li::before{ content:"—"; position:absolute; left:0; color:var(--azul
     <div class="fragment"><div class="hero-num">3</div><div class="hero-label">formatos: cerradas (305), semiabiertas (682) y abiertas estilo IRAC (55)</div></div>
     <div class="fragment"><div class="hero-num">15</div><div class="hero-label">LLMs evaluados: GPT-5.4, Gemini 3.1 Pro, Claude Opus 4.5, Llama, DeepSeek, Qwen…</div></div>
   </div>
-  <p class="fragment" style="font-size:.62em; margin-top:1em;">Construido con <strong>49 estudiantes y expertos de la Facultad de Derecho</strong> en 5 talleres, con protocolo de validación en 4 etapas (asistente legal → evaluador experto por área → comité). Cada pregunta tiene fuente legal documentada. Los modelos respondieron <strong>sin internet ni herramientas</strong>: medimos lo que llevan adentro.</p>
-  <div class="cite">Manrique, Castellanos, Morales, Gutiérrez, Barreto & Vélez (2026), "Do Large Language Models Know Colombian Law?", Universidad de los Andes.</div>
+  <p class="fragment" style="font-size:.62em; margin-top:1em;">Construido con estudiantes de la Facultad de Derecho (5 talleres, 49 participantes) y el equipo jurídico del proyecto: <strong>1.084 preguntas recibidas, 42 descartadas</strong>, revisión en 3 etapas (asistente legal → evaluador experto por área → comité). Cada pregunta tiene fuente legal documentada. Los modelos respondieron <strong>sin internet ni herramientas</strong>: medimos lo que llevan adentro.</p>
+  <div class="cite">Manrique, Castellanos, Morales, Gutiérrez, Barreto & Vélez (2026), "Do Large Language Models Know Colombian Law?", Universidad de los Andes. (Nombre formal en el artículo: <em>Colombian Legal Reliability Benchmark</em>.)</div>
   <aside class="notes">Énfasis metodológico para audiencia técnica: human-in-the-loop, validación multi-etapa, formatos que separan RECONOCER de PRODUCIR. (≈2.5 min)</aside>
 </section>
 
@@ -467,7 +465,7 @@ ul.limpia li::before{ content:"—"; position:absolute; left:0; color:var(--azul
   <h3 style="margin-bottom:.2em;">En selección múltiple, los mejores modelos lucen bien</h3>
   <p class="viz-sub" style="margin-bottom:.5em;">Exactitud en 305 preguntas cerradas (proporción de aciertos; azar = 0.25)</p>
   <div class="viz" id="chart-acc"></div>
-  <p class="viz-sub fragment">Brecha de <strong>33 puntos</strong> entre el mejor y el peor. Áreas más difíciles: <strong>procesal y administrativo</strong> (media 0.71) — igual que en <em>Mind the Gap</em>. La elección del modelo importa.</p>
+  <p class="viz-sub fragment">Brecha de <strong>33 puntos</strong> entre el mejor y el peor. Áreas más difíciles: <strong>procesal y administrativo</strong> (media 0.71) — administrativo ya era de los peores en <em>Mind the Gap</em>. La elección del modelo importa.</p>
   <aside class="notes">Leer el chart: tier líder >0.85 (Gemini, Opus, GPT-5.4, GLM), tier medio, y cola que apenas supera 2/3. Diferencias validadas con McNemar: son TIERS estadísticos, no un ranking fino. (≈2 min)</aside>
 </section>
 
@@ -488,17 +486,45 @@ ul.limpia li::before{ content:"—"; position:absolute; left:0; color:var(--azul
   <h2 style="font-size:1.25em;">Suenan bien <span class="malo">mientras se equivocan</span></h2>
   <div style="margin-top:1.4em;">
     <div class="rlab" style="font-size:.55em; color:var(--tinta2);">Relevancia — qué tan pertinente <em>suena</em> la respuesta (los 15 modelos)</div>
-    <div class="range-strip"><div class="rfill" style="left:73%; width:9.4%; background:var(--verde);"></div></div>
+    <div class="range-strip"><div class="rfill" style="left:73.2%; width:9.2%; background:var(--verde);"></div></div>
     <div style="font-size:.55em; color:var(--tinta2);">Correctitud — qué tan <em>cierta</em> es (los mismos 15 modelos)</div>
     <div class="range-strip"><div class="rfill" style="left:30.9%; width:14.2%; background:var(--naranja);"></div></div>
     <div class="range-ticks"><span>0</span><span>0.25</span><span>0.50</span><span>0.75</span><span>1.0</span></div>
   </div>
   <ul class="limpia" style="font-size:.62em; margin-top:.8em;">
-    <li class="fragment">Relevancia y correctitud están <strong>disociadas</strong> (ρ = −0.46): algunos de los modelos que <em>mejor suenan</em> son los <em>menos correctos</em>.</li>
+    <li class="fragment">Relevancia y correctitud están <strong>disociadas</strong>: entre modelos incluso apuntan en sentido contrario (ρ = −0.46) y, respuesta por respuesta (11.055 respuestas), la correlación es prácticamente nula (ρ = 0.08). <strong>Sonar pertinente no predice ser correcto.</strong></li>
     <li class="fragment">Una respuesta fluida, estructurada y pertinente es <strong>exactamente lo que un no experto no puede poner en duda</strong>.</li>
     <li class="fragment">Implicación de guardrail: <strong>la coherencia del texto no sirve como control de calidad</strong>. Jamás usar "se ve bien" como criterio.</li>
   </ul>
   <aside class="notes">Este es el eslogan para llevarse a casa: fluent but wrong. Conectar con el chat-chamber effect de la Corte Suprema. (≈2 min)</aside>
+</section>
+
+<!-- ══════════════════ 19b. CITAS NORMATIVAS ══════════════════ -->
+<section>
+  <p class="chip riesgo">Nuevo resultado · validado por abogados</p>
+  <h2 style="font-size:1.2em;">¿Y las normas que citan? <span class="malo">Una de cada dos está mal</span></h2>
+  <div class="cols" style="margin-top:.6em;">
+    <div style="flex:0 0 40%; text-align:center;">
+      <div class="fragment">
+        <div class="hero-num">53%</div>
+        <div class="hero-label">de las <strong>5.140 normas citadas</strong> por los 15 modelos son correctas.<br><strong>45%</strong> remiten a una norma equivocada · <strong>1.6%</strong> no existen.</div>
+      </div>
+    </div>
+    <div>
+      <div class="fragment">
+        <div class="barrow"><div class="blabel">GPT-5.4 (mejor)</div><div class="btrack"><div class="bfill destacado" style="width:90.3%;"><span class="bval">90%</span></div></div></div>
+        <div class="barrow"><div class="blabel">Promedio 15 modelos</div><div class="btrack"><div class="bfill" style="width:53.2%;"><span class="bval">53%</span></div></div></div>
+        <div class="barrow"><div class="blabel">Nemotron 49B (peor)</div><div class="btrack"><div class="bfill gris" style="width:23.1%;"><span class="bval">23%</span></div></div></div>
+        <p style="font-size:.5em; color:var(--tinta2); margin-top:.4em;">Proporción de citas normativas correctas (juez LLM con rúbrica, 350 preguntas).</p>
+      </div>
+      <ul class="limpia" style="font-size:.55em; margin-top:.5em;">
+        <li class="fragment">El error típico no es inventar la norma: es <strong>citar una norma real que no dice lo que el modelo afirma</strong>. Más difícil de detectar.</li>
+        <li class="fragment">Un abogado y dos estudiantes verificaron norma por norma: coinciden con el juez automático en el <strong>91%</strong> de los casos. Y juzgaron <strong>útil para un abogado</strong> solo el <strong>42%</strong> de las respuestas.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="cite">Manrique et al. (2026), secciones «Reliability of legal citations» y «Convergent validity and human validation».</div>
+  <aside class="notes">El hallazgo jurídicamente más grave y el mejor respaldado: validado por humanos. Conectar con el demo de la slide 8: allá inventó la sentencia; en la práctica, lo más común es citar una norma real equivocada. Verificar cada cita no es opcional. (≈2 min)</aside>
 </section>
 
 <!-- ══════════════════ 20. DOS SORPRESAS MÁS ══════════════════ -->
@@ -662,6 +688,7 @@ ul.limpia li::before{ content:"—"; position:absolute; left:0; color:var(--azul
   <p class="bigquote">Los modelos de lenguaje ya rinden<br>el examen de derecho colombiano.<br><br>
   <span class="fragment">Reconociendo respuestas: <span class="acento">notable — 0.905</span>.<br>
   Redactándolas: <span class="malo">reprobado — 0.451</span>.<br>
+  Citando normas: <span class="malo">una de cada dos mal</span>.<br>
   Y siempre con la misma voz segura.</span>
   <span class="sub fragment">La pregunta profesional del siglo ya no es «¿qué sabe la IA?»,<br>sino <strong>«¿cómo sé yo cuánto sabe?»</strong>. Esa respuesta tiene método científico:<br>benchmarks, umbrales, verificación. La confianza no se declara — <strong>se mide</strong>.</span></p>
   <aside class="notes">Cierre en tres tiempos: nota del examen, la voz segura, la tesis. Pausa antes del "se mide". (≈2 min)</aside>
@@ -679,7 +706,6 @@ ul.limpia li::before{ content:"—"; position:absolute; left:0; color:var(--azul
   </p>
   <div style="display:flex; gap:50px; justify-content:center; align-items:center; margin-top:1.2em;">
     <img src="imagenes/logo-uniandes-negro.png" alt="Universidad de los Andes" style="height:64px;">
-    <img src="imagenes/logo-seguros-bolivar.png" alt="Seguros Bolívar" style="height:64px;">
   </div>
   <aside class="notes">Abrir Q&A. Ofrecer colaboración: benchmark de dominio asegurador es el llamado a la acción natural. (≈1 min + Q&A)</aside>
 </section>
@@ -713,7 +739,6 @@ ul.limpia li::before{ content:"—"; position:absolute; left:0; color:var(--azul
 <!-- logos persistentes -->
 <div id="pie-logos">
   <img src="imagenes/logo-uniandes-negro.png" alt="Uniandes">
-  <img src="imagenes/logo-seguros-bolivar.png" alt="Seguros Bolívar">
 </div>
 
 <script src="reveal/dist/reveal.js"></script>
